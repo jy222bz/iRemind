@@ -1,0 +1,26 @@
+<resources>
+    <string name="app_name">iRemind</string>
+    <string name="tab_text_1">Events</string>
+    <string name="tab_text_2">Archive</string>
+    <string name="delete">Delete</string>
+    <string name="edit">Edit</string>
+    <string name="archive">Archive</string>
+    <string name="search_hint">Search Events</string>
+    <string name="title_activity_maps">Map</string>
+    <string name="starting_time">Time: 00:00</string>
+    <string name="more_info">More Information:</string>
+    <string name="title_event">Event Title:</string>
+    <string name="icon">Icon</string>
+    <string name="close_x">X</string>
+    <string name="time">12:00</string>
+    <string name="date">2000&#8211;01&#8211;01</string>
+    <string name="save">Save</string>
+    <string name="locations">Location</string>
+    <string name="not_supported">Non-Applicable!</string>
+    <string name="address">Enter the city and street address here</string>
+    <string name="search_icon">Search Icon.</string>
+    <string name="map_image">Map</string>
+    <string name="notifier_title">A ToDo-Task Reminder!</string>
+    <string name="no_info">No Information was provided!</string>
+    <string name="no_address">No address was provided!</string>
+</resources>
