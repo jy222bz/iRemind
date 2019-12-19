@@ -18,7 +18,7 @@ public class TaskRepo {
 
     public TaskRepo(Application application) {
        TaskDatabase database = TaskDatabase.getInstance(application);
-        mTaskDao = database.noteDao();
+        mTaskDao = database.taskDao();
         mAllTasks = mTaskDao.getAll();
         mActiveTasks = mTaskDao.getActiveTasks();
         mInactiveTasks = mTaskDao.getInactiveTasks();

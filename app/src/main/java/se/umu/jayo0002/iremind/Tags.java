@@ -52,4 +52,6 @@ public class Tags {
     public static final String EVENT_DELETED = "The Event Is Deleted!";
     public static final String TASK_ID = "TASK_ID";
     public static final String TASK_MESSAGE = "TASK_MESSAGE";
+    public static final String BUNDLE = "A Bundle Object carrying data.";
+    public static final String REMINDER = "A Task-ToDO Reminder!";
 }

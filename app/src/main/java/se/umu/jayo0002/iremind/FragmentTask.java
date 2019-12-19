@@ -22,9 +22,9 @@ import com.google.android.material.snackbar.Snackbar;
 import java.util.Objects;
 import se.umu.jayo0002.iremind.models.AlarmHandler;
 import se.umu.jayo0002.iremind.models.Task;
+import se.umu.jayo0002.iremind.view_models.TaskViewModel;
 
 import static android.app.Activity.RESULT_OK;
-
 
 public class FragmentTask extends Fragment {
     private SearchView mSearchView;
@@ -119,7 +119,6 @@ public class FragmentTask extends Fragment {
         intent.putExtra(Tags.TASK, mTask);
         startActivityForResult(intent, Tags.REQUEST_CODE_EDIT_EVENT);
     }
-
 
     private void onSwipe(){
         new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0,

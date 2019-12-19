@@ -2,7 +2,6 @@ package se.umu.jayo0002.iremind.database;
 
 import android.content.Context;
 import android.os.AsyncTask;
-
 import androidx.annotation.NonNull;
 import androidx.room.Database;
 import androidx.room.Room;
@@ -15,7 +14,7 @@ import se.umu.jayo0002.iremind.models.Task;
 public abstract class TaskDatabase extends RoomDatabase {
     private static TaskDatabase instance;
 
-    public abstract TaskDao noteDao();
+    public abstract TaskDao taskDao();
 
     static synchronized TaskDatabase getInstance(Context context) {
         if (instance == null) {
@@ -37,7 +36,7 @@ public abstract class TaskDatabase extends RoomDatabase {
     private static class PopulateDbAsyncTask extends AsyncTask<Void, Void, Void> {
 
         private PopulateDbAsyncTask(TaskDatabase db) {
-            TaskDao mTaskDao = db.noteDao();
+            TaskDao mTaskDao = db.taskDao();
         }
         @Override
         protected Void doInBackground(Void... voids) {

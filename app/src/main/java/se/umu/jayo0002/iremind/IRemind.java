@@ -17,7 +17,7 @@ public class IRemind extends Application {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
             NotificationChannel channel = new NotificationChannel(Tags.CHANNEL_ID,Tags.CHANNEL_Name,
                     NotificationManager.IMPORTANCE_DEFAULT);
-            channel.setDescription("Hy");
+            channel.setDescription(getString(R.string.notifier_title));
             NotificationManager mng = getSystemService(NotificationManager.class);
             assert mng != null;
             mng.createNotificationChannel(channel);

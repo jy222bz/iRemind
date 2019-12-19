@@ -1,4 +1,4 @@
-package se.umu.jayo0002.iremind;
+package se.umu.jayo0002.iremind.view_models;
 
 import android.app.Application;
 

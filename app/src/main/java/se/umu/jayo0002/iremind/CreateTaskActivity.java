@@ -228,8 +228,6 @@ public class CreateTaskActivity extends AppCompatActivity implements View.OnClic
             mLocationInfo.setAddress(address);
             mButtonAddLocation.setText(address);
         }
-        if (mEvent != null && !mEvent.isEmpty())
-            mMoreInfo.setText(mEvent);
     }
 
     private void updateUI(Bundle outState) {

@@ -8,13 +8,13 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import java.util.Objects;
-import se.umu.jayo0002.iremind.models.AlarmHandler;
 import se.umu.jayo0002.iremind.models.Task;
+import se.umu.jayo0002.iremind.view_models.TaskViewModel;
 
 public class OpenTaskActivity extends AppCompatActivity implements View.OnClickListener {
     private Task mTask;
     private Button mCLose;
-    private AlarmHandler mAlarmHandler;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,14 +22,16 @@ public class OpenTaskActivity extends AppCompatActivity implements View.OnClickL
         setContentView(R.layout.activity_open_task);
         TaskViewModel mNoteViewModel = ViewModelProviders.of(Objects.requireNonNull(this)).get(TaskViewModel.class);
         if (savedInstanceState  == null) {
-            mTask = Objects.requireNonNull(getIntent().getExtras()).getParcelable(Tags.TASK);
+            Bundle bundle = getIntent().getBundleExtra(Tags.BUNDLE);
+            mTask = Objects.requireNonNull(bundle).getParcelable(Tags.TASK);
             assert mTask != null;
+            mTask.setStatus(0);
             mTask.setStatus(false);
             mNoteViewModel.update(mTask);
         } else
             updateUI(savedInstanceState);
-        mCLose.setOnClickListener(this);
         prepareUI();
+        mCLose.setOnClickListener(this);
     }
 
     private void prepareUI(){
@@ -48,11 +50,6 @@ public class OpenTaskActivity extends AppCompatActivity implements View.OnClickL
     }
 
     @Override
-    public void onClick(View v) {
-        this.finish();
-    }
-
-    @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putParcelable(Tags.TASK,mTask);
@@ -60,5 +57,10 @@ public class OpenTaskActivity extends AppCompatActivity implements View.OnClickL
 
     private void updateUI(Bundle outState) {
         mTask = outState.getParcelable(Tags.TASK);
+    }
+
+    @Override
+    public void onClick(View view) {
+        this.finish();
     }
 }

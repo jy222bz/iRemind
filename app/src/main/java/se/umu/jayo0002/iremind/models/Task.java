@@ -275,6 +275,8 @@ public class Task implements Parcelable{
      * @return String
      */
     public String getNote() {
+        if (this.note.isEmpty())
+            return "No additional information was provided!";
         return this.note;
     }
 
