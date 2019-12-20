@@ -1,4 +1,4 @@
-package se.umu.jayo0002.iremind.models;
+package se.umu.jayo0002.iremind.notification;
 
 import android.app.Notification;
 import android.app.PendingIntent;
@@ -7,17 +7,18 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.media.AudioManager;
-import android.media.RingtoneManager;
-import android.net.Uri;
 import android.os.Bundle;
-import android.provider.Settings;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProviders;
+
 import java.util.Objects;
 import se.umu.jayo0002.iremind.OpenTaskActivity;
 import se.umu.jayo0002.iremind.R;
 import se.umu.jayo0002.iremind.Tags;
+import se.umu.jayo0002.iremind.models.Task;
+import se.umu.jayo0002.iremind.view_models.TaskViewModel;
 
 
 /**
@@ -41,24 +42,22 @@ public class AlarmReceiver extends BroadcastReceiver {
         activityIntent.putExtra(Tags.BUNDLE, bundle);
         PendingIntent contentIntent = PendingIntent.getActivity(context,
                 Objects.requireNonNull(task).getId(), activityIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-
         Bitmap icon = BitmapFactory.decodeResource(context.getResources(),R.drawable.iremind_image);
-        Uri uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-        Notification notification = new NotificationCompat.Builder(Objects.requireNonNull(context), Tags.CHANNEL_ID)
-                .setSmallIcon(R.drawable.task_image)
-                .setContentTitle(Tags.REMINDER)
-                .setLargeIcon(icon)
-                .setStyle(new NotificationCompat.BigTextStyle().bigText(task.getNote())
-                        .setBigContentTitle(task.getTitle()))
-                .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
-                .setContentText(task.getTitle())
-                .setPriority(NotificationCompat.PRIORITY_HIGH)
-                .setCategory(NotificationCompat.CATEGORY_ALARM)
-                .setSound(uri, AudioManager.STREAM_ALARM)
-                .setContentIntent(contentIntent)
-                .setAutoCancel(true)
-                .setOnlyAlertOnce(true)
-                .build();
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(Objects.requireNonNull(context), Tags.CHANNEL_ID);
+        builder.setDefaults(Notification.DEFAULT_SOUND|Notification.DEFAULT_LIGHTS|Notification.DEFAULT_VIBRATE);
+        builder.setSmallIcon(R.drawable.task_image);
+        builder.setContentTitle(Tags.REMINDER);
+        builder.setLargeIcon(icon);
+        builder.setStyle(new NotificationCompat.BigTextStyle().bigText(task.getNote())
+                .setBigContentTitle(task.getTitle()));
+        builder.setVisibility(NotificationCompat.VISIBILITY_PUBLIC);
+        builder.setContentText(task.getTitle());
+        builder.setPriority(NotificationCompat.PRIORITY_HIGH);
+        builder.setCategory(NotificationCompat.CATEGORY_ALARM);
+        builder.setContentIntent(contentIntent);
+        builder.setAutoCancel(true);
+        builder.setOnlyAlertOnce(true);
+        Notification notification = builder.build();
         notificationManager.notify(task.getUniqueNumber(), notification);
     }
 }

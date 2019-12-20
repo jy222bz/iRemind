@@ -1,4 +1,4 @@
-package se.umu.jayo0002.iremind.models;
+package se.umu.jayo0002.iremind.notification;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
@@ -8,6 +8,7 @@ import android.os.Bundle;
 
 import java.util.Calendar;
 import se.umu.jayo0002.iremind.Tags;
+import se.umu.jayo0002.iremind.models.Task;
 
 /**
  *

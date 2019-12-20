@@ -6,7 +6,6 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -21,8 +20,9 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.SearchView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
+
 import java.util.Objects;
-import se.umu.jayo0002.iremind.models.AlarmHandler;
+import se.umu.jayo0002.iremind.notification.AlarmHandler;
 import se.umu.jayo0002.iremind.models.SpecialListener;
 import se.umu.jayo0002.iremind.models.Task;
 import se.umu.jayo0002.iremind.view_models.SharedViewModel;

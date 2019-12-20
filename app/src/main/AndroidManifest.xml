@@ -10,7 +10,7 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <application
-        android:name=".IRemind"
+        android:name=".notification.IRemind"
         android:allowBackup="true"
         android:fullBackupContent="@xml/backup_descriptor"
         android:icon="@mipmap/ic_launcher"
@@ -52,7 +52,7 @@
             </intent-filter>
         </activity>
 
-        <receiver android:name=".models.AlarmReceiver" />
+        <receiver android:name=".notification.AlarmReceiver" />
     </application>
 
 </manifest>

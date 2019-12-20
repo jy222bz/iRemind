@@ -121,4 +121,17 @@ public class FragmentHistory extends Fragment {
             }
         }).attachToRecyclerView(mRV);
     }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        mViewModel = ViewModelProviders.of(Objects.requireNonNull(getActivity())).get(SharedViewModel.class);
+        mViewModel.getTaskToBeUpdated().observe(getViewLifecycleOwner(), task -> {
+            mTaskViewModel.update(task);
+            mAdapter.notifyDataSetChanged();
+        });
+        mViewModel.getTaskToBeDeleted().observe(getViewLifecycleOwner(), task -> {
+            mTaskViewModel.delete(task);
+        });
+    }
 }

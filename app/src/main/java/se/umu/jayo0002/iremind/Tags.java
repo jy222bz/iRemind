@@ -23,7 +23,7 @@ public class Tags {
     static final String MAP_MESSAGE = "To Pick a Place Tap The Marker.";
     public static final String LOCATION_OBJECT = "LOCATION_INFO";
     public static final String LOCATION_ADDRESS = "LOCATION Address";
-    static final String LATLNG_OUTSTATE = "Latlng outstate";
+    static final String LATLNG_OUTSTATE = "LatLng Out-State";
     static final String STATE_CONDITION = "State Condition";
     static final String PERMISSION_STATE = "Permission Condition";
     static final String EVENT_IMAGE= "IMAGE";
@@ -37,7 +37,7 @@ public class Tags {
     static final String LATLNG= "The last known location.";
     public static final String TASK= "A TaskTo Be Updated!";
     public static final String INVALID_DATE = "The DATE of the reminder should be in the future!";
-    public static final String NO_TITLE = "The Note shoud have a title!";
+    public static final String NO_TITLE = "The Note should have a title!";
     public static final String TITLE_IS_INVALID = "There should be a title that is not longer than 12 letters!";
     public static final String EVENT_TITLE = "THE TITLE FOR THE EVENT";
     public static final String EVENT_INFO = "More info about the event.";
