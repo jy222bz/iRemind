@@ -5,12 +5,13 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.media.AudioManager;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
-
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import java.util.Objects;
@@ -41,12 +42,14 @@ public class AlarmReceiver extends BroadcastReceiver {
         PendingIntent contentIntent = PendingIntent.getActivity(context,
                 Objects.requireNonNull(task).getId(), activityIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-        Uri uri = Settings.System.DEFAULT_RINGTONE_URI;
-        long[] vibrate = { 0, 100, 200, 300 };
+        Bitmap icon = BitmapFactory.decodeResource(context.getResources(),R.drawable.iremind_image);
+        Uri uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         Notification notification = new NotificationCompat.Builder(Objects.requireNonNull(context), Tags.CHANNEL_ID)
                 .setSmallIcon(R.drawable.task_image)
                 .setContentTitle(Tags.REMINDER)
-                .setVibrate(vibrate)
+                .setLargeIcon(icon)
+                .setStyle(new NotificationCompat.BigTextStyle().bigText(task.getNote())
+                        .setBigContentTitle(task.getTitle()))
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
                 .setContentText(task.getTitle())
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
@@ -56,7 +59,6 @@ public class AlarmReceiver extends BroadcastReceiver {
                 .setAutoCancel(true)
                 .setOnlyAlertOnce(true)
                 .build();
-
-        notificationManager.notify(1, notification);
+        notificationManager.notify(task.getUniqueNumber(), notification);
     }
 }

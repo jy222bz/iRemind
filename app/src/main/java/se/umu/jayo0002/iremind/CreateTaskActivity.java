@@ -23,6 +23,7 @@ import se.umu.jayo0002.iremind.models.DateValidator;
 import se.umu.jayo0002.iremind.models.LocationInfo;
 import se.umu.jayo0002.iremind.models.StringFormatter;
 import se.umu.jayo0002.iremind.models.Task;
+import se.umu.jayo0002.iremind.models.TextValidator;
 import se.umu.jayo0002.iremind.system_controllers.MapServiceController;
 import static se.umu.jayo0002.iremind.Tags.TASK;
 
@@ -132,13 +133,11 @@ public class CreateTaskActivity extends AppCompatActivity implements View.OnClic
     private void onSave(){
         if (!DateValidator.isDateValid(mStartHour, mStartMinute, mYear, mMonth, mDay))
             Toast.makeText(this, Tags.INVALID_DATE, Toast.LENGTH_LONG).show();
-        else if (mTitle == null)
-            Toast.makeText(this, Tags.NO_TITLE, Toast.LENGTH_LONG).show();
-        else if (mTitle.length() > 12)
-            Toast.makeText(this, Tags.TITLE_IS_LONG, Toast.LENGTH_LONG).show();
+        else if (!TextValidator.isTitleValid(mTitle))
+            Toast.makeText(this, Tags.TITLE_IS_INVALID, Toast.LENGTH_LONG).show();
+        else if (!TextValidator.isNoteValid(mEvent))
+                Toast.makeText(this, Tags.NOTE_SIZE, Toast.LENGTH_LONG).show();
         else {
-            if (mEvent == null)
-                mEvent = "";
             Intent main = new Intent();
             Task task = new Task();
             task.setTitle( mTitle);
@@ -259,6 +258,7 @@ public class CreateTaskActivity extends AppCompatActivity implements View.OnClic
     }
 
     private void prepareUI() {
+        mEvent ="";
         mIsDatePickerShown =false;
         mIsTimePickerShown = false;
         Calendar mCalendar= Calendar.getInstance();

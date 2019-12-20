@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 
+import se.umu.jayo0002.iremind.FragmentHistory;
 import se.umu.jayo0002.iremind.FragmentTask;
 import se.umu.jayo0002.iremind.R;
 
@@ -32,14 +33,11 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
     @Override
     public Fragment getItem(int position) {
         Fragment frag = new Fragment();
-
         if (position == 0) {
             frag = new FragmentTask();
-                /*case 1:
-                frag = new HistoryFragment();
-                break;*/
+        } else if (position == 1) {
+            frag = new FragmentHistory();
         }
-
         return frag;
     }
 

@@ -36,9 +36,9 @@ public class Tags {
     static final String EVENT_REMINDER_TEXT= "Reminder";
     static final String LATLNG= "The last known location.";
     public static final String TASK= "A TaskTo Be Updated!";
-    public static final String INVALID_DATE = "The Date and Time of the reminder should be in the future!";
+    public static final String INVALID_DATE = "The DATE of the reminder should be in the future!";
     public static final String NO_TITLE = "The Note shoud have a title!";
-    public static final String TITLE_IS_LONG = "The Title cannot have more than 12 letters!";
+    public static final String TITLE_IS_INVALID = "There should be a title that is not longer than 12 letters!";
     public static final String EVENT_TITLE = "THE TITLE FOR THE EVENT";
     public static final String EVENT_INFO = "More info about the event.";
     public static final String EVENT_TIME_HOUR = "Starting hour.";
@@ -54,4 +54,7 @@ public class Tags {
     public static final String TASK_MESSAGE = "TASK_MESSAGE";
     public static final String BUNDLE = "A Bundle Object carrying data.";
     public static final String REMINDER = "A Task-ToDO Reminder!";
+    public static final String NEW_LAUNCH = "SHOW TASK";
+    public static final String BOOLEAN = "Whether to go to Main Activity";
+    public static final String NOTE_SIZE = "NOTE CANNOT BE LONGER THAN 100 LETTERS.";
 }

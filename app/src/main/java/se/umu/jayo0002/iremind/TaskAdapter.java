@@ -1,8 +1,11 @@
 package se.umu.jayo0002.iremind;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ListView;
@@ -21,6 +24,11 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskHolder> im
     private List<Task> mTasks = new ArrayList<>();
     private List<Task> mTasksFull = new ArrayList<>();
     private int lastPosition = -1;
+    private Context mContext;
+
+    public TaskAdapter(Context context){
+        mContext = context;
+    }
     void setOnItemClickListener(OnItemClickListener onItemClickListener){
         this.mListener = onItemClickListener;
     }
@@ -79,6 +87,11 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskHolder> im
         holder.mTaskDate.setText(task.getDate());
         holder.mTaskTime.setText(task.getTime());
         Objects.requireNonNull(holder.itemView).setTag(position);
+
+        Animation anim = AnimationUtils.loadAnimation(mContext,(position > lastPosition)?
+                R.anim.scrolling_down : R.anim.scrolling_up);
+        holder.itemView.startAnimation(anim);
+        lastPosition = position;
     }
 
     @Override

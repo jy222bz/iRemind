@@ -7,6 +7,7 @@ import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 import com.google.android.gms.maps.model.LatLng;
 import java.util.Calendar;
+import java.util.Date;
 
 /**
  * This class represents the Task object and the information that holds for the event to be noted.
@@ -63,6 +64,11 @@ public class Task implements Parcelable{
     private String longitude;
 
     /**
+     * A unique number.
+     */
+    private int uniqueNumber;
+
+    /**
      * The status of the event.
      */
     @ColumnInfo(name= "status_column")
@@ -76,6 +82,23 @@ public class Task implements Parcelable{
         this.address = null;
         this.latitude = null;
         this.longitude = null;
+        this.uniqueNumber = (int) ((new Date().getTime() / 1000L) % Integer.MAX_VALUE);
+    }
+
+    protected Task(Parcel in) {
+        id = in.readInt();
+        title = in.readString();
+        note = in.readString();
+        year = in.readInt();
+        month = in.readInt();
+        day = in.readInt();
+        hour = in.readInt();
+        minute = in.readInt();
+        address = in.readString();
+        latitude = in.readString();
+        longitude = in.readString();
+        uniqueNumber = in.readInt();
+        status = in.readInt();
     }
 
     /**
@@ -286,7 +309,9 @@ public class Task implements Parcelable{
      */
     public String getAddress() {
         if (address == null)
-            return "No address is assigned!";
+            return "No address was assigned!";
+        else if (address.length() == 0)
+            return "No address was assigned!";
         else
         return this.address;
     }
@@ -385,56 +410,19 @@ public class Task implements Parcelable{
     }
 
     /**
-     * Describe the kinds of special objects contained in this Parcelable
-     * instance's marshaled representation. For example, if the object will
-     * include a file descriptor in the output of {@link #writeToParcel(Parcel, int)},
-     * the return value of this method must include the
-     * {@link #CONTENTS_FILE_DESCRIPTOR} bit.
-     *
-     * @return a bitmask indicating the set of special object types marshaled
-     * by this Parcelable object instance.
+     * It returns a unique number for the the Task.
+     * @return int
      */
-    @Override
-    public int describeContents() {
-        return 0;
+    public int getUniqueNumber(){
+        return this.uniqueNumber;
     }
 
     /**
-     * Flatten this object in to a Parcel.
-     *
-     * @param dest  The Parcel in which the object should be written.
-     * @param flags Additional flags about how the object should be written.
-     *              May be 0 or {@link #PARCELABLE_WRITE_RETURN_VALUE}.
+     * It sets the unique number for the Task.
+     * @param uniqueNumber
      */
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(id);
-        dest.writeString(title);
-        dest.writeString(note);
-        dest.writeInt(year);
-        dest.writeInt(month);
-        dest.writeInt(day);
-        dest.writeInt(hour);
-        dest.writeInt(minute);
-        dest.writeString(address);
-        dest.writeString(latitude);
-        dest.writeString(longitude);
-        dest.writeInt(status);
-    }
-
-    protected Task(Parcel in) {
-        id = in.readInt();
-        title = in.readString();
-        note = in.readString();
-        year = in.readInt();
-        month = in.readInt();
-        day = in.readInt();
-        hour = in.readInt();
-        minute = in.readInt();
-        address = in.readString();
-        latitude = in.readString();
-        longitude = in.readString();
-        status = in.readInt();
+    public void setUniqueNumber (int uniqueNumber){
+        this.uniqueNumber = uniqueNumber;
     }
 
     public static final Creator<Task> CREATOR = new Creator<Task>() {
@@ -448,4 +436,26 @@ public class Task implements Parcelable{
             return new Task[size];
         }
     };
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeInt(id);
+        parcel.writeString(title);
+        parcel.writeString(note);
+        parcel.writeInt(year);
+        parcel.writeInt(month);
+        parcel.writeInt(day);
+        parcel.writeInt(hour);
+        parcel.writeInt(minute);
+        parcel.writeString(address);
+        parcel.writeString(latitude);
+        parcel.writeString(longitude);
+        parcel.writeInt(uniqueNumber);
+        parcel.writeInt(status);
+    }
 }

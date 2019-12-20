@@ -10,7 +10,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase;
 
 import se.umu.jayo0002.iremind.models.Task;
 
-@Database(entities = Task.class, version =1, exportSchema = false)
+@Database(entities = Task.class, version =2, exportSchema = false)
 public abstract class TaskDatabase extends RoomDatabase {
     private static TaskDatabase instance;
 
