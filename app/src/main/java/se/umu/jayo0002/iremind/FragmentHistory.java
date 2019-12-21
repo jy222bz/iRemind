@@ -21,7 +21,6 @@ import com.google.android.material.snackbar.Snackbar;
 import java.util.Objects;
 import se.umu.jayo0002.iremind.database.TaskRepo;
 import se.umu.jayo0002.iremind.models.Task;
-
 import static se.umu.jayo0002.iremind.MainActivity.mTaskViewModel;
 
 public class FragmentHistory extends Fragment {
@@ -60,8 +59,8 @@ public class FragmentHistory extends Fragment {
         super.onCreateOptionsMenu(menu, inflater);
         menu.clear();
         MenuInflater in = Objects.requireNonNull(getActivity()).getMenuInflater();
-        in.inflate(R.menu.menu, menu);
-        MenuItem item = menu.findItem(R.id.search);
+        in.inflate(R.menu.menu2, menu);
+        MenuItem item = menu.findItem(R.id.search2);
         mSearchView = (SearchView) item.getActionView();
         mSearchView.setImeOptions(EditorInfo.IME_ACTION_DONE);
         mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -89,7 +88,7 @@ public class FragmentHistory extends Fragment {
 
     private void onSwipe() {
         new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0,
-                ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+                 ItemTouchHelper.LEFT) {
             @Override
             public boolean onMove(@NonNull RecyclerView recyclerView,
                                   @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
@@ -100,14 +99,19 @@ public class FragmentHistory extends Fragment {
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
                 Snackbar snackbar;
                 Task task = mAdapter.getTaskAt(viewHolder.getAdapterPosition());
-                if (direction <0){
-                    snackbar = Snackbar.make(Objects.requireNonNull(getView()), Tags.EVENT_ARCHIVED, Snackbar.LENGTH_LONG);
-                    snackbar.show();
-                } else {
+                if (direction == ItemTouchHelper.LEFT){
+                    mTaskViewModel.delete(task);
                     snackbar = Snackbar.make(Objects.requireNonNull(getView()), Tags.EVENT_DELETED, Snackbar.LENGTH_LONG);
                     snackbar.show();
                 }
             }
         }).attachToRecyclerView(mRV);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == R.id.delete)
+            mTaskViewModel.deleteAllInactiveTasks();
+        return super.onOptionsItemSelected(item);
     }
 }

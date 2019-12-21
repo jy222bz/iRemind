@@ -21,7 +21,7 @@ public class OpenTaskActivity extends AppCompatActivity implements View.OnClickL
         if (savedInstanceState == null && getIntent().hasExtra(Tags.BUNDLE)) {
             Bundle bundle = getIntent().getBundleExtra(Tags.BUNDLE);
             mTask = Objects.requireNonNull(bundle).getParcelable(Tags.TASK);
-        } else if (savedInstanceState == null && getIntent().hasExtra(Tags.TASK)){
+        } else if (savedInstanceState == null && getIntent().hasExtra(Tags.NEW_LAUNCH)){
            mGoMain = true;
            mTask = Objects.requireNonNull(getIntent().getExtras()).getParcelable(Tags.NEW_LAUNCH);
         } else if (savedInstanceState != null){
@@ -66,5 +66,14 @@ public class OpenTaskActivity extends AppCompatActivity implements View.OnClickL
             startActivity(intent);
             finish();
         }
+    }
+
+    public void onBackPressed() {
+        if (mGoMain){
+            startActivity(new Intent(this,MainActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
+            this.finish();
+        }
+        else
+            super.onBackPressed();
     }
 }

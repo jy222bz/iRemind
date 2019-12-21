@@ -35,8 +35,8 @@ public class Tags {
     static final String TIME_PICKER_STATUS = "Whether it is showing";
     static final String EVENT_REMINDER_TEXT= "Reminder";
     static final String LATLNG= "The last known location.";
-    public static final String TASK= "A TaskTo Be Updated!";
-    public static final String INVALID_DATE = "The DATE of the reminder should be in the future!";
+    public static final String TASK= "A Task Object.";
+    public static final String INVALID_DATE = "The DATE and TIME of the reminder should be in the future!";
     public static final String NO_TITLE = "The Note should have a title!";
     public static final String TITLE_IS_INVALID = "There should be a title that is not longer than 12 letters!";
     public static final String EVENT_TITLE = "THE TITLE FOR THE EVENT";
@@ -48,8 +48,7 @@ public class Tags {
     public static final String EVENT_MONTH = "Month";
     public static final String EVENT_DAY = "Day";
     static final String DATE = "Date";
-    static final String EVENT_ARCHIVED = "The Event Is Archived!";
-    public static final String EVENT_DELETED = "The Event Is Deleted!";
+    public static final String EVENT_DELETED = "The event is deleted!";
     public static final String TASK_ID = "TASK_ID";
     public static final String TASK_MESSAGE = "TASK_MESSAGE";
     public static final String BUNDLE = "A Bundle Object carrying data.";
