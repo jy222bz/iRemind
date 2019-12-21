@@ -12,12 +12,38 @@ import se.umu.jayo0002.iremind.database.TaskRepo;
 import se.umu.jayo0002.iremind.models.Task;
 
 
+/**
+ * TaskViewModel prepares and provides data for the UI.
+ * It communicates with the TaskRepo.
+ * It extends the AndroidViewModel.
+ */
 public class TaskViewModel extends AndroidViewModel {
+
+    /**
+     * it represents the repository of the Tasks.
+     */
     private TaskRepo mRepo;
+
+    /**
+     * It represents all the Tasks.
+     */
     private LiveData<List<Task>> mAllTasks;
+
+    /**
+     * It represents all the inactive Tasks.
+     */
     private LiveData<List<Task>> mInactiveTasks;
+
+    /**
+     * It represents all the active Tasks.
+     */
     private LiveData<List<Task>> mActiveTasks;
 
+    /**
+     * A Constructor, to construct the fields.
+     * Takes the application object as parameter.
+     * @param application
+     */
     public TaskViewModel(@NonNull Application application) {
         super(application);
         mRepo = new TaskRepo(application);
@@ -26,34 +52,64 @@ public class TaskViewModel extends AndroidViewModel {
         mInactiveTasks = mRepo.getInactiveTasks();
     }
 
+    /**
+     * It add the Task in the repository.
+     * @param task
+     */
     public void insert(Task task) {
         mRepo.insert(task);
     }
 
+    /**
+     * It updates the Task in the repository
+     * @param task
+     */
     public void update(Task task) {
         mRepo.update(task);
     }
 
+    /**
+     * It deletes the Task from the repository.
+     * @param task
+     */
     public void delete(Task task) {
         mRepo.delete(task);
     }
 
+    /**
+     * It deletes all the Tasks from repository.
+     */
     public void deleteAll() {
         mRepo.deleteAll();
     }
 
+    /**
+     * It deletes all the inactive Tasks from the repository.
+     */
     public void deleteAllInactiveTasks() {
         mRepo.deleteAllInactiveTasks();
     }
 
+    /**
+     * It returns all the data from the repository
+     * @return LiveData<List<Task>>
+     */
     public LiveData<List<Task>> getAll() {
         return mAllTasks;
     }
 
+    /**
+     * It returns the active Tasks.
+     * @return LiveData<List<Task>>
+     */
     public LiveData<List<Task>> getActiveTasks() {
         return mActiveTasks;
     }
 
+    /**
+     * It returns the inactive Tasks.
+     * @return LiveData<List<Task>>
+     */
     public LiveData<List<Task>> getInactiveTasks() {
         return mInactiveTasks;
     }

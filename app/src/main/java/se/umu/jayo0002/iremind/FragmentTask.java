@@ -118,7 +118,7 @@ public class FragmentTask extends Fragment {
 
     private void onSwipe(){
         new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0,
-                 ItemTouchHelper.LEFT) {
+                 ItemTouchHelper.LEFT ) {
             @Override
             public boolean onMove(@NonNull RecyclerView recyclerView,
                                   @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {

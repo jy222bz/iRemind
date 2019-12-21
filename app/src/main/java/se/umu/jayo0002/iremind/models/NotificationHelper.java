@@ -43,7 +43,7 @@ class NotificationHelper extends ContextWrapper {
      */
     @TargetApi(Build.VERSION_CODES.O)
     private void prepareChannel() {
-        NotificationChannel channel = new NotificationChannel(Tags.CHANNEL_ID, Tags.CHANNEL_Name, NotificationManager.IMPORTANCE_HIGH);
+        NotificationChannel channel = new NotificationChannel(Tags.CHANNEL_ID, Tags.CHANNEL_NAME, NotificationManager.IMPORTANCE_HIGH);
         channel.enableVibration(true);
         channel.enableLights(true);
         getManager().createNotificationChannel(channel);

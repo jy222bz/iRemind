@@ -5,7 +5,7 @@ import android.Manifest;
 public class Tags {
 
     public static final String CHANNEL_ID = "Notification Channel";
-    public static final String CHANNEL_Name = "A ToDo-Task Reminder!";
+    public static final String CHANNEL_NAME = "A ToDo-Task Reminder!";
     public static final String MAIN_ACTIVITY= "Main Activity.";
     public static final String MAP_ACTIVITY= "Map Activity.";
     static final String NOT_SUPPORTED = "Your Phone does NOT support this version of Google Map service.";
