@@ -23,8 +23,6 @@ public class OpenTaskActivity extends AppCompatActivity implements View.OnClickL
             mGoMain = false;
             Bundle bundle = getIntent().getBundleExtra(Tags.BUNDLE);
             mTask = Objects.requireNonNull(bundle).getParcelable(Tags.TASK);
-            assert mTask != null;
-            mTask.setStatus(false);
         } else if (savedInstanceState  == null && getIntent().hasExtra(Tags.TASK)){
            mGoMain = true;
            mTask = Objects.requireNonNull(getIntent().getExtras()).getParcelable(Tags.NEW_LAUNCH);

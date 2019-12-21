@@ -35,7 +35,7 @@ public class AlarmReceiver extends BroadcastReceiver {
         Intent activityIntent = new Intent(context, OpenTaskActivity.class);
         activityIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         Bundle bundle1= new Bundle();
-        bundle.putParcelable(Tags.TASK,task);
+        bundle1.putParcelable(Tags.TASK,task);
         activityIntent.putExtra(Tags.BUNDLE, bundle1);
         Objects.requireNonNull(task).setStatus(false);
         mTaskViewModel.update(task);
