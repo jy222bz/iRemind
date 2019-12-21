@@ -41,6 +41,7 @@ public class CreateTaskActivity extends AppCompatActivity implements View.OnClic
     private Date mDate;
     private String mTitle, mEvent, mPickedDate, mPickedTime;
     private boolean mIsDatePickerShown, mIsTimePickerShown;
+    private Button mButtonSave, mButtonClose;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,7 +67,7 @@ public class CreateTaskActivity extends AppCompatActivity implements View.OnClic
         });
     }
 
-    private TextWatcher textWatcher = new TextWatcher() {
+    private final TextWatcher textWatcher = new TextWatcher() {
         @Override
         public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
@@ -266,9 +267,9 @@ public class CreateTaskActivity extends AppCompatActivity implements View.OnClic
                 (mCalendar.get(Calendar.MONTH) +1))+ "-" +
                 StringFormatter.getFormattedString(mCalendar.get(Calendar.DAY_OF_MONTH));
         mPickedTime = getString(R.string.starting_time);
-        Button mButtonClose = findViewById(R.id.close_button);
+        mButtonClose = findViewById(R.id.close_button);
         mButtonClose.setOnClickListener(this);
-        Button mButtonSave = findViewById(R.id.save_button);
+        mButtonSave = findViewById(R.id.save_button);
         mButtonSave.setOnClickListener(this);
         mButtonAddDate = findViewById(R.id.btDate);
         mButtonAddDate.setOnClickListener(this);
@@ -282,7 +283,7 @@ public class CreateTaskActivity extends AppCompatActivity implements View.OnClic
                 CreateTaskActivity.this,
                 R.style.PickerTheme, this, mYear,mMonth,mDay);
         mDateDialog.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
-        mDateDialog.getDatePicker().setMaxDate(mDate.getPlusOneMonth());
+        mDateDialog.getDatePicker().setMaxDate(mDate.getPlus(5));
         mTimeDialog  = new TimePickerDialog(CreateTaskActivity.this,
                 R.style.PickerTheme,this,
                 mCalendar.get(Calendar.HOUR_OF_DAY),mCalendar.get(Calendar.MINUTE),false);

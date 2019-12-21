@@ -13,6 +13,10 @@ import se.umu.jayo0002.iremind.models.Task;
  * This class manages the local data.
  * It extends the RoomDatabase class.
  * It creates an instance of the database.
+ *
+ * @author Jacob Yousif
+ * @version 1.0
+ * @since 2019 -12-09
  */
 @Database(entities = Task.class, version =5, exportSchema = false)
 public abstract class TaskDatabase extends RoomDatabase {
@@ -39,7 +43,7 @@ public abstract class TaskDatabase extends RoomDatabase {
      * It populates the database.
      * It uses a private method to carry out the operation.
      */
-    private static Callback roomCallback = new Callback() {
+    private static final Callback roomCallback = new Callback() {
         @Override
         public void onCreate(@NonNull SupportSQLiteDatabase sQLiteDatabase) {
             super.onCreate(sQLiteDatabase);

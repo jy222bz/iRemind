@@ -15,7 +15,9 @@ import se.umu.jayo0002.iremind.R;
 import se.umu.jayo0002.iremind.Tags;
 
 /**
- *
+ * @author Jacob Yousif
+ * @version 1.0
+ * @since 2019 -12-09
  */
 class NotificationHelper extends ContextWrapper {
     /**
@@ -25,7 +27,7 @@ class NotificationHelper extends ContextWrapper {
     /**
      *
      */
-    private Task mTask;
+    private final Task mTask;
 
     /**
      * @param base
@@ -52,7 +54,7 @@ class NotificationHelper extends ContextWrapper {
     /**
      * @return
      */
-    public NotificationManager getManager() {
+    private NotificationManager getManager() {
         if (mNotificationManager == null)
             mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         return mNotificationManager;

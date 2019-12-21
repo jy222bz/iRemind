@@ -24,7 +24,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskHolder> im
     private List<Task> mTasks = new ArrayList<>();
     private List<Task> mTasksFull = new ArrayList<>();
     private int lastPosition = -1;
-    private Context mContext;
+    private final Context mContext;
 
     public TaskAdapter(Context context){
         mContext = context;

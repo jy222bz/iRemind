@@ -27,12 +27,14 @@ public class Date {
     }
 
     /**
-     * It returns a time in the near future, which is one month after the current date.
+     * It returns a time in the near future.
+     * The parameter is the amount of months in future.
+     * @param amountOfMonths
      * @return long
      */
-    public long getPlusOneMonth (){
+    public long getPlus (int amountOfMonths){
         Calendar calendar = Calendar.getInstance();
-        calendar.add(Calendar.MONTH, +1);
+        calendar.add(Calendar.MONTH, +amountOfMonths);
         return calendar.getTimeInMillis();
     }
 }

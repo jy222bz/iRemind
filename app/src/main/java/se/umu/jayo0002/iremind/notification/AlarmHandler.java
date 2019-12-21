@@ -18,7 +18,7 @@ public class AlarmHandler  {
     /**
      *
      */
-    private Context mContext;
+    private final Context mContext;
     /**
      *
      */

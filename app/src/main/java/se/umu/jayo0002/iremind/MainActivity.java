@@ -8,14 +8,14 @@ import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AppCompatActivity;
 import android.view.Menu;
 import android.widget.Toast;
-
 import se.umu.jayo0002.iremind.models.Date;
+import se.umu.jayo0002.iremind.models.Task;
 import se.umu.jayo0002.iremind.system_controllers.MapServiceController;
 import se.umu.jayo0002.iremind.ui.main.SectionsPagerAdapter;
 import se.umu.jayo0002.iremind.view_models.TaskViewModel;
 
 public class MainActivity extends AppCompatActivity {
-    public static TaskViewModel mTaskViewModel;
+    protected static TaskViewModel mTaskViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,5 +38,9 @@ public class MainActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu, menu);
         return true;
+    }
+
+    public static synchronized void update(Task task){
+        mTaskViewModel.update(task);
     }
 }

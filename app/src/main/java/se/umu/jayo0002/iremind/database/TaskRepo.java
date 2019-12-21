@@ -10,27 +10,31 @@ import se.umu.jayo0002.iremind.models.Task;
 /**
  * This object provide a single source of data from the database to the TaskViewModel.
  * It communicates between the TaskViewModel and the database.
+ *
+ * @author Jacob Yousif
+ * @version 1.0
+ * @since 2019 -12-09
  */
 public class TaskRepo {
     /**
      * Ir represents the TaskDao Object.
      */
-    private TaskDao mTaskDao;
+    private final TaskDao mTaskDao;
 
     /**
      * It represents all Tasks.
      */
-    private LiveData<List<Task>>mAllTasks;
+    private final LiveData<List<Task>>mAllTasks;
 
     /**
      * It represents all active Tasks.
      */
-    private LiveData<List<Task>> mActiveTasks;
+    private final LiveData<List<Task>> mActiveTasks;
 
     /**
      * It represents the inactive Tasks.
      */
-    private LiveData<List<Task>>mInactiveTasks;
+    private final LiveData<List<Task>>mInactiveTasks;
 
     /**
      * Constructor, to construct the object and assign the values.
@@ -112,7 +116,7 @@ public class TaskRepo {
      * It executes the insertion operation in the background thread.
      */
     private static class InsertTaskAsyncTask extends AsyncTask<Task, Void, Void> {
-        private TaskDao mTaskDao;
+        private final TaskDao mTaskDao;
 
         private InsertTaskAsyncTask(TaskDao taskDao) {
             this.mTaskDao = taskDao;
@@ -129,7 +133,7 @@ public class TaskRepo {
      * It executes the update operation in the background thread.
      */
     private static class UpdateTaskAsyncTask extends AsyncTask<Task, Void, Void> {
-        private TaskDao mTaskDao;
+        private final TaskDao mTaskDao;
 
         private UpdateTaskAsyncTask(TaskDao taskDao) {
             this.mTaskDao = taskDao;
@@ -146,7 +150,7 @@ public class TaskRepo {
      * It executes the insertion operation in the background thread.
      */
     private static class DeleteTaskAsyncTask extends AsyncTask<Task, Void, Void> {
-        private TaskDao mTaskDao;
+        private final TaskDao mTaskDao;
 
         private DeleteTaskAsyncTask(TaskDao taskDao) {
             this.mTaskDao = taskDao;
@@ -163,7 +167,7 @@ public class TaskRepo {
      * It executes the delete all operation in the background thread.
      */
     private static class DeleteAllAsyncTask extends AsyncTask<Void, Void, Void> {
-        private TaskDao mTaskDao;
+        private final TaskDao mTaskDao;
 
         private DeleteAllAsyncTask(TaskDao taskDao) {
             this.mTaskDao = taskDao;
@@ -180,7 +184,7 @@ public class TaskRepo {
      * It executes the delete all inactive Tasks operation in the background thread.
      */
     private static class deleteAllInactiveTasksAsyncTask extends AsyncTask<Void, Void, Void> {
-        private TaskDao mTaskDao;
+        private final TaskDao mTaskDao;
 
         private deleteAllInactiveTasksAsyncTask(TaskDao taskDao) {
             this.mTaskDao = taskDao;

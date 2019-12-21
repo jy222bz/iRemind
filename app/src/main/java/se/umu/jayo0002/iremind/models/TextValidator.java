@@ -2,6 +2,10 @@ package se.umu.jayo0002.iremind.models;
 
 /**
  * A class that provides two static methods.
+ *
+ * @author Jacob Yousif
+ * @version 1.0
+ * @since 2019 -12-09
  */
 public class TextValidator {
 

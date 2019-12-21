@@ -15,7 +15,7 @@ import se.umu.jayo0002.iremind.OpenTaskActivity;
 import se.umu.jayo0002.iremind.R;
 import se.umu.jayo0002.iremind.Tags;
 import se.umu.jayo0002.iremind.models.Task;
-import static se.umu.jayo0002.iremind.MainActivity.mTaskViewModel;
+import static se.umu.jayo0002.iremind.MainActivity.update;
 
 
 /**
@@ -38,7 +38,7 @@ public class AlarmReceiver extends BroadcastReceiver {
         bundle1.putParcelable(Tags.TASK,task);
         activityIntent.putExtra(Tags.BUNDLE, bundle1);
         Objects.requireNonNull(task).setStatus(false);
-        mTaskViewModel.update(task);
+        update(task);
         PendingIntent contentIntent = PendingIntent.getActivity(context,
                 Objects.requireNonNull(task).getId(), activityIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         Bitmap icon = BitmapFactory.decodeResource(context.getResources(),R.drawable.iremind_image);

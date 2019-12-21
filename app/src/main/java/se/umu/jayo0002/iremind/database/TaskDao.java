@@ -12,6 +12,10 @@ import se.umu.jayo0002.iremind.models.Task;
  * A Data Access Object class to communicate with SQLIte database.
  * TaskDao interface for storing data in the database, to provide persistence mechanism.
  * It defines the SQLite data operations, table and columns that will be generated.
+ *
+ * @author Jacob Yousif
+ * @version 1.0
+ * @since 2019 -12-09
  */
 
 @Dao

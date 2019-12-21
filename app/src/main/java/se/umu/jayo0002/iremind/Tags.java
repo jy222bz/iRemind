@@ -55,5 +55,5 @@ public class Tags {
     public static final String REMINDER = "A Task-ToDO Reminder!";
     public static final String NEW_LAUNCH = "SHOW TASK";
     public static final String BOOLEAN = "Whether to go to Main Activity";
-    public static final String NOTE_SIZE = "NOTE CANNOT BE LONGER THAN 100 LETTERS.";
+    public static final String NOTE_SIZE = "NOTE CANNOT BE LONGER THAN 300 LETTERS.";
 }
