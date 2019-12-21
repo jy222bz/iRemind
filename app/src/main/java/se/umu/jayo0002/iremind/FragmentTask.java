@@ -1,12 +1,10 @@
 package se.umu.jayo0002.iremind;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -20,29 +18,21 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.SearchView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
-
 import java.util.Objects;
 import se.umu.jayo0002.iremind.notification.AlarmHandler;
-import se.umu.jayo0002.iremind.models.SpecialListener;
 import se.umu.jayo0002.iremind.models.Task;
-import se.umu.jayo0002.iremind.view_models.SharedViewModel;
-import se.umu.jayo0002.iremind.view_models.TaskViewModel;
 
 import static android.app.Activity.RESULT_OK;
+import static se.umu.jayo0002.iremind.MainActivity.*;
 
 public class FragmentTask extends Fragment {
     private SearchView mSearchView;
     private FloatingActionButton mFAB;
-    private TaskViewModel mTaskViewModel;
     private Task mTask;
     private TaskAdapter mAdapter;
     private RecyclerView mRV;
     private AlarmHandler mAlarmHandler;
-    private SharedViewModel mViewModel;
-    private SpecialListener mListener;
-    public static FragmentTask newInstance() {
-        return new FragmentTask();
-    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -56,11 +46,9 @@ public class FragmentTask extends Fragment {
         mFAB = view.findViewById(R.id.fab);
         mRV.setAdapter(mAdapter);
         registerForContextMenu(mRV);
-        mTaskViewModel = ViewModelProviders.of(Objects.requireNonNull(getActivity())).get(TaskViewModel.class);
-        mTaskViewModel.getActiveTasks().observe(getActivity(), tasks -> mAdapter.setAll(tasks));
+        mTaskViewModel.getActiveTasks().observe(Objects.requireNonNull(getActivity()), tasks -> mAdapter.setAll(tasks));
         onClickFAButton();
         onSwipe();
-
         mAdapter.setOnItemClickListener(task -> {
             mTask = task;
             edit();
@@ -113,12 +101,12 @@ public class FragmentTask extends Fragment {
         if (requestCode == Tags.REQUEST_CODE_CREATE_EVENT && resultCode == RESULT_OK){
             mTask = Objects.requireNonNull(Objects.requireNonNull(data).getExtras()).getParcelable(Tags.TASK);
             mTaskViewModel.insert(mTask);
-            mAlarmHandler.startAlarm(Objects.requireNonNull(mTask).getAlarmDateAndTime(), mTask.getUniqueNumber(), mTask);
+            mAlarmHandler.startAlarm(Objects.requireNonNull(mTask).getAlarmDateAndTime(), mTask.getId(), mTask);
         } else if (requestCode == Tags.REQUEST_CODE_EDIT_EVENT && resultCode == RESULT_OK){
             mTask = Objects.requireNonNull(Objects.requireNonNull(data).getExtras()).getParcelable(Tags.TASK);
             mTaskViewModel.update(mTask);
-            mAlarmHandler.cancelAlarm(mTask.getUniqueNumber());
-            mAlarmHandler.startAlarm(mTask.getAlarmDateAndTime(), mTask.getUniqueNumber(), mTask);
+            mAlarmHandler.cancelAlarm(mTask.getId());
+            mAlarmHandler.startAlarm(mTask.getAlarmDateAndTime(), mTask.getId(), mTask);
         }
     }
 
@@ -142,12 +130,11 @@ public class FragmentTask extends Fragment {
                 Task task = mAdapter.getTaskAt(viewHolder.getAdapterPosition());
                 if (direction <0){
                     task.setStatus(0);
-                    mTaskViewModel.update(task);
+                    mTaskViewModel.update(mTask);
                     snackbar = Snackbar.make(Objects.requireNonNull(getView()), Tags.EVENT_ARCHIVED, Snackbar.LENGTH_LONG);
                     snackbar.show();
                 } else {
                     mAlarmHandler.cancelAlarm(task.getId());
-                    mTaskViewModel.delete(task);
                     snackbar = Snackbar.make(Objects.requireNonNull(getView()), Tags.EVENT_DELETED, Snackbar.LENGTH_LONG);
                     snackbar.show();
                 }
@@ -155,30 +142,4 @@ public class FragmentTask extends Fragment {
         }).attachToRecyclerView(mRV);
     }
 
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        mViewModel = ViewModelProviders.of(Objects.requireNonNull(getActivity())).get(SharedViewModel.class);
-        mViewModel.getTaskToBeUpdated().observe(getViewLifecycleOwner(), task -> {
-            mTaskViewModel.update(task);
-            mAdapter.notifyDataSetChanged();
-        });
-        mViewModel.getTaskToBeDeleted().observe(getViewLifecycleOwner(), task -> {
-            mTaskViewModel.delete(task);
-        });
-    }
-
-    @Override
-    public void onAttach(@NonNull Context context) {
-        super.onAttach(context);
-        if (context instanceof SpecialListener){
-            mListener = (SpecialListener) context;
-        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
 }

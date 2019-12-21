@@ -2,19 +2,16 @@ package se.umu.jayo0002.iremind.database;
 
 import android.app.Application;
 import android.os.AsyncTask;
-
 import androidx.lifecycle.LiveData;
-
 import java.util.List;
-
 import se.umu.jayo0002.iremind.models.Task;
 
 
 public class TaskRepo {
     private TaskDao mTaskDao;
-    private LiveData<List<Task>> mAllTasks;
+    private LiveData<List<Task>>mAllTasks;
     private LiveData<List<Task>> mActiveTasks;
-    private LiveData<List<Task>> mInactiveTasks;
+    private LiveData<List<Task>>mInactiveTasks;
 
     public TaskRepo(Application application) {
        TaskDatabase database = TaskDatabase.getInstance(application);

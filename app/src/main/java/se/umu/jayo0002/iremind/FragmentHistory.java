@@ -5,7 +5,6 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -19,24 +18,23 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.SearchView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
+
+import java.util.List;
 import java.util.Objects;
-import se.umu.jayo0002.iremind.models.SpecialListener;
+
+import se.umu.jayo0002.iremind.database.TaskRepo;
 import se.umu.jayo0002.iremind.models.Task;
-import se.umu.jayo0002.iremind.view_models.SharedViewModel;
-import se.umu.jayo0002.iremind.view_models.TaskViewModel;
+
+import static se.umu.jayo0002.iremind.MainActivity.mTaskViewModel;
 
 public class FragmentHistory extends Fragment {
     private SearchView mSearchView;
     private FloatingActionButton mFAB;
-    private TaskViewModel mTaskViewModel;
+    private TaskRepo mTaskRepo;
     private Task mTask;
+    private List<Task> mTasks;
     private TaskAdapter mAdapter;
     private RecyclerView mRV;
-    private SharedViewModel mViewModel;
-    private SpecialListener mListener;
-    public static FragmentHistory newInstance() {
-        return new FragmentHistory();
-    }
 
     @Nullable
     @Override
@@ -49,15 +47,14 @@ public class FragmentHistory extends Fragment {
         setHasOptionsMenu(true);
         mRV.setAdapter(mAdapter);
         registerForContextMenu(mRV);
-        mTaskViewModel = ViewModelProviders.of(Objects.requireNonNull(getActivity())).get(TaskViewModel.class);
-        mTaskViewModel.getInactiveTasks().observe(getActivity(), tasks -> mAdapter.setAll(tasks));
+        mTaskViewModel.getInactiveTasks().observe(Objects.requireNonNull(getActivity()), tasks -> mAdapter.setAll(tasks));
         onSwipe();
         mAdapter.setOnItemClickListener(task -> {
             mTask = task;
             Intent intent = new Intent(getActivity(), OpenTaskActivity.class);
             intent.putExtra(Tags.NEW_LAUNCH, task);
             startActivity(intent);
-            getActivity().finish();
+            Objects.requireNonNull(getActivity()).finish();
         });
         return view;
     }
@@ -109,29 +106,11 @@ public class FragmentHistory extends Fragment {
                 Snackbar snackbar;
                 Task task = mAdapter.getTaskAt(viewHolder.getAdapterPosition());
                 if (direction < 0) {
-                    task.setStatus(0);
-                    mTaskViewModel.update(task);
-                    snackbar = Snackbar.make(Objects.requireNonNull(getView()), Tags.EVENT_ARCHIVED, Snackbar.LENGTH_LONG);
-                    snackbar.show();
-                } else {
                     mTaskViewModel.delete(task);
-                    snackbar = Snackbar.make(Objects.requireNonNull(getView()), Tags.EVENT_DELETED, Snackbar.LENGTH_LONG);
+                    snackbar = Snackbar.make(Objects.requireNonNull(getView()), Tags.EVENT_ARCHIVED, Snackbar.LENGTH_LONG);
                     snackbar.show();
                 }
             }
         }).attachToRecyclerView(mRV);
-    }
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        mViewModel = ViewModelProviders.of(Objects.requireNonNull(getActivity())).get(SharedViewModel.class);
-        mViewModel.getTaskToBeUpdated().observe(getViewLifecycleOwner(), task -> {
-            mTaskViewModel.update(task);
-            mAdapter.notifyDataSetChanged();
-        });
-        mViewModel.getTaskToBeDeleted().observe(getViewLifecycleOwner(), task -> {
-            mTaskViewModel.delete(task);
-        });
     }
 }

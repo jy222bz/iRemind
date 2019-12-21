@@ -7,13 +7,11 @@ import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.sqlite.db.SupportSQLiteDatabase;
-
 import se.umu.jayo0002.iremind.models.Task;
 
-@Database(entities = Task.class, version =2, exportSchema = false)
+@Database(entities = Task.class, version =5, exportSchema = false)
 public abstract class TaskDatabase extends RoomDatabase {
     private static TaskDatabase instance;
-
     public abstract TaskDao taskDao();
 
     static synchronized TaskDatabase getInstance(Context context) {

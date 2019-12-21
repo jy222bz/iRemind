@@ -10,8 +10,6 @@ import android.widget.Button;
 import android.widget.TextView;
 import java.util.Objects;
 import se.umu.jayo0002.iremind.models.Task;
-import se.umu.jayo0002.iremind.view_models.SharedViewModel;
-import se.umu.jayo0002.iremind.view_models.TaskViewModel;
 
 public class OpenTaskActivity extends AppCompatActivity implements View.OnClickListener {
     private Task mTask;
@@ -21,16 +19,12 @@ public class OpenTaskActivity extends AppCompatActivity implements View.OnClickL
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_open_task);
-        TaskViewModel mNoteViewModel = ViewModelProviders.of(Objects.requireNonNull(this)).get(TaskViewModel.class);
         if (savedInstanceState  == null && getIntent().hasExtra(Tags.BUNDLE)) {
             mGoMain = false;
             Bundle bundle = getIntent().getBundleExtra(Tags.BUNDLE);
             mTask = Objects.requireNonNull(bundle).getParcelable(Tags.TASK);
             assert mTask != null;
             mTask.setStatus(false);
-            SharedViewModel mViewModel = ViewModelProviders.of(this).get(SharedViewModel.class);
-            mViewModel.sendTaskToBeUpdated(mTask);
-            mNoteViewModel.update(mTask);
         } else if (savedInstanceState  == null && getIntent().hasExtra(Tags.TASK)){
            mGoMain = true;
            mTask = Objects.requireNonNull(getIntent().getExtras()).getParcelable(Tags.NEW_LAUNCH);
