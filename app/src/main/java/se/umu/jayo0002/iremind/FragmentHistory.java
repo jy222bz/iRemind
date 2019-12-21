@@ -18,10 +18,7 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.SearchView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
-
-import java.util.List;
 import java.util.Objects;
-
 import se.umu.jayo0002.iremind.database.TaskRepo;
 import se.umu.jayo0002.iremind.models.Task;
 
@@ -32,7 +29,6 @@ public class FragmentHistory extends Fragment {
     private FloatingActionButton mFAB;
     private TaskRepo mTaskRepo;
     private Task mTask;
-    private List<Task> mTasks;
     private TaskAdapter mAdapter;
     private RecyclerView mRV;
 
@@ -75,7 +71,6 @@ public class FragmentHistory extends Fragment {
                 mSearchView.setIconified(true);
                 return false;
             }
-
             @Override
             public boolean onQueryTextChange(String s) {
                 mAdapter.getFilter().filter(s);
@@ -105,9 +100,11 @@ public class FragmentHistory extends Fragment {
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
                 Snackbar snackbar;
                 Task task = mAdapter.getTaskAt(viewHolder.getAdapterPosition());
-                if (direction < 0) {
-                    mTaskViewModel.delete(task);
+                if (direction <0){
                     snackbar = Snackbar.make(Objects.requireNonNull(getView()), Tags.EVENT_ARCHIVED, Snackbar.LENGTH_LONG);
+                    snackbar.show();
+                } else {
+                    snackbar = Snackbar.make(Objects.requireNonNull(getView()), Tags.EVENT_DELETED, Snackbar.LENGTH_LONG);
                     snackbar.show();
                 }
             }

@@ -118,7 +118,7 @@ public class FragmentTask extends Fragment {
 
     private void onSwipe(){
         new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0,
-                ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+                 ItemTouchHelper.RIGHT) {
             @Override
             public boolean onMove(@NonNull RecyclerView recyclerView,
                                   @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
@@ -129,11 +129,11 @@ public class FragmentTask extends Fragment {
                 Snackbar snackbar;
                 Task task = mAdapter.getTaskAt(viewHolder.getAdapterPosition());
                 if (direction <0){
-                    task.setStatus(0);
-                    mTaskViewModel.update(mTask);
+                    mTaskViewModel.update(task);
                     snackbar = Snackbar.make(Objects.requireNonNull(getView()), Tags.EVENT_ARCHIVED, Snackbar.LENGTH_LONG);
                     snackbar.show();
                 } else {
+                    mTaskViewModel.delete(task);
                     mAlarmHandler.cancelAlarm(task.getId());
                     snackbar = Snackbar.make(Objects.requireNonNull(getView()), Tags.EVENT_DELETED, Snackbar.LENGTH_LONG);
                     snackbar.show();

@@ -2,7 +2,6 @@ package se.umu.jayo0002.iremind;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -14,19 +13,18 @@ import se.umu.jayo0002.iremind.models.Task;
 public class OpenTaskActivity extends AppCompatActivity implements View.OnClickListener {
     private Task mTask;
     private Button mCLose;
-    private boolean mGoMain;
+    private boolean mGoMain = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_open_task);
-        if (savedInstanceState  == null && getIntent().hasExtra(Tags.BUNDLE)) {
-            mGoMain = false;
+        if (savedInstanceState == null && getIntent().hasExtra(Tags.BUNDLE)) {
             Bundle bundle = getIntent().getBundleExtra(Tags.BUNDLE);
             mTask = Objects.requireNonNull(bundle).getParcelable(Tags.TASK);
-        } else if (savedInstanceState  == null && getIntent().hasExtra(Tags.TASK)){
+        } else if (savedInstanceState == null && getIntent().hasExtra(Tags.TASK)){
            mGoMain = true;
            mTask = Objects.requireNonNull(getIntent().getExtras()).getParcelable(Tags.NEW_LAUNCH);
-        } else if (savedInstanceState  != null){
+        } else if (savedInstanceState != null){
             updateUI(savedInstanceState);
         }
         prepareUI();
