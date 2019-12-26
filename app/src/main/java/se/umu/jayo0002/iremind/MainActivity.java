@@ -43,4 +43,5 @@ public class MainActivity extends AppCompatActivity {
     public static synchronized void update(Task task){
         mTaskViewModel.update(task);
     }
+
 }

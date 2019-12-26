@@ -147,7 +147,6 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskHolder> im
 
             FilterResults filterResults = new FilterResults();
             filterResults.values = filteredList;
-
             return filterResults ;
         }
 

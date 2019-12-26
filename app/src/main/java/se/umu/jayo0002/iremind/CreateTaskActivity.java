@@ -8,6 +8,7 @@ import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.InputType;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
@@ -41,7 +42,6 @@ public class CreateTaskActivity extends AppCompatActivity implements View.OnClic
     private Date mDate;
     private String mTitle, mEvent, mPickedDate, mPickedTime;
     private boolean mIsDatePickerShown, mIsTimePickerShown;
-    private Button mButtonSave, mButtonClose;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -129,30 +129,6 @@ public class CreateTaskActivity extends AppCompatActivity implements View.OnClic
         Intent main = new Intent();
         setResult(RESULT_CANCELED, main);
         this.finish();
-    }
-
-    private void onSave(){
-        if (!DateValidator.isDateValid(mStartHour, mStartMinute, mYear, mMonth, mDay))
-            Toast.makeText(this, Tags.INVALID_DATE, Toast.LENGTH_LONG).show();
-        else if (!TextValidator.isTitleValid(mTitle))
-            Toast.makeText(this, Tags.TITLE_IS_INVALID, Toast.LENGTH_LONG).show();
-        else if (!TextValidator.isNoteValid(mEvent))
-                Toast.makeText(this, Tags.NOTE_SIZE, Toast.LENGTH_LONG).show();
-        else {
-            Intent main = new Intent();
-            Task task = new Task();
-            task.setTitle( mTitle);
-            task.setNote(mEvent);
-            task.setLocation(mLocationInfo);
-            task.setYear(mYear);
-            task.setMonth(mMonth);
-            task.setDay(mDay);
-            task.setHour(mStartHour);
-            task.setMinute(mStartMinute);
-            main.putExtra(TASK, task);
-            setResult(RESULT_OK, main);
-            this.finish();
-        }
     }
 
     @Override
@@ -257,6 +233,29 @@ public class CreateTaskActivity extends AppCompatActivity implements View.OnClic
         else if (mIsDatePickerShown)
             mDateDialog.show();
     }
+    private void onSave(){
+        if (!DateValidator.isDateValid(mStartHour, mStartMinute, mYear, mMonth, mDay))
+            Toast.makeText(this, Tags.INVALID_DATE, Toast.LENGTH_LONG).show();
+        else if (!TextValidator.isTitleValid(mTitle))
+            Toast.makeText(this, Tags.TITLE_IS_INVALID, Toast.LENGTH_LONG).show();
+        else if (!TextValidator.isNoteValid(mEvent))
+            Toast.makeText(this, Tags.NOTE_SIZE, Toast.LENGTH_LONG).show();
+        else {
+            Intent main = new Intent();
+            Task task = new Task();
+            task.setTitle( mTitle);
+            task.setNote(mEvent);
+            task.setLocation(mLocationInfo);
+            task.setYear(mYear);
+            task.setMonth(mMonth);
+            task.setDay(mDay);
+            task.setHour(mStartHour);
+            task.setMinute(mStartMinute);
+            main.putExtra(TASK, task);
+            setResult(RESULT_OK, main);
+            this.finish();
+        }
+    }
 
     private void prepareUI() {
         mEvent ="";
@@ -267,9 +266,9 @@ public class CreateTaskActivity extends AppCompatActivity implements View.OnClic
                 (mCalendar.get(Calendar.MONTH) +1))+ "-" +
                 StringFormatter.getFormattedString(mCalendar.get(Calendar.DAY_OF_MONTH));
         mPickedTime = getString(R.string.starting_time);
-        mButtonClose = findViewById(R.id.close_button);
+        Button mButtonClose = findViewById(R.id.close_button);
         mButtonClose.setOnClickListener(this);
-        mButtonSave = findViewById(R.id.save_button);
+        Button mButtonSave = findViewById(R.id.save_button);
         mButtonSave.setOnClickListener(this);
         mButtonAddDate = findViewById(R.id.btDate);
         mButtonAddDate.setOnClickListener(this);
@@ -289,5 +288,7 @@ public class CreateTaskActivity extends AppCompatActivity implements View.OnClic
                 mCalendar.get(Calendar.HOUR_OF_DAY),mCalendar.get(Calendar.MINUTE),false);
         mMoreInfo.addTextChangedListener(textWatcher);
         mEventTitle.addTextChangedListener(textWatcher);
+        mEventTitle.setInputType(InputType.TYPE_CLASS_TEXT|InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
+        mMoreInfo.setInputType(InputType.TYPE_CLASS_TEXT|InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
     }
 }

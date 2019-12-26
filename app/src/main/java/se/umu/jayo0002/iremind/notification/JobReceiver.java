@@ -8,25 +8,20 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
+
 import java.util.Objects;
+
 import se.umu.jayo0002.iremind.OpenTaskActivity;
 import se.umu.jayo0002.iremind.R;
 import se.umu.jayo0002.iremind.Tags;
 import se.umu.jayo0002.iremind.models.Task;
+
 import static se.umu.jayo0002.iremind.MainActivity.update;
 
-
-/**
- *
- */
-public class AlarmReceiver extends BroadcastReceiver {
-
-    /**
-     * @param context
-     * @param intent
-     */
+public class JobReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         Bundle bundle = intent.getBundleExtra(Tags.BUNDLE);
@@ -40,7 +35,7 @@ public class AlarmReceiver extends BroadcastReceiver {
         update(task);
         PendingIntent contentIntent = PendingIntent.getActivity(context,
                 Objects.requireNonNull(task).getId(), activityIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-        Bitmap icon = BitmapFactory.decodeResource(context.getResources(),R.drawable.iremind_image);
+        Bitmap icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.iremind_image);
         NotificationCompat.Builder builder = new NotificationCompat.Builder(Objects.requireNonNull(context), Tags.CHANNEL_ID);
         builder.setDefaults(Notification.DEFAULT_SOUND|Notification.DEFAULT_LIGHTS|Notification.DEFAULT_VIBRATE);
         builder.setSmallIcon(R.drawable.task_image);

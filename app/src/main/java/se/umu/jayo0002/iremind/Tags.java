@@ -56,4 +56,8 @@ public class Tags {
     public static final String NEW_LAUNCH = "SHOW TASK";
     public static final String BOOLEAN = "Whether to go to Main Activity";
     public static final String NOTE_SIZE = "NOTE CANNOT BE LONGER THAN 300 LETTERS.";
+    public static final String PENDING_INTENT = "A Pending intent";
+    public static final String ALARM_DATE = "A date for the event";
+    public static final String BOOT = "android.intent.action.BOOT_COMPLETED";
+    public static final String POWER = "POWER";
 }

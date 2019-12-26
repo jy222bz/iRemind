@@ -12,20 +12,40 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.PowerManager;
+
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
+
 import java.util.Calendar;
 import java.util.Objects;
+
 import se.umu.jayo0002.iremind.OpenTaskActivity;
 import se.umu.jayo0002.iremind.R;
 import se.umu.jayo0002.iremind.Tags;
 import se.umu.jayo0002.iremind.models.Task;
+
 import static se.umu.jayo0002.iremind.MainActivity.update;
 
-/**
- *
- */
-public class AlarmHandler extends BroadcastReceiver {
+public class AlarmScheduler extends BroadcastReceiver {
+
+    /**
+     *
+     */
+    private final Context mContext;
+
+
+    /**
+     *
+     */
+    private Task mTask;
+
+    /**
+     * @param context
+     */
+    public AlarmScheduler(Context context) {
+        mContext = context;
+    }
 
     /**
      * @param context
@@ -33,16 +53,17 @@ public class AlarmHandler extends BroadcastReceiver {
      */
     @Override
     public void onReceive(Context context, Intent intent) {
-        if (intent.getAction() != null && context != null){
-            if (Objects.equals(intent.getAction(), Tags.BOOT)) {
-                Bundle bundle = intent.getBundleExtra(Tags.BUNDLE);
-                Task task = Objects.requireNonNull(bundle).getParcelable(Tags.TASK);
-                startAlarm(context, Objects.requireNonNull(task).getAlarmDateAndTime(), task.getId(), task);
-            }
+        if (Objects.equals(intent.getAction(), Tags.BOOT)) {
+            Bundle bundle = intent.getBundleExtra(Tags.BUNDLE);
+            mTask = Objects.requireNonNull(bundle).getParcelable(Tags.TASK);
+            startAlarm(Objects.requireNonNull(mTask).getAlarmDateAndTime(), mTask.getId(), mTask);
         } else {
+            PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
+            PowerManager.WakeLock wl = Objects.requireNonNull(pm).newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "Tag: iRemind");
+            wl.acquire(10*60*1000L);
             Bundle bundle = intent.getBundleExtra(Tags.BUNDLE);
             Task task = Objects.requireNonNull(bundle).getParcelable(Tags.TASK);
-            NotificationManagerCompat notificationManager = NotificationManagerCompat.from(Objects.requireNonNull(context));
+            NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
             Intent activityIntent = new Intent(context, OpenTaskActivity.class);
             Bundle bundle1= new Bundle();
             bundle1.putParcelable(Tags.TASK,task);
@@ -67,28 +88,29 @@ public class AlarmHandler extends BroadcastReceiver {
             builder.setOnlyAlertOnce(true);
             Notification notification = builder.build();
             notificationManager.notify(task.getId(), notification);
+            wl.release();
         }
     }
 
-
     /**
-     * @param context
      * @param calendar
      * @param code
      * @param task
      */
-    public void startAlarm(Context context, Calendar calendar, int code, Task task) {
-        ComponentName receiver = new ComponentName(context, AlarmHandler.class);
-        PackageManager pm = context.getPackageManager();
+    public void startAlarm(Calendar calendar, int code, Task task) {
+        mTask = task;
+        ComponentName receiver = new ComponentName(mContext, AlarmScheduler.class);
+        PackageManager pm = mContext.getPackageManager();
         pm.setComponentEnabledSetting(receiver,
                 PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
                 PackageManager.DONT_KILL_APP);
-        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+
+        AlarmManager alarmManager = (AlarmManager) mContext.getSystemService(Context.ALARM_SERVICE);
         Bundle bundle = new Bundle();
         bundle.putParcelable(Tags.TASK, task);
-        Intent intent = new Intent(context, AlarmHandler.class);
+        Intent intent = new Intent(mContext, AlarmScheduler.class);
         intent.putExtra(Tags.BUNDLE, bundle);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, code, intent, PendingIntent.FLAG_ONE_SHOT);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(mContext, code, intent, PendingIntent.FLAG_ONE_SHOT);
         assert alarmManager != null;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, task.getAlarmDateAndTime().getTimeInMillis(), pendingIntent);
@@ -97,20 +119,19 @@ public class AlarmHandler extends BroadcastReceiver {
         }
     }
 
-
     /**
-     * @param context
      * @param code
      */
-    public void cancelAlarm(Context context, int code) {
-        ComponentName receiver = new ComponentName(context, AlarmHandler.class);
-        PackageManager pm = context.getPackageManager();
+    public void cancelAlarm(int code) {
+        ComponentName receiver = new ComponentName(mContext, AlarmScheduler.class);
+        PackageManager pm = mContext.getPackageManager();
         pm.setComponentEnabledSetting(receiver,
                 PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
                 PackageManager.DONT_KILL_APP);
-        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-        Intent intent = new Intent(context, AlarmReceiver.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, code, intent, PendingIntent.FLAG_ONE_SHOT);
+        AlarmManager alarmManager = (AlarmManager) mContext.getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(mContext, AlarmReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(mContext, code, intent, PendingIntent.FLAG_ONE_SHOT);
+        pendingIntent.cancel();
         assert alarmManager != null;
         alarmManager.cancel(pendingIntent);
     }
