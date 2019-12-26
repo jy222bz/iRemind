@@ -1,4 +1,4 @@
-package se.umu.jayo0002.iremind.notification;
+package se.umu.jayo0002.iremind.notifications;
 
 import android.app.Application;
 import android.app.NotificationChannel;
@@ -11,14 +11,23 @@ import android.os.Build;
 import se.umu.jayo0002.iremind.R;
 import se.umu.jayo0002.iremind.Tags;
 
+/**
+ * This class creates the channel for notifications.
+ */
 public class IRemind extends Application {
 
+    /**
+     * It calls the private method to create the channel for notifications.
+     */
     @Override
     public void onCreate() {
         super.onCreate();
         createChannel();
     }
 
+    /**
+     * It creates the channel for notification.
+     */
     private void createChannel() {
         Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -27,7 +36,7 @@ public class IRemind extends Application {
             channel.setDescription(getString(R.string.notifier_title));
             AudioAttributes audioAttributes = new AudioAttributes.Builder()
                     .setContentType(AudioAttributes.CONTENT_TYPE_MOVIE)
-                    .setUsage(AudioAttributes.USAGE_NOTIFICATION)
+                    .setUsage(AudioAttributes.USAGE_ALARM)
                     .build();
             channel.setSound(alarmSound, audioAttributes);
             NotificationManager mng = getSystemService(NotificationManager.class);

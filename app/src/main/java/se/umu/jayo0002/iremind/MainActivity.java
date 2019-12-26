@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
-    public static synchronized void update(Task task){
+    public static void update(Task task){
         mTaskViewModel.update(task);
     }
 

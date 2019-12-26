@@ -113,11 +113,9 @@ public class Task implements Parcelable{
     }
 
     /**
-     * It sets the status of the event.
-     * @param isActive
+     * It sets the status of the event to inactive.
      */
-    public void setStatus(boolean isActive) {
-        if (!isActive)
+    public void setInactive() {
             this.status = 0;
     }
 

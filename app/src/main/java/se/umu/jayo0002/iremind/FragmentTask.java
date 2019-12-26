@@ -20,31 +20,31 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import java.util.Objects;
 import se.umu.jayo0002.iremind.models.Task;
-import se.umu.jayo0002.iremind.notification.AlarmHandler;
+import se.umu.jayo0002.iremind.notifications.AlarmHandler;
 import static android.app.Activity.RESULT_OK;
 import static se.umu.jayo0002.iremind.MainActivity.*;
 
+/**
+ * This Fragment is for showing the current active Tasks.
+ */
 public class FragmentTask extends Fragment {
     private SearchView mSearchView;
     private FloatingActionButton mFAB;
     private Task mTask;
     private TaskAdapter mAdapter;
     private RecyclerView mRV;
-    private AlarmHandler mAlarmHandler;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_task, container, false);
         mRV = view.findViewById(R.id.recycler_view);
-        mAlarmHandler = new AlarmHandler();
         mAdapter = new TaskAdapter(getContext());
         mRV.setLayoutManager(new LinearLayoutManager(getContext()));
         mRV.setHasFixedSize(true);
         setHasOptionsMenu(true);
         mFAB = view.findViewById(R.id.fab);
         mRV.setAdapter(mAdapter);
-        registerForContextMenu(mRV);
         mTaskViewModel.getActiveTasks().observe(Objects.requireNonNull(getActivity()), tasks -> mAdapter.setAll(tasks));
         onClickFAButton();
         onSwipe();
@@ -100,12 +100,12 @@ public class FragmentTask extends Fragment {
         if (requestCode == Tags.REQUEST_CODE_CREATE_EVENT && resultCode == RESULT_OK){
             mTask = Objects.requireNonNull(Objects.requireNonNull(data).getExtras()).getParcelable(Tags.TASK);
             mTaskViewModel.insert(mTask);
-            mAlarmHandler.startAlarm(getActivity(),Objects.requireNonNull(mTask).getAlarmDateAndTime(), mTask.getId(), mTask);
+            AlarmHandler.scheduleAlarm(getActivity(), mTask);
         } else if (requestCode == Tags.REQUEST_CODE_EDIT_EVENT && resultCode == RESULT_OK){
             mTask = Objects.requireNonNull(Objects.requireNonNull(data).getExtras()).getParcelable(Tags.TASK);
             mTaskViewModel.update(mTask);
-            mAlarmHandler.cancelAlarm(getActivity(),mTask.getId());
-            mAlarmHandler.startAlarm(getActivity(),mTask.getAlarmDateAndTime(), mTask.getId(), mTask);
+            AlarmHandler.cancelAlarm(getActivity(),mTask);
+            AlarmHandler.scheduleAlarm(getActivity(), mTask);
         }
     }
 
@@ -128,7 +128,7 @@ public class FragmentTask extends Fragment {
                 Snackbar snackbar;
                 Task task = mAdapter.getTaskAt(viewHolder.getAdapterPosition());
                 if (direction == ItemTouchHelper.LEFT){
-                    mAlarmHandler.cancelAlarm(getActivity(), task.getId());
+                    AlarmHandler.cancelAlarm(getActivity(), task);
                     mTaskViewModel.delete(task);
                     snackbar = Snackbar.make(Objects.requireNonNull(getView()), Tags.EVENT_DELETED, Snackbar.LENGTH_LONG);
                     snackbar.show();

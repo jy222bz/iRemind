@@ -23,6 +23,9 @@ import se.umu.jayo0002.iremind.database.TaskRepo;
 import se.umu.jayo0002.iremind.models.Task;
 import static se.umu.jayo0002.iremind.MainActivity.mTaskViewModel;
 
+/**
+ * This Fragment is for showing the old and inactive Tasks.
+ */
 public class FragmentHistory extends Fragment {
     private SearchView mSearchView;
     private FloatingActionButton mFAB;
@@ -41,7 +44,6 @@ public class FragmentHistory extends Fragment {
         mRV.setHasFixedSize(true);
         setHasOptionsMenu(true);
         mRV.setAdapter(mAdapter);
-        registerForContextMenu(mRV);
         mTaskViewModel.getInactiveTasks().observe(Objects.requireNonNull(getActivity()), tasks -> mAdapter.setAll(tasks));
         onSwipe();
         mAdapter.setOnItemClickListener(task -> {

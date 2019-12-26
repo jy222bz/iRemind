@@ -288,7 +288,5 @@ public class CreateTaskActivity extends AppCompatActivity implements View.OnClic
                 mCalendar.get(Calendar.HOUR_OF_DAY),mCalendar.get(Calendar.MINUTE),false);
         mMoreInfo.addTextChangedListener(textWatcher);
         mEventTitle.addTextChangedListener(textWatcher);
-        mEventTitle.setInputType(InputType.TYPE_CLASS_TEXT|InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
-        mMoreInfo.setInputType(InputType.TYPE_CLASS_TEXT|InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
     }
 }
