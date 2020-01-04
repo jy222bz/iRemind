@@ -18,7 +18,6 @@
     <string name="address">Enter the city and street address here</string>
     <string name="search_icon">Search Icon.</string>
     <string name="map_image">Map</string>
-    <string name="notifier_title">A ToDo-Task Reminder!</string>
     <string name="no_info">No additional information was provided!</string>
     <string name="no_address">No address was provided!</string>
 

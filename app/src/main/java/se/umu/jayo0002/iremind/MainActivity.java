@@ -6,21 +6,25 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AppCompatActivity;
-import android.view.Menu;
 import android.widget.Toast;
+
+import java.util.List;
+import java.util.Objects;
+
 import se.umu.jayo0002.iremind.models.Date;
 import se.umu.jayo0002.iremind.models.Task;
 import se.umu.jayo0002.iremind.system_controllers.MapServiceController;
 import se.umu.jayo0002.iremind.ui.main.SectionsPagerAdapter;
 import se.umu.jayo0002.iremind.view_models.TaskViewModel;
 
+
 public class MainActivity extends AppCompatActivity {
-    protected static TaskViewModel mTaskViewModel;
+   // protected static TaskViewModel mTaskViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mTaskViewModel = ViewModelProviders.of(this).get(TaskViewModel.class);
+        //mTaskViewModel = ViewModelProviders.of(this).get(TaskViewModel.class);
         setContentView(R.layout.activity_main);
         SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(this, getSupportFragmentManager());
         ViewPager viewPager = findViewById(R.id.view_pager);
@@ -33,15 +37,4 @@ public class MainActivity extends AppCompatActivity {
         if (MapServiceController.isServiceSupported(this))
             Toast.makeText(this, Tags.NOT_SUPPORTED, Toast.LENGTH_LONG).show();
     }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu, menu);
-        return true;
-    }
-
-    public static void update(Task task){
-        mTaskViewModel.update(task);
-    }
-
 }

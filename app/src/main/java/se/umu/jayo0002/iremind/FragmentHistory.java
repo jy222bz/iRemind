@@ -5,6 +5,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -16,12 +17,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.SearchView;
+import android.widget.Toast;
+
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import java.util.Objects;
 import se.umu.jayo0002.iremind.database.TaskRepo;
 import se.umu.jayo0002.iremind.models.Task;
-import static se.umu.jayo0002.iremind.MainActivity.mTaskViewModel;
+import se.umu.jayo0002.iremind.view_models.TaskViewModel;
 
 /**
  * This Fragment is for showing the old and inactive Tasks.
@@ -33,10 +36,12 @@ public class FragmentHistory extends Fragment {
     private Task mTask;
     private TaskAdapter mAdapter;
     private RecyclerView mRV;
+    private TaskViewModel mTaskViewModel;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        mTaskViewModel = ViewModelProviders.of(Objects.requireNonNull(getActivity())).get(TaskViewModel.class);
         View view = inflater.inflate(R.layout.fragment_history, container, false);
         mRV = view.findViewById(R.id.recycler_view1);
         mAdapter = new TaskAdapter(getContext());
@@ -112,8 +117,14 @@ public class FragmentHistory extends Fragment {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == R.id.delete)
-            mTaskViewModel.deleteAllInactiveTasks();
+        if (item.getItemId() == R.id.delete){
+            if (Objects.requireNonNull(mTaskViewModel.getInactiveTasks().getValue()).size() == 0)
+                Toast.makeText(getActivity(), Tags.NO_ARCHIVE, Toast.LENGTH_LONG).show();
+            else
+                mTaskViewModel.deleteAllInactiveTasks();
+        }
+
         return super.onOptionsItemSelected(item);
     }
+
 }

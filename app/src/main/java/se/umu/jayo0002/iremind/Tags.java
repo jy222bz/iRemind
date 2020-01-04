@@ -36,7 +36,7 @@ public class Tags {
     static final String EVENT_REMINDER_TEXT= "Reminder";
     static final String LATLNG= "The last known location.";
     public static final String TASK= "A Task Object.";
-    public static final String INVALID_DATE = "The DATE and TIME of the reminder should be in the future!";
+    public static final String INVALID_DATE = "The DATE and the TIME of the reminder should be in the future!";
     public static final String NO_TITLE = "The Note should have a title!";
     public static final String TITLE_IS_INVALID = "There should be a title that is not longer than 12 letters!";
     public static final String EVENT_TITLE = "THE TITLE FOR THE EVENT";
@@ -52,7 +52,7 @@ public class Tags {
     public static final String TASK_ID = "TASK_ID";
     public static final String TASK_MESSAGE = "TASK_MESSAGE";
     public static final String BUNDLE = "A Bundle Object carrying data.";
-    public static final String REMINDER = "A Task-ToDO Reminder!";
+    public static final String REMINDER = "A Task-ToDo Reminder!";
     public static final String NEW_LAUNCH = "SHOW TASK";
     public static final String BOOLEAN = "Whether to go to Main Activity";
     public static final String NOTE_SIZE = "NOTE CANNOT BE LONGER THAN 300 LETTERS.";
@@ -60,4 +60,9 @@ public class Tags {
     public static final String ALARM_DATE = "A date for the event";
     public static final String BOOT = "android.intent.action.BOOT_COMPLETED";
     public static final String POWER = "POWER";
+    public static final String TASK_STACK = "TASKS TO BE UPDATED!";
+    public static final long[] VIBRATION_PATTERN = {0, 100, 500, 100, 500, 100, 500, 100, 500, 100};
+    public static final int JOB_ID = 1001;
+    public static final String NO_ARCHIVE = "The Archive Is Already Empty!";
+    public static final int TASK_SCHEDULER = 1983;
 }

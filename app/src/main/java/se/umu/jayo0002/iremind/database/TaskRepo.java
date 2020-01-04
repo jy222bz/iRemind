@@ -1,6 +1,6 @@
 package se.umu.jayo0002.iremind.database;
 
-import android.app.Application;
+import android.content.Context;
 import android.os.AsyncTask;
 import androidx.lifecycle.LiveData;
 import java.util.List;
@@ -38,10 +38,10 @@ public class TaskRepo {
 
     /**
      * Constructor, to construct the object and assign the values.
-     * @param application
+     * @param context
      */
-    public TaskRepo(Application application) {
-       TaskDatabase database = TaskDatabase.getInstance(application);
+    public TaskRepo(Context context) {
+       TaskDatabase database = TaskDatabase.getInstance(context);
         mTaskDao = database.taskDao();
         mAllTasks = mTaskDao.getAll();
         mActiveTasks = mTaskDao.getActiveTasks();
@@ -102,6 +102,7 @@ public class TaskRepo {
     public LiveData<List<Task>> getActiveTasks() {
         return mActiveTasks;
     }
+
 
     /**
      * It returns the inactive Tasks.

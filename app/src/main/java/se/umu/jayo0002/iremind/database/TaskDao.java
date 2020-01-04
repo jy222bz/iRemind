@@ -73,7 +73,6 @@ public interface TaskDao {
     @Query("SELECT * FROM  task_table WHERE status_column = 1")
     LiveData<List<Task>> getActiveTasks();
 
-
     /**
      * It returns the inactive Tasks only.
      * It picks ony the Tasks where their status is inactive, i.e. is 0.

@@ -123,7 +123,7 @@ public class Task implements Parcelable{
      * It returns the status of the event.
      * @return boolean
      */
-    public boolean isItActive() {
+    public boolean isActive() {
         return this.status ==1;
     }
 
