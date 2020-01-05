@@ -81,21 +81,6 @@ public class Task implements Parcelable{
         this.id = (int) ((new Date().getTime() / 1000L) % Integer.MAX_VALUE);
     }
 
-    protected Task(Parcel in) {
-        id = in.readInt();
-        title = in.readString();
-        note = in.readString();
-        year = in.readInt();
-        month = in.readInt();
-        day = in.readInt();
-        hour = in.readInt();
-        minute = in.readInt();
-        address = in.readString();
-        latitude = in.readString();
-        longitude = in.readString();
-        status = in.readInt();
-    }
-
     /**
      * It sets the title of the event.
      * @param title
@@ -142,14 +127,6 @@ public class Task implements Parcelable{
         this.day = day;
         this.hour = hour;
         this.minute = minute;
-    }
-
-    /**
-     * It checks whether the date and the time of the alarm for the event.
-     * @return boolean
-     */
-    public boolean isAlarmDateValid(){
-        return DateValidator.isDateValid(hour,minute, year,month,day);
     }
 
     /**
@@ -402,7 +379,37 @@ public class Task implements Parcelable{
         return new LatLng(Double.parseDouble(latitude), Double.parseDouble(longitude));
     }
 
+    /**
+     * It sets the status active if the date is valid, i.e. is in the future.
+     * @return boolean
+     */
+    public boolean setActive() {
+        if (status == 0) {
+            if (DateValidator.isDateValid(hour, minute, year, month, day)){
+                status = 1;
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
 
+    protected Task(Parcel in) {
+        id = in.readInt();
+        title = in.readString();
+        note = in.readString();
+        year = in.readInt();
+        month = in.readInt();
+        day = in.readInt();
+        hour = in.readInt();
+        minute = in.readInt();
+        address = in.readString();
+        latitude = in.readString();
+        longitude = in.readString();
+        status = in.readInt();
+    }
     public static final Creator<Task> CREATOR = new Creator<Task>() {
         @Override
         public Task createFromParcel(Parcel in) {

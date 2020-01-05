@@ -139,7 +139,7 @@ public class FragmentTask extends Fragment {
 
     private void onSwipe() {
         new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0,
-                ItemTouchHelper.LEFT) {
+                ItemTouchHelper.LEFT| ItemTouchHelper.RIGHT) {
             @Override
             public boolean onMove(@NonNull RecyclerView recyclerView,
                                   @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
@@ -154,6 +154,12 @@ public class FragmentTask extends Fragment {
                     AlarmHandler.cancelAlarm(Objects.requireNonNull(getActivity()), task);
                     mTaskViewModel.delete(task);
                     snackbar = Snackbar.make(Objects.requireNonNull(getView()), Tags.EVENT_DELETED, Snackbar.LENGTH_LONG);
+                    snackbar.show();
+                } else if (direction == ItemTouchHelper.RIGHT) {
+                    AlarmHandler.cancelAlarm(Objects.requireNonNull(getActivity()), task);
+                    task.setInactive();
+                    mTaskViewModel.update(task);
+                    snackbar = Snackbar.make(Objects.requireNonNull(getView()), Tags.EVENT_ARCHIVED, Snackbar.LENGTH_LONG);
                     snackbar.show();
                 }
             }

@@ -49,6 +49,9 @@ public class Tags {
     public static final String EVENT_DAY = "Day";
     static final String DATE = "Date";
     public static final String EVENT_DELETED = "The event is deleted!";
+    public static final String EVENT_ARCHIVED = "The event is archived!";
+    public static final String EVENT_UNARCHIVED = "The event is active now!";
+    public static final String EVENT_INVALID = "IT IS IN THE PAST AND THEREFORE IT CANNOT BE PUT INTO AN ACTIVE MODE!";
     public static final String TASK_ID = "TASK_ID";
     public static final String TASK_MESSAGE = "TASK_MESSAGE";
     public static final String BUNDLE = "A Bundle Object carrying data.";

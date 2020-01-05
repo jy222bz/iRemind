@@ -25,6 +25,7 @@ import com.google.android.material.snackbar.Snackbar;
 import java.util.Objects;
 import se.umu.jayo0002.iremind.database.TaskRepo;
 import se.umu.jayo0002.iremind.models.Task;
+import se.umu.jayo0002.iremind.service.AlarmHandler;
 import se.umu.jayo0002.iremind.view_models.TaskViewModel;
 
 /**
@@ -105,7 +106,7 @@ public class FragmentHistory extends Fragment {
 
     private void onSwipe() {
         new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0,
-                 ItemTouchHelper.LEFT) {
+                 ItemTouchHelper.LEFT| ItemTouchHelper.RIGHT) {
             @Override
             public boolean onMove(@NonNull RecyclerView recyclerView,
                                   @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
@@ -120,6 +121,17 @@ public class FragmentHistory extends Fragment {
                     mTaskViewModel.delete(task);
                     snackbar = Snackbar.make(Objects.requireNonNull(getView()), Tags.EVENT_DELETED, Snackbar.LENGTH_LONG);
                     snackbar.show();
+                }else if (direction == ItemTouchHelper.RIGHT) {
+                    if (task.setActive()){
+                        mTaskViewModel.update(task);
+                        AlarmHandler.scheduleAlarm(Objects.requireNonNull(getContext()),task);
+                        snackbar = Snackbar.make(Objects.requireNonNull(getView()), Tags.EVENT_UNARCHIVED, Snackbar.LENGTH_LONG);
+                        snackbar.show();
+                    } else{
+                        mAdapter.notifyDataSetChanged();
+                        snackbar = Snackbar.make(Objects.requireNonNull(getView()), Tags.EVENT_INVALID, Snackbar.LENGTH_LONG);
+                        snackbar.show();
+                    }
                 }
             }
         }).attachToRecyclerView(mRV);
