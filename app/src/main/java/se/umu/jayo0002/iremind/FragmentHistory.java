@@ -88,6 +88,7 @@ public class FragmentHistory extends Fragment {
             }
             @Override
             public boolean onQueryTextChange(String s) {
+                mSearchQuery = s;
                 mAdapter.getFilter().filter(s);
                 return false;
             }
@@ -132,7 +133,6 @@ public class FragmentHistory extends Fragment {
             else
                 mTaskViewModel.deleteAllInactiveTasks();
         }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -145,7 +145,7 @@ public class FragmentHistory extends Fragment {
             mSearchView.onActionViewExpanded();
             mSearchView.setQuery(mSearchQuery, true);
             mSearchView.clearFocus();
-            mTaskViewModel.getActiveTasks().observe(Objects.requireNonNull(getActivity()), tasks -> mAdapter.setAll(tasks));
+            mTaskViewModel.getInactiveTasks().observe(Objects.requireNonNull(getActivity()), tasks -> mAdapter.setAll(tasks));
             mAdapter.getFilter().filter(mSearchQuery);
             mIsTheSearchViewUp = false;
         }
