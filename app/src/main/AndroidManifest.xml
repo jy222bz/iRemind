@@ -5,12 +5,11 @@
 
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-    <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.VIBRATE" />
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
     <application
         android:name=".models.IRemind"
+        android:configChanges="keyboardHidden|orientation|screenSize"
         android:allowBackup="false"
         android:fullBackupContent="@xml/backup_descriptor"
         android:icon="@mipmap/ic_launcher"
@@ -19,10 +18,6 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <service
-            android:name=".notifications.AlarmService"
-            android:enabled="true"
-            android:permission="android.permission.FOREGROUND_SERVICE"/>
 
         <activity
             android:name=".OpenTaskActivity"
@@ -46,27 +41,16 @@
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <receiver android:name=".notifications.BootReceiver">
+        <receiver android:name=".service.BootReceiver"
+            android:enabled="true" >
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
                 <action android:name="android.intent.action.QUICKBOOT_POWERON" />
             </intent-filter>
         </receiver>
-        <receiver android:name=".notifications.AlarmReceiver" />
-
-        <service
-            android:name=".notifications.ReschedulingService"
-            android:exported="true"
-            android:permission="android.permission.BIND_JOB_SERVICE" />
-        <service
-            android:name=".notifications.TaskScheduler"
-            android:exported="true"
-            android:permission="android.permission.BIND_JOB_SERVICE" />
+        <receiver android:name=".service.AlarmReceiver" />
     </application>
-
 </manifest>

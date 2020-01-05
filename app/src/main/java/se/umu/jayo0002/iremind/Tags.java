@@ -65,4 +65,6 @@ public class Tags {
     public static final int JOB_ID = 1001;
     public static final String NO_ARCHIVE = "The Archive Is Already Empty!";
     public static final int TASK_SCHEDULER = 1983;
+    public static final String SEARCH_QUERY = "THE QUERY OF THE SEARCH VIEW:";
+    public static final String STATE_OF_THE_SEARCH_VIEW = "THE STATE OF THE SEARCH VIEW:";
 }

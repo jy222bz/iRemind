@@ -1,5 +1,7 @@
 package se.umu.jayo0002.iremind;
 
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
@@ -18,7 +20,6 @@ import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.SearchView;
 import android.widget.Toast;
-
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import java.util.Objects;
@@ -37,6 +38,8 @@ public class FragmentHistory extends Fragment {
     private TaskAdapter mAdapter;
     private RecyclerView mRV;
     private TaskViewModel mTaskViewModel;
+    private String mSearchQuery;
+    private boolean mIsTheSearchViewUp;
 
     @Nullable
     @Override
@@ -58,6 +61,11 @@ public class FragmentHistory extends Fragment {
             startActivity(intent);
             Objects.requireNonNull(getActivity()).finish();
         });
+
+        if (savedInstanceState != null) {
+            mSearchQuery = savedInstanceState.getString(Tags.SEARCH_QUERY);
+            mIsTheSearchViewUp = savedInstanceState.getBoolean(Tags.STATE_OF_THE_SEARCH_VIEW);
+        }
         return view;
     }
 
@@ -70,6 +78,7 @@ public class FragmentHistory extends Fragment {
         MenuItem item = menu.findItem(R.id.search2);
         mSearchView = (SearchView) item.getActionView();
         mSearchView.setImeOptions(EditorInfo.IME_ACTION_DONE);
+        updateSearchView(mIsTheSearchViewUp);
         mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String s) {
@@ -127,4 +136,28 @@ public class FragmentHistory extends Fragment {
         return super.onOptionsItemSelected(item);
     }
 
+    private void updateSearchView(boolean isTheStateOut) {
+        if (isTheStateOut) {
+            SearchManager searchManager =
+                    (SearchManager) Objects.requireNonNull(getActivity()).getSystemService(Context.SEARCH_SERVICE);
+            mSearchView.setSearchableInfo(
+                    Objects.requireNonNull(searchManager).getSearchableInfo(getActivity().getComponentName()));
+            mSearchView.onActionViewExpanded();
+            mSearchView.setQuery(mSearchQuery, true);
+            mSearchView.clearFocus();
+            mTaskViewModel.getActiveTasks().observe(Objects.requireNonNull(getActivity()), tasks -> mAdapter.setAll(tasks));
+            mAdapter.getFilter().filter(mSearchQuery);
+            mIsTheSearchViewUp = false;
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        if (mSearchQuery != null && !mSearchView.getQuery().toString().isEmpty()) {
+            outState.putString(Tags.SEARCH_QUERY, mSearchQuery);
+            outState.putBoolean(Tags.STATE_OF_THE_SEARCH_VIEW, true);
+            mSearchView.setQuery("", false);
+        }
+        super.onSaveInstanceState(outState);
+    }
 }

@@ -23,7 +23,7 @@ public class Date {
         String month = mMonth[Calendar.getInstance().get(Calendar.MONTH)];
         Calendar.getInstance();
         int day = (Calendar.getInstance().get(Calendar.DAY_OF_MONTH));
-        return day  + " " + month;
+        return StringFormatter.getFormattedString(day)  + " " + month;
     }
 
     /**

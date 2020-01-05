@@ -1,4 +1,4 @@
-package se.umu.jayo0002.iremind.notifications;
+package se.umu.jayo0002.iremind.service;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -17,8 +17,6 @@ import se.umu.jayo0002.iremind.models.Task;
  */
 public class BootReceiver extends BroadcastReceiver {
 
-
-
     /**
      * It receives the intent and reschedule the Tasks after reboot.
      *
@@ -30,9 +28,11 @@ public class BootReceiver extends BroadcastReceiver {
         if (Intent.ACTION_BOOT_COMPLETED.equals(intent.getAction())) {
             TaskRepo taskRepo = new TaskRepo(context.getApplicationContext());
             taskRepo.getAll().observeForever(tasks -> {
-                for (Task task : tasks){
-                    if(task.isActive())
-                        AlarmHandler.scheduleAlarm(context, task);
+                if (tasks.size() > 0){
+                    for (Task task : tasks){
+                        if(task.isActive())
+                            AlarmHandler.scheduleAlarm(context, task);
+                    }
                 }
             });
         }

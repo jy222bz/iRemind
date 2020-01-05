@@ -1,4 +1,4 @@
-package se.umu.jayo0002.iremind.notifications;
+package se.umu.jayo0002.iremind.service;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
@@ -10,7 +10,7 @@ import se.umu.jayo0002.iremind.Tags;
 import se.umu.jayo0002.iremind.models.Task;
 
 /**
- * This class is responsible for scheduling and canceling the alarm.
+ * This class is responsible for scheduling and canceling the alarms.
  *
  * @author Jacob Yousif
  * @version 1.0
@@ -24,11 +24,6 @@ public class AlarmHandler {
      * @param task
      */
     public static void scheduleAlarm(Context context, Task task) {
-        /*ComponentName receiver = new ComponentName(context, BootReceiver.class);
-        PackageManager pm = context.getPackageManager();
-        pm.setComponentEnabledSetting(receiver,
-                PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
-                PackageManager.DONT_KILL_APP);*/
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         Bundle bundle = new Bundle();
         bundle.putParcelable(Tags.TASK, task);
@@ -50,11 +45,6 @@ public class AlarmHandler {
      * @param task
      */
     public static void cancelAlarm(Context context, Task task) {
-       /* ComponentName receiver = new ComponentName(context, BootReceiver.class);
-        PackageManager pm = context.getPackageManager();
-        pm.setComponentEnabledSetting(receiver,
-                PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
-                PackageManager.DONT_KILL_APP);*/
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(context, AlarmReceiver.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context, task.getId(), intent, PendingIntent.FLAG_ONE_SHOT);

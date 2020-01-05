@@ -1,4 +1,4 @@
-package se.umu.jayo0002.iremind.notifications;
+package se.umu.jayo0002.iremind.service;
 
 import android.app.Notification;
 import android.app.PendingIntent;
