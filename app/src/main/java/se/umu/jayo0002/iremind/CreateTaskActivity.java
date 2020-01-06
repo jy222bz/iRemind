@@ -232,6 +232,7 @@ public class CreateTaskActivity extends AppCompatActivity implements View.OnClic
         else if (mIsDatePickerShown)
             mDateDialog.show();
     }
+
     private void onSave(){
         if (!DateValidator.isDateValid(mStartHour, mStartMinute, mYear, mMonth, mDay))
             Toast.makeText(this, Tags.INVALID_DATE, Toast.LENGTH_LONG).show();
@@ -258,8 +259,6 @@ public class CreateTaskActivity extends AppCompatActivity implements View.OnClic
 
     private void prepareUI() {
         mEvent ="";
-        mIsDatePickerShown =false;
-        mIsTimePickerShown = false;
         Calendar mCalendar= Calendar.getInstance();
         mPickedDate = mCalendar.get(Calendar.YEAR) + "-" + StringFormatter.getFormattedString(
                 (mCalendar.get(Calendar.MONTH) +1))+ "-" +
