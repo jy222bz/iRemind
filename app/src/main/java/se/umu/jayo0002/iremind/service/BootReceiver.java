@@ -18,7 +18,7 @@ import se.umu.jayo0002.iremind.models.Task;
 public class BootReceiver extends BroadcastReceiver {
 
     /**
-     * It receives the intent and reschedule the Tasks after reboot.
+     * It receives the intent and reschedule the Tasks upon reboot.
      *
      * @param context
      * @param intent

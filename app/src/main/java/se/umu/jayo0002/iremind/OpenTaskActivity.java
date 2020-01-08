@@ -13,7 +13,8 @@ import se.umu.jayo0002.iremind.models.Task;
 public class OpenTaskActivity extends AppCompatActivity implements View.OnClickListener {
     private Task mTask;
     private Button mCLose;
-    private boolean mGoMain = false;
+    private boolean mIsGoingMainActivity;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -22,7 +23,7 @@ public class OpenTaskActivity extends AppCompatActivity implements View.OnClickL
             Bundle bundle = getIntent().getBundleExtra(Tags.BUNDLE);
             mTask = Objects.requireNonNull(bundle).getParcelable(Tags.TASK);
         } else if (savedInstanceState == null && getIntent().hasExtra(Tags.NEW_LAUNCH)){
-           mGoMain = true;
+           mIsGoingMainActivity = true;
            mTask = Objects.requireNonNull(getIntent().getExtras()).getParcelable(Tags.NEW_LAUNCH);
         } else if (savedInstanceState != null){
             updateUI(savedInstanceState);
@@ -49,27 +50,27 @@ public class OpenTaskActivity extends AppCompatActivity implements View.OnClickL
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putParcelable(Tags.TASK,mTask);
-        outState.putBoolean(Tags.BOOLEAN, mGoMain);
+        outState.putBoolean(Tags.BOOLEAN, mIsGoingMainActivity);
     }
 
     private void updateUI(Bundle outState) {
         mTask = outState.getParcelable(Tags.TASK);
-        mGoMain = outState.getBoolean(Tags.BOOLEAN);
+        mIsGoingMainActivity = outState.getBoolean(Tags.BOOLEAN);
     }
 
     @Override
     public void onClick(View view) {
-        if (!mGoMain)
+        if (!mIsGoingMainActivity)
             this.finish();
         else {
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
-            finish();
+            this.finish();
         }
     }
 
     public void onBackPressed() {
-        if (mGoMain){
+        if (mIsGoingMainActivity){
             startActivity(new Intent(this,MainActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
             this.finish();
         }

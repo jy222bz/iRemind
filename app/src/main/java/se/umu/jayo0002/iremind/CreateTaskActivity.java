@@ -51,11 +51,11 @@ public class CreateTaskActivity extends AppCompatActivity implements View.OnClic
         if (getIntent().hasExtra(TASK) && savedInstanceState == null)
             update();
         else if(savedInstanceState != null)
-            updateUI(savedInstanceState);
+            updateTheStateOfUI(savedInstanceState);
         checkService();
     }
 
-    private void onDismiss(){
+    private void onDismissDialog(){
         mDateDialog.setOnCancelListener(dialog -> {
             mDateDialog.dismiss();
             mIsDatePickerShown = false;
@@ -105,7 +105,7 @@ public class CreateTaskActivity extends AppCompatActivity implements View.OnClic
             case R.id.btLocation:
                 Intent maps= new Intent(this, MapsActivity.class);
                 if (mLocationInfo != null)
-                    maps.putExtra(Tags.LATLNG, mLocationInfo.getLatLng());
+                    maps.putExtra(Tags._LAT_LNG, mLocationInfo.getLatLng());
                 startActivityForResult(maps,Tags.REQUEST_CODE_MAP);
                 break;
             default:
@@ -205,7 +205,7 @@ public class CreateTaskActivity extends AppCompatActivity implements View.OnClic
         }
     }
 
-    private void updateUI(Bundle outState) {
+    private void updateTheStateOfUI(Bundle outState) {
         if(outState.getParcelable(Tags.LOCATION_OBJECT) != null){
             mLocationInfo = outState.getParcelable(Tags.LOCATION_OBJECT);
             mButtonAddLocation.setText(Objects.requireNonNull(mLocationInfo).getAddress());
@@ -243,7 +243,7 @@ public class CreateTaskActivity extends AppCompatActivity implements View.OnClic
         else {
             Intent main = new Intent();
             Task task = new Task();
-            task.setTitle( mTitle);
+            task.setTitle(mTitle);
             task.setNote(mEvent);
             task.setLocation(mLocationInfo);
             task.setYear(mYear);

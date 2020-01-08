@@ -80,8 +80,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         if (mPermitted){
             mMyLocation.setVisibility(View.VISIBLE);
             mMyLocation.setEnabled(true);
-        } if (getIntent().hasExtra(Tags.LATLNG) && !mIsItOutState){
-            mLatLng = Objects.requireNonNull(getIntent().getExtras()).getParcelable(Tags.LATLNG);
+        } if (getIntent().hasExtra(Tags._LAT_LNG) && !mIsItOutState){
+            mLatLng = Objects.requireNonNull(getIntent().getExtras()).getParcelable(Tags._LAT_LNG);
             onCallMoveToLocation(mLatLng);
         }  else if (mPermitted && !mIsItOutState){
             getCurrentLocation();
@@ -197,7 +197,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         mIsItOutState = true;
-        outState.putParcelable(Tags.LATLNG_OUTSTATE, mLatLng);
+        outState.putParcelable(Tags.LAT_LNG_OUT_STATE, mLatLng);
         outState.putBoolean(Tags.STATE_CONDITION, mIsItOutState);
         outState.putBoolean(Tags.PERMISSION_STATE, mPermitted);
     }
@@ -227,7 +227,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     private void updateUI(Bundle savedInstanceState) {
-        mLatLng = savedInstanceState.getParcelable(Tags.LATLNG_OUTSTATE);
+        mLatLng = savedInstanceState.getParcelable(Tags.LAT_LNG_OUT_STATE);
         mIsItOutState = savedInstanceState.getBoolean(Tags.STATE_CONDITION);
         mPermitted = savedInstanceState.getBoolean(Tags.PERMISSION_STATE);
     }

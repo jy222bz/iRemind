@@ -3,28 +3,18 @@ package se.umu.jayo0002.iremind;
 import android.os.Bundle;
 import com.google.android.material.tabs.TabLayout;
 import androidx.appcompat.widget.Toolbar;
-import androidx.lifecycle.ViewModelProviders;
 import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AppCompatActivity;
 import android.widget.Toast;
-
-import java.util.List;
-import java.util.Objects;
-
 import se.umu.jayo0002.iremind.models.Date;
-import se.umu.jayo0002.iremind.models.Task;
 import se.umu.jayo0002.iremind.system_controllers.MapServiceController;
 import se.umu.jayo0002.iremind.ui.main.SectionsPagerAdapter;
-import se.umu.jayo0002.iremind.view_models.TaskViewModel;
-
 
 public class MainActivity extends AppCompatActivity {
-   // protected static TaskViewModel mTaskViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //mTaskViewModel = ViewModelProviders.of(this).get(TaskViewModel.class);
         setContentView(R.layout.activity_main);
         SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(this, getSupportFragmentManager());
         ViewPager viewPager = findViewById(R.id.view_pager);
