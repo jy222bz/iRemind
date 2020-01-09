@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/shape_for_upper_part_add_event"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:orientation="vertical">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:background="@drawable/shape_for_upper_part_add_event">
+
+            <Button
+                android:id="@+id/close_buttons"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_gravity="start"
+                android:layout_margin="5dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/close_button"
+                android:text="@string/close_x"
+                android:textColor="@color/white"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_marginLeft="8dp"
+                tools:ignore="RtlHardcoded" />
+
+
+            <Button
+                android:id="@+id/btDates"
+                android:layout_width="280dp"
+                android:layout_height="40dp"
+                android:layout_gravity="center"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="68dp"
+                android:layout_marginEnd="16dp"
+                android:background="@drawable/shape_for_textviews"
+                android:clickable="true"
+                android:drawableStart="@drawable/ic_date_range"
+                android:focusable="true"
+                android:fontFamily="serif-monospace"
+                android:padding="8dp"
+                android:text="@string/date"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:drawableLeft="@drawable/ic_date_range"
+                tools:targetApi="jelly_bean"
+                tools:ignore="RtlHardcoded" />
+
+            <Button
+                android:id="@+id/btLocations"
+                android:layout_width="280dp"
+                android:layout_height="60dp"
+                android:layout_gravity="center"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
+                android:background="@drawable/shape_for_textviews"
+                android:clickable="true"
+                android:drawableStart="@drawable/ic_locations"
+                android:focusable="true"
+                android:fontFamily="serif-monospace"
+                android:padding="8dp"
+                android:text="@string/no_address"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/btDates"
+                app:layout_constraintVertical_bias="0.113"
+                android:drawableLeft="@drawable/ic_locations"
+                tools:targetApi="jelly_bean"
+                tools:ignore="RtlHardcoded" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="534dp"
+            android:background="@drawable/shape_for_lower_part_add_events">
+
+
+            <Button
+                android:id="@+id/btStartingTimes"
+                android:layout_width="282dp"
+                android:layout_height="46dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="23dp"
+                android:layout_marginEnd="10dp"
+                android:background="@drawable/shape_for_text_fields2"
+                android:clickable="true"
+                android:drawableStart="@drawable/ic_access_time_white"
+                android:focusable="true"
+                android:fontFamily="serif-monospace"
+                android:padding="8dp"
+                android:text="@string/starting_time"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toTopOf="@+id/tvTitles"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toEndOf="@+id/googleMapButton"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.0" />
+
+            <Button
+                android:id="@+id/googleMapButton"
+                android:layout_width="282dp"
+                android:layout_height="46dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="23dp"
+                android:layout_marginEnd="10dp"
+                android:background="@drawable/shape_for_text_fields2"
+                android:clickable="true"
+                android:drawableStart="@drawable/ic_directions"
+                android:focusable="true"
+                android:fontFamily="serif-monospace"
+                android:padding="8dp"
+                android:text="@string/directions"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tvTitles"
+                android:layout_width="match_parent"
+                android:layout_height="38dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginBottom="32dp"
+                android:background="@drawable/shape_for_text_fields2"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:fontFamily="serif-monospace"
+                android:gravity="start"
+                android:importantForAutofill="no"
+                android:padding="8dp"
+                android:textAlignment="viewStart"
+                android:textColor="@color/white"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toTopOf="@+id/tvMoreInfos"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                tools:targetApi="jelly_bean" />
+
+            <TextView
+                android:id="@+id/tvMoreInfos"
+                android:layout_width="match_parent"
+                android:layout_height="330dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginBottom="28dp"
+                android:background="@drawable/shape_for_text_fields2"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:fontFamily="serif-monospace"
+                android:gravity="start|top"
+                android:importantForAutofill="no"
+                android:padding="8dp"
+                android:text="@string/no_info"
+                android:textAlignment="viewStart"
+                android:textColor="@color/white"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                tools:targetApi="jelly_bean" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+
+    </LinearLayout>
+
+
+
+
+
+</ScrollView>

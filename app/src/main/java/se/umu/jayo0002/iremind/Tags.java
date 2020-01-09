@@ -24,7 +24,7 @@ public class Tags {
     static final String LAT_LNG = "The last known coordinates for the last location.";
     public static final String TASK= "A Task Object.";
     public static final String INVALID_DATE = "The DATE and the TIME of the reminder should be in the future!";
-    public static final String TITLE_IS_INVALID = "There should be a title that is not longer than 12 letters!";
+    public static final String TITLE_IS_INVALID = "There should be a title that is not longer than 20 letters!";
     public static final String EVENT_TITLE = "THE TITLE FOR THE EVENT";
     public static final String EVENT_INFO = "More info about the event.";
     public static final String EVENT_TIME_HOUR = "Starting hour.";
@@ -50,7 +50,7 @@ public class Tags {
     public static final String NO_GOOGLE_MAP_APP = "This Device Does Not Have Google Map Directions!";
     public static final String GOOGLE_MAP_APP = "com.google.android.apps.maps";
     public static final String NON_APPLICABLE= "No Directions!";
-    public static final int THE_ALLOWED_AMOUNT_FOR_TITLE = 12;
+    public static final int THE_ALLOWED_AMOUNT_FOR_TITLE = 20;
     public static final int THE_ALLOWED_AMOUNT_FOR_NOTE = 600;
     public static final int LONG_TOAST = 1;
     public static final int LONG_SNACK = 0;

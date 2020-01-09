@@ -38,7 +38,8 @@ public class CreateTaskActivity extends AppCompatActivity implements View.OnClic
     private LocationInfo mLocationInfo;
     private String mTitle, mEvent, mPickedDate, mPickedTime;
     private boolean mIsDatePickerShown, mIsTimePickerShown;
-    ContentController mController;
+    private ContentController mController;
+    private Task mTask;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -151,7 +152,6 @@ public class CreateTaskActivity extends AppCompatActivity implements View.OnClic
 
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
-        super.onSaveInstanceState(outState);
         outState.putBoolean(Tags.DATE_PICKER_STATUS, mIsDatePickerShown);
         outState.putBoolean(Tags.TIME_PICKER_STATUS, mIsTimePickerShown);
         outState.putString(Tags.DATE, mPickedDate);
@@ -168,22 +168,23 @@ public class CreateTaskActivity extends AppCompatActivity implements View.OnClic
             mDateDialog.dismiss();
         else if (mIsTimePickerShown)
             mTimeDialog.dismiss();
+        super.onSaveInstanceState(outState);
     }
 
     private void update() {
-        Task task = Objects.requireNonNull(getIntent().getExtras()).getParcelable(TASK);
-        assert task != null;
-        mTitle = task.getTitle();
-        mEvent = task.getNote();
-        mYear = task.getYear();
-        mMonth = task.getMonth();
-        mDay = task.getDay();
-        mStartHour = task.getHour();
-        mStartMinute = task.getMinute();
-        mPickedDate = task.getDate();
-        mPickedTime = task.getTime();
-        LatLng latLng = task.getLatLng();
-        String address = task.getAddress();
+        mTask = Objects.requireNonNull(getIntent().getExtras()).getParcelable(TASK);
+        assert mTask != null;
+        mTitle = mTask.getTitle();
+        mEvent = mTask.getNote();
+        mYear = mTask.getYear();
+        mMonth = mTask.getMonth();
+        mDay = mTask.getDay();
+        mStartHour = mTask.getHour();
+        mStartMinute = mTask.getMinute();
+        mPickedDate = mTask.getDate();
+        mPickedTime = mTask.getTime();
+        LatLng latLng = mTask.getLatLng();
+        String address = mTask.getAddress();
         mButtonAddDate.setText(mPickedDate);
         mButtonAddStartTime.setText(mPickedTime);
         mEventTitle.setText(mTitle);
@@ -227,7 +228,7 @@ public class CreateTaskActivity extends AppCompatActivity implements View.OnClic
         if (mController.areContentsValid(mTitle, mEvent, mStartHour, mStartMinute, mYear,mMonth,mDay)) {
             Intent main = new Intent();
             main.putExtra(TASK, mController.getTask(mTitle,mEvent,mStartHour,mStartMinute,
-                    mYear,mMonth,mDay,mLocationInfo));
+                    mYear,mMonth,mDay,mLocationInfo, mTask));
             setResult(RESULT_OK, main);
             this.finish();
         }

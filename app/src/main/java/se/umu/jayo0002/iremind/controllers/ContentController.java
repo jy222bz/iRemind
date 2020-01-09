@@ -63,8 +63,9 @@ public class ContentController {
      * @return Task
      */
     public Task getTask(String title, String text, int hour, int minute, int year, int month,
-                        int day, LocationInfo locationInfo){
-        Task task = new Task();
+                        int day, LocationInfo locationInfo, Task task){
+        if (task == null)
+            task = new Task();
         task.setTitle(title);
         task.setNote(text);
         task.setLocation(locationInfo);
