@@ -34,7 +34,7 @@ public class ContentController {
      * @param year
      * @param month
      * @param day
-     * @return
+     * @return boolean
      */
     public boolean areContentsValid(String title, String text, int hour, int minute, int year, int month, int day){
         boolean val = false;
@@ -43,7 +43,7 @@ public class ContentController {
         else if (!TextValidator.isTitleValid(title, Tags.THE_ALLOWED_AMOUNT_FOR_TITLE))
             Toaster.displayToast(mContext, Tags.TITLE_IS_INVALID, Tags.LONG_TOAST);
         else if (!TextValidator.isNoteValid(text, Tags.THE_ALLOWED_AMOUNT_FOR_NOTE))
-            Toaster.displayToast(mContext, Tags.NOTE_SIZE, Tags.LONG_TOAST);
+            Toaster.displayToast(mContext, Tags.NOTE_INVALID_SIZE, Tags.LONG_TOAST);
         else
             val = true;
 
@@ -60,7 +60,7 @@ public class ContentController {
      * @param month
      * @param day
      * @param locationInfo
-     * @return
+     * @return Task
      */
     public Task getTask(String title, String text, int hour, int minute, int year, int month,
                         int day, LocationInfo locationInfo){
@@ -75,5 +75,4 @@ public class ContentController {
         task.setMinute(minute);
         return task;
     }
-
 }

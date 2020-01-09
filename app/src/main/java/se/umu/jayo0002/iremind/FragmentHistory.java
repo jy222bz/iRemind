@@ -122,7 +122,7 @@ public class FragmentHistory extends Fragment {
                     if (task.setActive()){
                         mTaskViewModel.update(task);
                         AlarmHandler.scheduleAlarm(Objects.requireNonNull(getContext()),task);
-                        Toaster.displaySnack(getView(),Tags.EVENT_UNARCHIVED, Tags.LONG_SNACK);
+                        Toaster.displaySnack(getView(),Tags.EVENT_ACTIVATED, Tags.LONG_SNACK);
                     } else{
                         mAdapter.notifyDataSetChanged();
                         Toaster.displaySnack(getView(),Tags.EVENT_INVALID, Tags.LONG_SNACK);

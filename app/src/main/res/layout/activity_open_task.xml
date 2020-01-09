@@ -101,15 +101,14 @@
 
             <Button
                 android:id="@+id/btStartingTimes"
-                android:layout_width="202dp"
+                android:layout_width="192dp"
                 android:layout_height="46dp"
-                android:layout_marginStart="16dp"
+                android:layout_marginStart="10dp"
                 android:layout_marginTop="23dp"
                 android:layout_marginEnd="10dp"
                 android:background="@drawable/shape_for_text_fields2"
                 android:clickable="true"
                 android:drawableStart="@drawable/ic_access_time_white"
-                android:drawableLeft="@drawable/ic_access_time_white"
                 android:focusable="true"
                 android:fontFamily="serif-monospace"
                 android:padding="8dp"
@@ -121,22 +120,30 @@
                 app:layout_constraintBottom_toTopOf="@+id/tvTitles"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="1.0"
-                app:layout_constraintStart_toEndOf="@+id/imageViews"
+                app:layout_constraintStart_toEndOf="@+id/googleMapButton"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.0"
-                tools:ignore="RtlHardcoded"
-                tools:targetApi="jelly_bean" />
+                app:layout_constraintVertical_bias="0.0" />
 
-            <ImageView
-                android:id="@+id/imageViews"
-                android:layout_width="40dp"
-                android:layout_height="53dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="20dp"
-                android:contentDescription="@string/icon"
+            <Button
+                android:id="@+id/googleMapButton"
+                android:layout_width="140dp"
+                android:layout_height="46dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="23dp"
+                android:layout_marginEnd="10dp"
+                android:background="@drawable/shape_for_text_fields2"
+                android:clickable="true"
+                android:drawableStart="@drawable/ic_directions"
+                android:focusable="true"
+                android:fontFamily="serif-monospace"
+                android:padding="8dp"
+                android:text="@string/directions"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textSize="12sp"
+                android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/alarm" />
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/tvTitles"

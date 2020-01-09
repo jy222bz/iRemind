@@ -2,18 +2,23 @@ package se.umu.jayo0002.iremind;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import com.google.android.gms.maps.model.LatLng;
 import java.util.Objects;
 import se.umu.jayo0002.iremind.models.Task;
+import se.umu.jayo0002.iremind.view.Toaster;
 
 public class OpenTaskActivity extends AppCompatActivity implements View.OnClickListener {
     private Task mTask;
-    private Button mCLose;
     private boolean mIsGoingMainActivity;
+    private LatLng mLatLng;
+    Button mGoogleMapDirectionsButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,13 +34,11 @@ public class OpenTaskActivity extends AppCompatActivity implements View.OnClickL
             updateUI(savedInstanceState);
         }
         prepareUI();
-        mCLose.setOnClickListener(this);
     }
 
-
-
     private void prepareUI(){
-        mCLose= findViewById(R.id.close_buttons);
+        Button mCLose = findViewById(R.id.close_buttons);
+        mGoogleMapDirectionsButton = findViewById(R.id.googleMapButton);
         TextView mTextViewTitle = findViewById(R.id.tvTitles);
         TextView mTextViewInfo = findViewById(R.id.tvMoreInfos);
         Button mButtonDate = findViewById(R.id.btDates);
@@ -46,6 +49,9 @@ public class OpenTaskActivity extends AppCompatActivity implements View.OnClickL
         mButtonTime.setText(mTask.getTime());
         mTextViewInfo.setText(mTask.getNote());
         mLocation.setText(mTask.getAddress());
+        mLatLng = mTask.getLatLng();
+        mCLose.setOnClickListener(this);
+        checkLatLng();
     }
 
     @Override
@@ -62,12 +68,16 @@ public class OpenTaskActivity extends AppCompatActivity implements View.OnClickL
 
     @Override
     public void onClick(View view) {
-        if (!mIsGoingMainActivity)
-            this.finish();
-        else {
-            Intent intent = new Intent(this, MainActivity.class);
-            startActivity(intent);
-            this.finish();
+        if (view.getId() == R.id.googleMapButton){
+            onDemandLaunchGoogleMapDirections();
+        } else if (view.getId() == R.id.close_buttons){
+            if (!mIsGoingMainActivity)
+                this.finish();
+            else {
+                Intent intent = new Intent(this, MainActivity.class);
+                startActivity(intent);
+                this.finish();
+            }
         }
     }
 
@@ -80,4 +90,25 @@ public class OpenTaskActivity extends AppCompatActivity implements View.OnClickL
             super.onBackPressed();
     }
 
+    private void onDemandLaunchGoogleMapDirections(){
+            Uri navUri = Uri.parse("google.navigation:q=" + mLatLng.latitude +"," +
+                    mLatLng.longitude);
+            Intent googleMapDirections = new Intent(Intent.ACTION_VIEW, navUri);
+            googleMapDirections.setPackage(Tags.GOOGLE_MAP_APP);
+            try {
+                startActivity(googleMapDirections);
+                this.finish();
+            } catch(ActivityNotFoundException e) {
+                Toaster.displayToast(this, Tags.NO_GOOGLE_MAP_APP, Tags.LONG_SNACK);
+            }
+    }
+
+    private void checkLatLng(){
+        if (mLatLng == null){
+            mGoogleMapDirectionsButton.setText(Tags.NON_APPLICABLE);
+            mGoogleMapDirectionsButton.setEnabled(false);
+        } else {
+            mGoogleMapDirectionsButton.setOnClickListener(this);
+        }
+    }
 }

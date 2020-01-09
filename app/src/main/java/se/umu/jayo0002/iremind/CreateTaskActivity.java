@@ -93,7 +93,7 @@ public class CreateTaskActivity extends AppCompatActivity implements View.OnClic
             case R.id.btLocation:
                 Intent maps = new Intent(this, MapsActivity.class);
                 if (mLocationInfo != null)
-                    maps.putExtra(Tags._LAT_LNG, mLocationInfo.getLatLng());
+                    maps.putExtra(Tags.LAT_LNG, mLocationInfo.getLatLng());
                 startActivityForResult(maps, Tags.REQUEST_CODE_MAP);
                 break;
             default:
@@ -154,10 +154,6 @@ public class CreateTaskActivity extends AppCompatActivity implements View.OnClic
         super.onSaveInstanceState(outState);
         outState.putBoolean(Tags.DATE_PICKER_STATUS, mIsDatePickerShown);
         outState.putBoolean(Tags.TIME_PICKER_STATUS, mIsTimePickerShown);
-        if (mIsDatePickerShown)
-            mDateDialog.dismiss();
-        else if (mIsTimePickerShown)
-            mTimeDialog.dismiss();
         outState.putString(Tags.DATE, mPickedDate);
         outState.putString(Tags.PICKED_TIME, mPickedTime);
         outState.putString(Tags.EVENT_TITLE, mTitle);
@@ -168,6 +164,10 @@ public class CreateTaskActivity extends AppCompatActivity implements View.OnClic
         outState.putInt(Tags.EVENT_TIME_HOUR, mStartHour);
         outState.putInt(Tags.EVENT_TIME_MINUTES, mStartMinute);
         outState.putParcelable(Tags.LOCATION_OBJECT, mLocationInfo);
+        if (mIsDatePickerShown)
+            mDateDialog.dismiss();
+        else if (mIsTimePickerShown)
+            mTimeDialog.dismiss();
     }
 
     private void update() {

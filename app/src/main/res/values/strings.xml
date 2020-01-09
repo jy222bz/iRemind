@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">iRemind</string>
-    <string name="tab_text_1">Events</string>
-    <string name="tab_text_2">Archive</string>
+    <string name="tab_text_1">Active Events</string>
+    <string name="tab_text_2">Inactive Events</string>
     <string name="delete">Delete All!</string>
     <string name="search_hint">Search Events</string>
     <string name="title_activity_maps">Map</string>
@@ -20,5 +20,6 @@
     <string name="map_image">Map</string>
     <string name="no_info">No additional information was provided!</string>
     <string name="no_address">No address was provided!</string>
+    <string name="directions">Get Directions!</string>
 
 </resources>

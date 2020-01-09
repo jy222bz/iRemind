@@ -4,12 +4,10 @@ import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
-
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Address;
-import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
 import android.view.KeyEvent;
@@ -17,8 +15,6 @@ import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.Toast;
-
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -30,13 +26,11 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.Task;
-
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-
+import se.umu.jayo0002.iremind.models.GoogleMapHelper;
 import se.umu.jayo0002.iremind.models.LocationInfo;
+import se.umu.jayo0002.iremind.view.Toaster;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
@@ -58,12 +52,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMyLocation.setEnabled(false);
         mIsItOutState = false;
         mLatLng = new LatLng(0, 0);
-
-        if (savedInstanceState !=null)
+        if (savedInstanceState != null)
             updateUI(savedInstanceState);
         else if (!mPermitted)
             requestPermission();
-
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         if (mapFragment == null) throw new AssertionError();
@@ -80,8 +72,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         if (mPermitted){
             mMyLocation.setVisibility(View.VISIBLE);
             mMyLocation.setEnabled(true);
-        } if (getIntent().hasExtra(Tags._LAT_LNG) && !mIsItOutState){
-            mLatLng = Objects.requireNonNull(getIntent().getExtras()).getParcelable(Tags._LAT_LNG);
+        } if (getIntent().hasExtra(Tags.LAT_LNG) && !mIsItOutState){
+            mLatLng = Objects.requireNonNull(getIntent().getExtras()).getParcelable(Tags.LAT_LNG);
             onCallMoveToLocation(mLatLng);
         }  else if (mPermitted && !mIsItOutState){
             getCurrentLocation();
@@ -91,7 +83,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
         mMap.setOnCameraMoveListener(() -> mLatLng = mMap.getCameraPosition().target);
         mMap.setOnCameraIdleListener(() -> mMarker.setPosition(mLatLng));
-
         onSearch();
         onBackToMyLocation();
         onDrag();
@@ -108,6 +99,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
             mPermitted = true;
             mMyLocation.setVisibility(View.VISIBLE);
+            mMyLocation.setEnabled(true);
             getCurrentLocation();
         }
     }
@@ -122,13 +114,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     assert currentLocation != null;
                     onCallMoveToLocation(new LatLng(currentLocation.getLatitude(),
                             currentLocation.getLongitude()));
-                    mLatLng = new LatLng(currentLocation.getLatitude(),
-                            currentLocation.getLongitude());
                 }
             });
 
         } catch (Exception e) {
-            Toast.makeText(this, Tags.NO_LOCATION, Toast.LENGTH_SHORT).show();
+            Toaster.displayToast(this,Tags.NO_LOCATION,Tags.LONG_TOAST);
         }
     }
 
@@ -144,7 +134,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     || i == EditorInfo.IME_ACTION_DONE
                     || keyEvent.getAction() == KeyEvent.ACTION_DOWN
                     || keyEvent.getAction() == KeyEvent.KEYCODE_ENTER){
-                List<Address> list = geoCoder(null);
+                List<Address> list = GoogleMapHelper.geoCoder(null,
+                        this, mSearchBar.getText().toString());
                 if(list.size() >0){
                     Address address = list.get(0);
                     mLatLng = new LatLng(address.getLatitude(), address.getLongitude());
@@ -160,32 +151,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMyLocation.setOnClickListener(view -> getCurrentLocation());
     }
 
-    private List<Address> geoCoder(LatLng latLng){
-        Geocoder geocoder = new Geocoder(MapsActivity.this);
-        List<Address> list = new ArrayList<>();
-        if (latLng == null){
-            String str = mSearchBar.getText().toString();
-            try{
-                list = geocoder.getFromLocationName(str, 1);
-            }catch (IOException ignored){
-            }
-        } else {
-            try {
-                list = geocoder.getFromLocation(latLng.latitude,
-                        latLng.longitude, 1);
-            } catch (IOException ignored) {
-            }
-        }
-        return list;
-    }
-
     private void onLongClick(){
         mMap.setOnMapLongClickListener(latLng -> {
-            List<Address> list = geoCoder(latLng);
+            List<Address> list = GoogleMapHelper.geoCoder(latLng,
+                    this,mSearchBar.getText().toString());
             LocationInfo locationInfo = new LocationInfo();
             locationInfo.setLatLng(latLng);
             locationInfo.setAddress(list.get(0).getAddressLine(0));
-            Toast.makeText(this, list.get(0).getAddressLine(0), Toast.LENGTH_SHORT).show();
+            Toaster.displayToast(this,list.get(0).getAddressLine(0),Tags.LONG_TOAST);
             Intent back_to_create_events = new Intent();
             back_to_create_events.putExtra(Tags.LOCATION_OBJECT, locationInfo);
             setResult(RESULT_OK, back_to_create_events);
@@ -235,7 +208,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private void requestPermission(){
         String[] permission = {Manifest.permission.ACCESS_FINE_LOCATION};
         if (PackageManager.PERMISSION_GRANTED == ContextCompat.checkSelfPermission(this.getApplicationContext(),
-                Tags.ACCESS_FINE_LOCATION)){ mPermitted = true;
+                Tags.ACCESS_FINE_LOCATION)){
+            mPermitted = true;
         } else {
             ActivityCompat.requestPermissions(this, permission, Tags.LOCATION_PERMISSION_REQUEST_CODE);
         }

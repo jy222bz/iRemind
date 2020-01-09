@@ -4,7 +4,6 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -19,7 +18,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.SearchView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.util.Objects;
@@ -153,20 +151,10 @@ public class FragmentTask extends Fragment {
                     AlarmHandler.cancelAlarm(Objects.requireNonNull(getActivity()), task);
                     task.setInactive();
                     mTaskViewModel.update(task);
-                    Toaster.displaySnack(getView(),Tags.EVENT_ARCHIVED, Tags.LONG_SNACK);
+                    Toaster.displaySnack(getView(),Tags.EVENT_DEACTIVATED, Tags.LONG_SNACK);
                 }
             }
         }).attachToRecyclerView(mRV);
-    }
-
-    public boolean isKeyboardShowing(Context context, View view) {
-        try {
-            InputMethodManager keyboard = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
-            Objects.requireNonNull(keyboard).hideSoftInputFromWindow(view.getWindowToken(), 0);
-            return keyboard.isActive();
-        } catch (Exception ex) {
-            return false;
-        }
     }
 
     private void updateSearchView(boolean isTheStateOut) {
