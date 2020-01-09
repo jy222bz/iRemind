@@ -32,6 +32,8 @@ public class OpenTaskActivity extends AppCompatActivity implements View.OnClickL
         mCLose.setOnClickListener(this);
     }
 
+
+
     private void prepareUI(){
         mCLose= findViewById(R.id.close_buttons);
         TextView mTextViewTitle = findViewById(R.id.tvTitles);
@@ -77,4 +79,5 @@ public class OpenTaskActivity extends AppCompatActivity implements View.OnClickL
         else
             super.onBackPressed();
     }
+
 }

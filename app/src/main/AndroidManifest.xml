@@ -8,7 +8,7 @@
     <uses-permission android:name="android.permission.VIBRATE" />
 
     <application
-        android:name=".models.IRemind"
+        android:name=".service.IRemind"
         android:configChanges="keyboardHidden|orientation|screenSize"
         android:allowBackup="false"
         android:fullBackupContent="@xml/backup_descriptor"

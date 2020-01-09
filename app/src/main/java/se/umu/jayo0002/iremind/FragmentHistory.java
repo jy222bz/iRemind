@@ -19,13 +19,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.SearchView;
-import android.widget.Toast;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 import java.util.Objects;
 import se.umu.jayo0002.iremind.database.TaskRepo;
 import se.umu.jayo0002.iremind.models.Task;
 import se.umu.jayo0002.iremind.service.AlarmHandler;
+import se.umu.jayo0002.iremind.view.Toaster;
 import se.umu.jayo0002.iremind.view_models.TaskViewModel;
 
 /**
@@ -115,22 +114,18 @@ public class FragmentHistory extends Fragment {
 
             @Override
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-                Snackbar snackbar;
                 Task task = mAdapter.getTaskAt(viewHolder.getAdapterPosition());
                 if (direction == ItemTouchHelper.LEFT){
                     mTaskViewModel.delete(task);
-                    snackbar = Snackbar.make(Objects.requireNonNull(getView()), Tags.EVENT_DELETED, Snackbar.LENGTH_LONG);
-                    snackbar.show();
+                    Toaster.displaySnack(getView(),Tags.EVENT_DELETED, Tags.LONG_SNACK);
                 }else if (direction == ItemTouchHelper.RIGHT) {
                     if (task.setActive()){
                         mTaskViewModel.update(task);
                         AlarmHandler.scheduleAlarm(Objects.requireNonNull(getContext()),task);
-                        snackbar = Snackbar.make(Objects.requireNonNull(getView()), Tags.EVENT_UNARCHIVED, Snackbar.LENGTH_LONG);
-                        snackbar.show();
+                        Toaster.displaySnack(getView(),Tags.EVENT_UNARCHIVED, Tags.LONG_SNACK);
                     } else{
                         mAdapter.notifyDataSetChanged();
-                        snackbar = Snackbar.make(Objects.requireNonNull(getView()), Tags.EVENT_INVALID, Snackbar.LENGTH_LONG);
-                        snackbar.show();
+                        Toaster.displaySnack(getView(),Tags.EVENT_INVALID, Tags.LONG_SNACK);
                     }
                 }
             }
@@ -141,7 +136,7 @@ public class FragmentHistory extends Fragment {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.delete){
             if (Objects.requireNonNull(mTaskViewModel.getInactiveTasks().getValue()).size() == 0)
-                Toast.makeText(getActivity(), Tags.NO_ARCHIVE, Toast.LENGTH_LONG).show();
+                Toaster.displayToast(getActivity(),Tags.NO_ARCHIVE, Tags.LONG_TOAST);
             else
                 mTaskViewModel.deleteAllInactiveTasks();
         }

@@ -9,6 +9,8 @@ import com.google.android.gms.maps.model.LatLng;
 import java.util.Calendar;
 import java.util.Date;
 
+import se.umu.jayo0002.iremind.controllers.DateValidator;
+
 /**
  * This class represents the Task object and the information that holds for the event to be noted.
  * This class contains SQLite notations, for Database purposes.

@@ -27,12 +27,22 @@ public class Date {
     }
 
     /**
+     * It returns the the current date; Day, Month and Year.
+     * @return String
+     */
+    public static String getFullDate(){
+        return Calendar.getInstance().get(Calendar.YEAR) + "-" + StringFormatter.getFormattedString(
+                (Calendar.getInstance().get(Calendar.MONTH) + 1)) + "-" +
+                StringFormatter.getFormattedString(Calendar.getInstance().get(Calendar.DAY_OF_MONTH));
+    }
+
+    /**
      * It returns a time in the near future.
      * The parameter is the amount of months in future.
      * @param amountOfMonths
      * @return long
      */
-    public long getPlus (int amountOfMonths){
+    public static long getPlus (int amountOfMonths){
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.MONTH, +amountOfMonths);
         return calendar.getTimeInMillis();

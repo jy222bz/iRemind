@@ -5,10 +5,10 @@ import com.google.android.material.tabs.TabLayout;
 import androidx.appcompat.widget.Toolbar;
 import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AppCompatActivity;
-import android.widget.Toast;
 import se.umu.jayo0002.iremind.models.Date;
 import se.umu.jayo0002.iremind.system_controllers.MapServiceController;
 import se.umu.jayo0002.iremind.ui.main.SectionsPagerAdapter;
+import se.umu.jayo0002.iremind.view.Toaster;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -25,6 +25,6 @@ public class MainActivity extends AppCompatActivity {
         toolbar.setTitle(new Date().getDate());
         setSupportActionBar(toolbar);
         if (MapServiceController.isServiceSupported(this))
-            Toast.makeText(this, Tags.NOT_SUPPORTED, Toast.LENGTH_LONG).show();
+            Toaster.displayToast(this,Tags.NOT_SUPPORTED, Tags.LONG_TOAST);
     }
 }

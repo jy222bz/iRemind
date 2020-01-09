@@ -12,7 +12,6 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -22,16 +21,12 @@ import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.SearchView;
-
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
-
 import java.util.Objects;
-
 import se.umu.jayo0002.iremind.models.Task;
 import se.umu.jayo0002.iremind.service.AlarmHandler;
+import se.umu.jayo0002.iremind.view.Toaster;
 import se.umu.jayo0002.iremind.view_models.TaskViewModel;
-
 import static android.app.Activity.RESULT_OK;
 
 
@@ -63,6 +58,7 @@ public class FragmentTask extends Fragment {
         mTaskViewModel.getActiveTasks().observe(Objects.requireNonNull(getActivity()), tasks -> mAdapter.setAll(tasks));
         onClickFAButton();
         onSwipe();
+
         mAdapter.setOnItemClickListener(task -> {
             mTask = task;
             edit();
@@ -148,19 +144,16 @@ public class FragmentTask extends Fragment {
 
             @Override
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-                Snackbar snackbar;
                 Task task = mAdapter.getTaskAt(viewHolder.getAdapterPosition());
                 if (direction == ItemTouchHelper.LEFT) {
                     AlarmHandler.cancelAlarm(Objects.requireNonNull(getActivity()), task);
                     mTaskViewModel.delete(task);
-                    snackbar = Snackbar.make(Objects.requireNonNull(getView()), Tags.EVENT_DELETED, Snackbar.LENGTH_LONG);
-                    snackbar.show();
+                    Toaster.displaySnack(getView(),Tags.EVENT_DELETED, Tags.LONG_SNACK);
                 } else if (direction == ItemTouchHelper.RIGHT) {
                     AlarmHandler.cancelAlarm(Objects.requireNonNull(getActivity()), task);
                     task.setInactive();
                     mTaskViewModel.update(task);
-                    snackbar = Snackbar.make(Objects.requireNonNull(getView()), Tags.EVENT_ARCHIVED, Snackbar.LENGTH_LONG);
-                    snackbar.show();
+                    Toaster.displaySnack(getView(),Tags.EVENT_ARCHIVED, Tags.LONG_SNACK);
                 }
             }
         }).attachToRecyclerView(mRV);

@@ -1,4 +1,4 @@
-package se.umu.jayo0002.iremind.models;
+package se.umu.jayo0002.iremind.service;
 
 import android.app.Application;
 import android.app.NotificationChannel;

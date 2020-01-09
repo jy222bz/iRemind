@@ -1,4 +1,4 @@
-package se.umu.jayo0002.iremind.models;
+package se.umu.jayo0002.iremind.controllers;
 
 /**
  * A class that provides two static methods.
@@ -13,22 +13,24 @@ public class TextValidator {
     /**
      * It checks whether the title is valid, according to the rules.
      * @param title
+     * @param theMaximumAmountOfChars
      * @return boolean
      */
-    public static boolean isTitleValid(String title){
+    public static boolean isTitleValid(String title, int theMaximumAmountOfChars){
         if (title == null)
             return false;
-        else return title.length() <= 12;
+        else return title.length() <= theMaximumAmountOfChars;
     }
 
     /**
      * It checks whether the note is valid, according to the rules.
      * @param note
+     * @param theMaximumAmountOfChars
      * @return boolean
      */
-    public static boolean isNoteValid(String note){
+    public static boolean isNoteValid(String note, int theMaximumAmountOfChars){
         if (note == null)
             return false;
-        return note.length() <= 300;
+        return note.length() <= theMaximumAmountOfChars;
     }
 }

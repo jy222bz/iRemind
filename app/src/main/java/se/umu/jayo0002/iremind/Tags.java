@@ -37,7 +37,7 @@ public class Tags {
     public static final String EVENT_DELETED = "The event is deleted!";
     public static final String EVENT_ARCHIVED = "The event is archived!";
     public static final String EVENT_UNARCHIVED = "The event is active now!";
-    public static final String EVENT_INVALID = "IT IS IN THE PAST AND THEREFORE IT CANNOT BE PUT INTO AN ACTIVE MODE!";
+    public static final String EVENT_INVALID = "The DATE and the TIME should be in the future to be put into an active mode!";
     public static final String BUNDLE = "A Bundle Object carrying data.";
     public static final String REMINDER = "A Task-ToDo Reminder!";
     public static final String NEW_LAUNCH = "SHOW TASK";
@@ -47,4 +47,8 @@ public class Tags {
     public static final String NO_ARCHIVE = "The Archive Is Already Empty!";
     public static final String SEARCH_QUERY = "THE QUERY OF THE SEARCH VIEW:";
     public static final String STATE_OF_THE_SEARCH_VIEW = "THE STATE OF THE SEARCH VIEW:";
+    public static final int THE_ALLOWED_AMOUNT_FOR_TITLE = 12;
+    public static final int THE_ALLOWED_AMOUNT_FOR_NOTE = 300;
+    public static final int LONG_TOAST = 1;
+    public static final int LONG_SNACK = 0;
 }

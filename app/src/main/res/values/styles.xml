@@ -7,15 +7,13 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
 
-
-        <!-- To change the popup menu and app text color  -->
         <item name="android:textColor">@color/white</item>
-
         <!-- To change the background of options menu-->
         <item name="android:itemBackground">@drawable/pop_menu_shape</item>
 
         <item name="searchViewStyle">@style/AppTheme.SearchView</item>
     </style>
+
 
     <style name="AppTheme.SearchView" parent="Widget.AppCompat.SearchView">
         <item name="searchHintIcon">@null</item>
@@ -31,6 +29,7 @@
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
     <style name="PickerTheme" parent="Theme.AppCompat.Light.Dialog">
+        <item name="android:textColor">@color/purple</item>
         <item name="colorAccent">@color/purple</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
