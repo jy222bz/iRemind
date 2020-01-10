@@ -20,7 +20,7 @@ public class StringFormatter {
      */
     public static String getFormattedString(int target){
         if (target < 10)
-            return String.valueOf(target) + target;
+            return String.valueOf(0) + target;
         return String.valueOf(target);
     }
 
