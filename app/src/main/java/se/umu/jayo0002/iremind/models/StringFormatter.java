@@ -20,8 +20,28 @@ public class StringFormatter {
      */
     public static String getFormattedString(int target){
         if (target < 10)
-            return "0"+ target;
+            return String.valueOf(target) + target;
+        return String.valueOf(target);
+    }
 
-        return ""+target;
+    /**
+     * It returns a formatted time.
+     * @param hour
+     * @param minute
+     * @return String
+     */
+    public static String getFormattedTime(int hour, int minute){
+        return "Time: " + getFormattedString(hour) + ":" + getFormattedString(minute);
+    }
+
+    /**
+     * It returns a formatted date.
+     * @param year
+     * @param month
+     * @param day
+     * @return String
+     */
+    public static String getFormattedDate(int year, int month, int day){
+        return "Date: " +  year + "-" + getFormattedString((month)) + "-" + getFormattedString(day);
     }
 }

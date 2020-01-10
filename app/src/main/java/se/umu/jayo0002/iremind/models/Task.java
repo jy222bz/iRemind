@@ -357,8 +357,7 @@ public class Task implements Parcelable{
      * @return int
      */
     public String getDate(){
-        return "Date: " + year+ "-" + StringFormatter.getFormattedString((month+1)) + "-" +
-                StringFormatter.getFormattedString(day);
+        return StringFormatter.getFormattedDate(year, (month+1), day);
     }
 
     /**
@@ -366,8 +365,7 @@ public class Task implements Parcelable{
      * @return String
      */
     public String getTime(){
-        return "Time: " + StringFormatter.getFormattedString(hour) +":" +
-                StringFormatter.getFormattedString(minute);
+        return StringFormatter.getFormattedTime(hour, minute);
     }
 
     /**

@@ -134,7 +134,7 @@ public class CreateTaskActivity extends AppCompatActivity implements View.OnClic
         mYear = year;
         mMonth = month;
         mDay = day;
-        mPickedDate = year + "-" + StringFormatter.getFormattedString((month + 1)) + "-" + StringFormatter.getFormattedString(day);
+        mPickedDate = StringFormatter.getFormattedDate(year,(month+1),day);
         mButtonAddDate.setText(mPickedDate);
         mIsDatePickerShown = false;
         mDateDialog.dismiss();
@@ -144,7 +144,7 @@ public class CreateTaskActivity extends AppCompatActivity implements View.OnClic
     public void onTimeSet(TimePicker timePicker, int hour, int minute) {
         mStartHour = hour;
         mStartMinute = minute;
-        mPickedTime = "Time: " + StringFormatter.getFormattedString(mStartHour) + ":" + StringFormatter.getFormattedString(mStartMinute);
+        mPickedTime = StringFormatter.getFormattedTime(hour,minute);
         mButtonAddStartTime.setText(mPickedTime);
         mIsTimePickerShown = false;
         mTimeDialog.dismiss();
