@@ -2,39 +2,23 @@ package se.umu.jayo0002.iremind;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
-import android.graphics.Matrix;
 import android.net.Uri;
 import android.os.Bundle;
-import android.view.GestureDetector;
-import android.view.MotionEvent;
-import android.view.ScaleGestureDetector;
 import android.view.View;
-import android.view.animation.ScaleAnimation;
 import android.widget.Button;
-import android.widget.ScrollView;
 import android.widget.TextView;
-
 import com.google.android.gms.maps.model.LatLng;
-
 import java.util.Objects;
-
 import se.umu.jayo0002.iremind.models.Task;
-import se.umu.jayo0002.iremind.view.GesturesDetector;
 import se.umu.jayo0002.iremind.view.Toaster;
 
-public class OpenTaskActivity extends AppCompatActivity implements View.OnClickListener, View.OnTouchListener {
+public class OpenTaskActivity extends AppCompatActivity implements View.OnClickListener {
     private Task mTask;
     private boolean mIsGoingMainActivity;
     private LatLng mLatLng;
-    Button mGoogleMapDirectionsButton;
-    private float mScale = 1f;
-    private ScaleGestureDetector mScaleGestureDetector;
-    private GestureDetector mGestureDetector;
-    private ScrollView mZoomableScrollView;
-    private float mX, mY;
+    Button mDemandMapDirections;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,37 +33,12 @@ public class OpenTaskActivity extends AppCompatActivity implements View.OnClickL
         } else if (savedInstanceState != null) {
             updateUI(savedInstanceState);
         }
-        mGestureDetector = new GestureDetector(this, new GesturesDetector());
         prepareUI();
-        onScale();
-    }
-
-    private void onScale() {
-        mScaleGestureDetector = new ScaleGestureDetector(this, new ScaleGestureDetector.SimpleOnScaleGestureListener() {
-            @Override
-            public boolean onScale(ScaleGestureDetector detector) {
-                float scale = 1 - detector.getScaleFactor();
-                float prevScale = mScale;
-                mScale += scale;
-
-                if (mScale > 10f)
-                    mScale = 10f;
-
-                ScaleAnimation scaleAnimation = new ScaleAnimation(1f / prevScale, 1f / mScale, 1f / prevScale, 1f / mScale, detector.getFocusX(), detector.getFocusY());
-                scaleAnimation.setDuration(0);
-                scaleAnimation.setFillAfter(true);
-                mZoomableScrollView.startAnimation(scaleAnimation);
-                return true;
-            }
-        });
     }
 
     private void prepareUI() {
-        mZoomableScrollView = findViewById(R.id.zoomable_task);
-        mX = mZoomableScrollView.getX();
-        mY = mZoomableScrollView.getY();
-        Button mCLose = findViewById(R.id.close_buttons);
-        mGoogleMapDirectionsButton = findViewById(R.id.googleMapButton);
+        Button mClose = findViewById(R.id.close_buttons);
+        mDemandMapDirections = findViewById(R.id.googleMapButton);
         TextView mTextViewTitle = findViewById(R.id.tvTitles);
         TextView mTextViewInfo = findViewById(R.id.tvMoreInfos);
         Button mButtonDate = findViewById(R.id.btDates);
@@ -91,7 +50,7 @@ public class OpenTaskActivity extends AppCompatActivity implements View.OnClickL
         mTextViewInfo.setText(mTask.getNote());
         mLocation.setText(mTask.getAddress());
         mLatLng = mTask.getLatLng();
-        mCLose.setOnClickListener(this);
+        mClose.setOnClickListener(this);
         checkLatLng();
     }
 
@@ -145,35 +104,10 @@ public class OpenTaskActivity extends AppCompatActivity implements View.OnClickL
 
     private void checkLatLng() {
         if (mLatLng == null) {
-            mGoogleMapDirectionsButton.setText(Tags.NON_APPLICABLE);
-            mGoogleMapDirectionsButton.setEnabled(false);
+            mDemandMapDirections.setText(Tags.NON_APPLICABLE);
+            mDemandMapDirections.setEnabled(false);
         } else {
-            mGoogleMapDirectionsButton.setOnClickListener(this);
+            mDemandMapDirections.setOnClickListener(this);
         }
-    }
-
-    @Override
-    public boolean dispatchTouchEvent(MotionEvent event) {
-
-        super.dispatchTouchEvent(event);
-        mScaleGestureDetector.onTouchEvent(event);
-        mGestureDetector.onTouchEvent(event);
-        return mGestureDetector.onTouchEvent(event);
-    }
-
-    @Override
-    public boolean onTouch(View v, MotionEvent event) {
-        switch (event.getAction()) {
-            case MotionEvent.ACTION_DOWN:
-                mZoomableScrollView.setScaleX(mX);
-                mZoomableScrollView.setScaleY(mY);
-                break;
-            case MotionEvent.ACTION_BUTTON_RELEASE:
-                v.performClick();
-                break;
-            default:
-                break;
-        }
-        return true;
     }
 }
