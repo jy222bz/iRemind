@@ -8,6 +8,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import se.umu.jayo0002.iremind.Tags;
+
 /**
  * A class help to geo code locations.
  */
@@ -27,13 +29,13 @@ public class GoogleMapHelper {
         List<Address> list = new ArrayList<>();
         if (latLng == null){
             try{
-                list = geocoder.getFromLocationName(address, 1);
+                list = geocoder.getFromLocationName(address, Tags.MAX_AMOUNT_OF_ADDRESSES);
             }catch (IOException ignored){
             }
         } else {
             try {
                 list = geocoder.getFromLocation(latLng.latitude,
-                        latLng.longitude, 1);
+                        latLng.longitude, Tags.MAX_AMOUNT_OF_ADDRESSES);
             } catch (IOException ignored) {
             }
         }

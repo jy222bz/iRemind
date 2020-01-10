@@ -3,6 +3,7 @@ package se.umu.jayo0002.iremind;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
@@ -14,15 +15,19 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TimePicker;
+
 import com.google.android.gms.maps.model.LatLng;
+
 import java.util.Calendar;
 import java.util.Objects;
+
 import se.umu.jayo0002.iremind.controllers.ContentController;
 import se.umu.jayo0002.iremind.models.Date;
 import se.umu.jayo0002.iremind.models.LocationInfo;
 import se.umu.jayo0002.iremind.models.StringFormatter;
 import se.umu.jayo0002.iremind.models.Task;
 import se.umu.jayo0002.iremind.system_controllers.MapServiceController;
+
 import static se.umu.jayo0002.iremind.Tags.TASK;
 
 public class CreateTaskActivity extends AppCompatActivity implements View.OnClickListener,
@@ -39,6 +44,7 @@ public class CreateTaskActivity extends AppCompatActivity implements View.OnClic
     private String mTitle, mEvent, mPickedDate, mPickedTime;
     private boolean mIsDatePickerShown, mIsTimePickerShown;
     private ContentController mController;
+    volatile
     private Task mTask;
 
     @Override
@@ -51,6 +57,8 @@ public class CreateTaskActivity extends AppCompatActivity implements View.OnClic
         else if (savedInstanceState != null)
             updateTheStateOfUI(savedInstanceState);
         checkService();
+        mDateDialog.setOnCancelListener(dialogInterface -> mIsDatePickerShown = false);
+        mTimeDialog.setOnCancelListener(dialogInterface -> mIsTimePickerShown = false);
     }
 
     private final TextWatcher textWatcher = new TextWatcher() {
@@ -134,7 +142,7 @@ public class CreateTaskActivity extends AppCompatActivity implements View.OnClic
         mYear = year;
         mMonth = month;
         mDay = day;
-        mPickedDate = StringFormatter.getFormattedDate(year,(month+1),day);
+        mPickedDate = StringFormatter.getFormattedDate(year, (month + 1), day);
         mButtonAddDate.setText(mPickedDate);
         mIsDatePickerShown = false;
         mDateDialog.dismiss();
@@ -144,7 +152,7 @@ public class CreateTaskActivity extends AppCompatActivity implements View.OnClic
     public void onTimeSet(TimePicker timePicker, int hour, int minute) {
         mStartHour = hour;
         mStartMinute = minute;
-        mPickedTime = StringFormatter.getFormattedTime(hour,minute);
+        mPickedTime = StringFormatter.getFormattedTime(hour, minute);
         mButtonAddStartTime.setText(mPickedTime);
         mIsTimePickerShown = false;
         mTimeDialog.dismiss();
@@ -183,17 +191,10 @@ public class CreateTaskActivity extends AppCompatActivity implements View.OnClic
         mStartMinute = mTask.getMinute();
         mPickedDate = mTask.getDate();
         mPickedTime = mTask.getTime();
-        LatLng latLng = mTask.getLatLng();
-        String address = mTask.getAddress();
         mButtonAddDate.setText(mPickedDate);
         mButtonAddStartTime.setText(mPickedTime);
         mEventTitle.setText(mTitle);
-        if (address != null && latLng != null) {
-            mLocationInfo = new LocationInfo();
-            mLocationInfo.setLatLng(latLng);
-            mLocationInfo.setAddress(address);
-            mButtonAddLocation.setText(address);
-        }
+        checkLatLng(mTask.getLatLng(), mTask.getAddress());
     }
 
     private void updateTheStateOfUI(Bundle outState) {
@@ -201,6 +202,8 @@ public class CreateTaskActivity extends AppCompatActivity implements View.OnClic
             mLocationInfo = outState.getParcelable(Tags.LOCATION_OBJECT);
             mButtonAddLocation.setText(Objects.requireNonNull(mLocationInfo).getAddress());
         }
+        mIsTimePickerShown = outState.getBoolean(Tags.TIME_PICKER_STATUS);
+        mIsDatePickerShown = outState.getBoolean(Tags.DATE_PICKER_STATUS);
         mPickedDate = outState.getString(Tags.DATE);
         mPickedTime = outState.getString(Tags.PICKED_TIME);
         mTitle = outState.getString(Tags.EVENT_TITLE);
@@ -212,12 +215,7 @@ public class CreateTaskActivity extends AppCompatActivity implements View.OnClic
         mStartMinute = outState.getInt(Tags.EVENT_TIME_MINUTES);
         mButtonAddDate.setText(mPickedDate);
         mButtonAddStartTime.setText(mPickedTime);
-        if (mEvent != null && !mEvent.isEmpty())
-            mMoreInfo.setText(mEvent);
-        if (mTitle != null && !mTitle.isEmpty())
-            mEventTitle.setText(mTitle);
-        mIsTimePickerShown = outState.getBoolean(Tags.TIME_PICKER_STATUS);
-        mIsDatePickerShown = outState.getBoolean(Tags.DATE_PICKER_STATUS);
+        checkStrings();
         if (mIsTimePickerShown)
             mTimeDialog.show();
         else if (mIsDatePickerShown)
@@ -225,10 +223,10 @@ public class CreateTaskActivity extends AppCompatActivity implements View.OnClic
     }
 
     private void onSave() {
-        if (mController.areContentsValid(mTitle, mEvent, mStartHour, mStartMinute, mYear,mMonth,mDay)) {
+        if (mController.areContentsValid(mTitle, mEvent, mStartHour, mStartMinute, mYear, mMonth, mDay)) {
             Intent main = new Intent();
-            main.putExtra(TASK, mController.getTask(mTitle,mEvent,mStartHour,mStartMinute,
-                    mYear,mMonth,mDay,mLocationInfo, mTask));
+            main.putExtra(TASK, mController.getTask(mTitle, mEvent, mStartHour, mStartMinute,
+                    mYear, mMonth, mDay, mLocationInfo, mTask));
             setResult(RESULT_OK, main);
             this.finish();
         }
@@ -251,6 +249,12 @@ public class CreateTaskActivity extends AppCompatActivity implements View.OnClic
         mButtonAddStartTime.setOnClickListener(this);
         mEventTitle = findViewById(R.id.tvTitle);
         mMoreInfo = findViewById(R.id.tvMoreInfo);
+        prepareDialogs();
+        mMoreInfo.addTextChangedListener(textWatcher);
+        mEventTitle.addTextChangedListener(textWatcher);
+    }
+
+    private void prepareDialogs() {
         mDateDialog = new DatePickerDialog(
                 CreateTaskActivity.this,
                 R.style.PickerTheme, this, mYear, mMonth, mDay);
@@ -260,7 +264,21 @@ public class CreateTaskActivity extends AppCompatActivity implements View.OnClic
                 R.style.PickerTheme, this,
                 Calendar.getInstance().get(Calendar.HOUR_OF_DAY),
                 Calendar.getInstance().get(Calendar.MINUTE), false);
-        mMoreInfo.addTextChangedListener(textWatcher);
-        mEventTitle.addTextChangedListener(textWatcher);
+    }
+
+    private void checkLatLng(LatLng latLng, String address) {
+        if (address != null && latLng != null) {
+            mLocationInfo = new LocationInfo();
+            mLocationInfo.setLatLng(latLng);
+            mLocationInfo.setAddress(address);
+            mButtonAddLocation.setText(address);
+        }
+    }
+
+    private void checkStrings() {
+        if (mEvent != null && !mEvent.isEmpty())
+            mMoreInfo.setText(mEvent);
+        if (mTitle != null && !mTitle.isEmpty())
+            mEventTitle.setText(mTitle);
     }
 }
