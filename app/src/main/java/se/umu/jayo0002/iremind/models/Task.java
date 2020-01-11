@@ -152,6 +152,14 @@ public class Task implements Parcelable{
     }
 
     /**
+     * It checks whether the alarm date and time is in the future.
+     * @return boolean
+     */
+    public boolean isAlarmValid(){
+            return DateValidator.isDateValid(hour,minute, year,month,day);
+    }
+
+    /**
      * It sets the information of the location.
      * @param locationInfo
      */

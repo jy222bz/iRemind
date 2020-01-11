@@ -22,7 +22,7 @@ import se.umu.jayo0002.iremind.models.Task;
 public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskHolder> implements Filterable{
     private OnItemClickListener mListener;
     private List<Task> mTasks = new ArrayList<>();
-    private List<Task> mTasksFull = new ArrayList<>();
+    private List<Task> mAllTasks = new ArrayList<>();
     private int lastPosition = -1;
     private final Context mContext;
 
@@ -100,12 +100,12 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskHolder> im
     }
 
     Task getTaskAt(int position) {
-        return mTasksFull.get(position);
+        return mAllTasks.get(position);
     }
 
     void setAll(List<Task> tasks) {
         this.mTasks = tasks;
-        mTasksFull = new ArrayList<>(mTasks);
+        mAllTasks = new ArrayList<>(mTasks);
         notifyDataSetChanged();
     }
 
@@ -120,7 +120,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskHolder> im
             mTaskDate = view.findViewById(R.id.date_tv);
             view.setOnClickListener(v -> {
                 if (mListener != null && getAdapterPosition() != RecyclerView.NO_POSITION)
-                    mListener.onItemClick(mTasksFull.get(getAdapterPosition()));
+                    mListener.onItemClick(mAllTasks.get(getAdapterPosition()));
             });
         }
     }
@@ -136,10 +136,10 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskHolder> im
         protected FilterResults performFiltering(CharSequence charSequence) {
             ArrayList<Task> filteredList = new ArrayList<>();
             if (charSequence == null || charSequence.length() == 0) {
-                filteredList.addAll(mTasksFull);
+                filteredList.addAll(mAllTasks);
             } else {
                 String text = charSequence.toString().toLowerCase().trim();
-                for (Task task : mTasksFull) {
+                for (Task task : mAllTasks) {
                     if (task.getTitle().toLowerCase().contains(text))
                         filteredList.add(task);
                 }

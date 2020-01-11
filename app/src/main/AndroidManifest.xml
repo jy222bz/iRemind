@@ -52,5 +52,6 @@
             </intent-filter>
         </receiver>
         <receiver android:name=".service.AlarmReceiver" />
+
     </application>
 </manifest>

@@ -30,7 +30,7 @@ public class BootReceiver extends BroadcastReceiver {
             taskRepo.getAll().observeForever(tasks -> {
                 if (tasks.size() > 0){
                     for (Task task : tasks){
-                        if(task.isActive())
+                        if(task.isActive() && task.isAlarmValid())
                             AlarmHandler.scheduleAlarm(context, task);
                     }
                 }

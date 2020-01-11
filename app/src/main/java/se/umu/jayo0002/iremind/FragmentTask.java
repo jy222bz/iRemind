@@ -21,6 +21,8 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.SearchView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.util.Objects;
+
+import se.umu.jayo0002.iremind.controllers.OverdueTasksNotifier;
 import se.umu.jayo0002.iremind.models.Task;
 import se.umu.jayo0002.iremind.service.AlarmHandler;
 import se.umu.jayo0002.iremind.view.Toaster;
@@ -47,24 +49,24 @@ public class FragmentTask extends Fragment {
         mTaskViewModel = ViewModelProviders.of(Objects.requireNonNull(getActivity())).get(TaskViewModel.class);
         View view = inflater.inflate(R.layout.fragment_task, container, false);
         mRV = view.findViewById(R.id.recycler_view);
+        OverdueTasksNotifier mOverdueTasksNotifier = new OverdueTasksNotifier();
         mAdapter = new TaskAdapter(getContext());
         mRV.setLayoutManager(new LinearLayoutManager(getContext()));
         mRV.setHasFixedSize(true);
         setHasOptionsMenu(true);
         mFAB = view.findViewById(R.id.fab);
         mRV.setAdapter(mAdapter);
+        boolean mIsThereOverdue = mOverdueTasksNotifier.doControlOverdueTasks(Objects.requireNonNull(getActivity()));
         mTaskViewModel.getActiveTasks().observe(Objects.requireNonNull(getActivity()), tasks -> mAdapter.setAll(tasks));
+        if (mIsThereOverdue) Toaster.displayToast(getContext(), Tags.OVERDUE_NOTIFICATION_DETAILS, Tags.LONG_TOAST);
         onClickFAButton();
         onSwipe();
-
         mAdapter.setOnItemClickListener(task -> {
             mTask = task;
             edit();
         });
-        if (savedInstanceState != null) {
-            mSearchQuery = savedInstanceState.getString(Tags.SEARCH_QUERY);
-            mIsTheSearchViewUp = savedInstanceState.getBoolean(Tags.STATE_OF_THE_SEARCH_VIEW);
-        }
+
+        restateSearchView(savedInstanceState);
         return view;
     }
 
@@ -180,5 +182,12 @@ public class FragmentTask extends Fragment {
             mSearchView.setQuery("", false);
         }
         super.onSaveInstanceState(outState);
+    }
+
+    private void restateSearchView(Bundle savedInstanceState){
+        if (savedInstanceState != null) {
+            mSearchQuery = savedInstanceState.getString(Tags.SEARCH_QUERY);
+            mIsTheSearchViewUp = savedInstanceState.getBoolean(Tags.STATE_OF_THE_SEARCH_VIEW);
+        }
     }
 }

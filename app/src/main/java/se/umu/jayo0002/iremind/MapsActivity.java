@@ -69,18 +69,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .position(mLatLng)
                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED))
                 .draggable(true));
-        if (mPermitted){
-            mMyLocation.setVisibility(View.VISIBLE);
-            mMyLocation.setEnabled(true);
-        } if (getIntent().hasExtra(Tags.LAT_LNG) && !mIsItOutState){
-            mLatLng = Objects.requireNonNull(getIntent().getExtras()).getParcelable(Tags.LAT_LNG);
-            onCallMoveToLocation(mLatLng);
-        }  else if (mPermitted && !mIsItOutState){
-            getCurrentLocation();
-        } else if (mIsItOutState) {
-            onCallMoveToLocation(mLatLng);
-            mIsItOutState = false;
-        }
+        init();
         mMap.setOnCameraMoveListener(() -> mLatLng = mMap.getCameraPosition().target);
         mMap.setOnCameraIdleListener(() -> mMarker.setPosition(mLatLng));
         onSearch();
@@ -110,10 +99,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             Task<Location> location = locationProvider.getLastLocation();
             location.addOnCompleteListener(task -> {
                 if (task.isSuccessful()){
-                    Location currentLocation = task.getResult();
-                    assert currentLocation != null;
-                    onCallMoveToLocation(new LatLng(currentLocation.getLatitude(),
-                            currentLocation.getLongitude()));
+                    Location currentPosition = task.getResult();
+                    assert currentPosition != null;
+                    mLatLng = new LatLng(currentPosition.getLatitude(),
+                            currentPosition.getLongitude());
+                    onCallMoveToLocation(mLatLng);
                 }
             });
 
@@ -162,7 +152,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             Intent back_to_create_events = new Intent();
             back_to_create_events.putExtra(Tags.LOCATION_OBJECT, locationInfo);
             setResult(RESULT_OK, back_to_create_events);
-            finish();
+            this.finish();
         });
     }
 
@@ -212,6 +202,21 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             mPermitted = true;
         } else {
             ActivityCompat.requestPermissions(this, permission, Tags.LOCATION_PERMISSION_REQUEST_CODE);
+        }
+    }
+
+    private void init(){
+        if (mPermitted){
+            mMyLocation.setVisibility(View.VISIBLE);
+            mMyLocation.setEnabled(true);
+        } if (getIntent().hasExtra(Tags.LAT_LNG) && !mIsItOutState){
+            mLatLng = Objects.requireNonNull(getIntent().getExtras()).getParcelable(Tags.LAT_LNG);
+            onCallMoveToLocation(mLatLng);
+        }  else if (mPermitted && !mIsItOutState){
+            getCurrentLocation();
+        } else if (mIsItOutState) {
+            onCallMoveToLocation(mLatLng);
+            mIsItOutState = false;
         }
     }
 }
