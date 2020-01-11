@@ -46,14 +46,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
-        mSearchBar = findViewById(R.id.search_map);
-        mMyLocation = findViewById(R.id.to_my_location);
-        mMyLocation.setVisibility(View.INVISIBLE);
-        mMyLocation.setEnabled(false);
-        mIsItOutState = false;
-        mLatLng = new LatLng(0, 0);
+        prepareUI();
         if (savedInstanceState != null)
-            updateUI(savedInstanceState);
+            updateState(savedInstanceState);
         else if (!mPermitted)
             requestPermission();
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -86,10 +81,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     if (grantResult != PackageManager.PERMISSION_GRANTED) return;
                 }
             }
+            Toaster.displayToast(this, Tags.ADDRESS_GUIDE,Tags.LONG_TOAST);
             mPermitted = true;
-            mMyLocation.setVisibility(View.VISIBLE);
-            mMyLocation.setEnabled(true);
-            getCurrentLocation();
+            init();
         }
     }
 
@@ -98,11 +92,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         try {
             final Task<Location> location = provider.getLastLocation();
             location.addOnCompleteListener(task -> {
-                if (task.isSuccessful()){
+                if (task.isSuccessful()) {
                     Location currentPosition = task.getResult();
-                    assert currentPosition != null;
+                    if (currentPosition != null)
                     onCallMoveToLocation(new LatLng(currentPosition.getLatitude(),
-                            currentPosition.getLongitude()));
+                                currentPosition.getLongitude()));
                 }
             });
         } catch (Exception e) {
@@ -157,9 +151,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        mIsItOutState = true;
         outState.putParcelable(Tags.LAT_LNG_OUT_STATE, mLatLng);
-        outState.putBoolean(Tags.STATE_CONDITION, mIsItOutState);
+        outState.putBoolean(Tags.STATE_CONDITION, true);
         outState.putBoolean(Tags.PERMISSION_STATE, mPermitted);
     }
 
@@ -187,7 +180,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         });
     }
 
-    private void updateUI(Bundle savedInstanceState) {
+    private void updateState(Bundle savedInstanceState) {
         mLatLng = savedInstanceState.getParcelable(Tags.LAT_LNG_OUT_STATE);
         mIsItOutState = savedInstanceState.getBoolean(Tags.STATE_CONDITION);
         mPermitted = savedInstanceState.getBoolean(Tags.PERMISSION_STATE);
@@ -216,5 +209,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             onCallMoveToLocation(mLatLng);
             mIsItOutState = false;
         }
+    }
+
+    private void prepareUI(){
+        mSearchBar = findViewById(R.id.search_map);
+        mMyLocation = findViewById(R.id.to_my_location);
+        mMyLocation.setVisibility(View.INVISIBLE);
+        mMyLocation.setEnabled(false);
+        mIsItOutState = false;
+        mLatLng = new LatLng(0, 0);
     }
 }
