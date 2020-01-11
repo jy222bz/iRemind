@@ -55,8 +55,8 @@ public class Tags {
     public static final String FAILED_ATTEMPT_TO_GET_THE_LOCATION= "It Failed To Get The Current Location. Try Again Later.";
     public static final int THE_ALLOWED_AMOUNT_FOR_TITLE = 34;
     public static final int THE_ALLOWED_AMOUNT_FOR_NOTE = 600;
-    public static final String OVERDUE_NOTIFICATION_DETAILS= "There is at least one Task its reminder " +
-            "did not trigger because the device was switched off. Check the Archive!.";
     public static final int LONG_TOAST = 1;
     public static final int LONG_SNACK = 0;
+    public static final String ALARM_SET= "The Reminder Is Set!";
+    public static final String ALARM_IS_UPDATED= "The Reminder Is Updated and Set!.";
 }

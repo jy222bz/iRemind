@@ -29,6 +29,6 @@ public class DateValidator {
         c.set(Calendar.MONTH, month);
         c.set(Calendar.DAY_OF_MONTH, day);
         c.set(Calendar.YEAR, year);
-        return !c.before(Calendar.getInstance());
+        return c.after(Calendar.getInstance());
     }
 }

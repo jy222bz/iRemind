@@ -52,7 +52,7 @@ public class FragmentHistory extends Fragment {
         mRV.setHasFixedSize(true);
         setHasOptionsMenu(true);
         mRV.setAdapter(mAdapter);
-        mTaskViewModel.getInactiveTasks().observe(Objects.requireNonNull(getActivity()), tasks -> mAdapter.setAll(tasks));
+        mTaskViewModel.getInactiveTasks().observe(Objects.requireNonNull(getActivity()), tasks -> mAdapter.setTasks(tasks));
         onSwipe();
         mAdapter.setOnItemClickListener(task -> {
             mTask = task;
@@ -152,7 +152,7 @@ public class FragmentHistory extends Fragment {
             mSearchView.onActionViewExpanded();
             mSearchView.setQuery(mSearchQuery, true);
             mSearchView.clearFocus();
-            mTaskViewModel.getInactiveTasks().observe(Objects.requireNonNull(getActivity()), tasks -> mAdapter.setAll(tasks));
+            mTaskViewModel.getInactiveTasks().observe(Objects.requireNonNull(getActivity()), tasks -> mAdapter.setTasks(tasks));
             mAdapter.getFilter().filter(mSearchQuery);
             mIsTheSearchViewUp = false;
         }

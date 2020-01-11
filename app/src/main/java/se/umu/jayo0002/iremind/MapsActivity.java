@@ -105,7 +105,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                             currentPosition.getLongitude()));
                 }
             });
-
         } catch (Exception e) {
             Toaster.displayToast(this,Tags.NO_LOCATION,Tags.LONG_TOAST);
         }

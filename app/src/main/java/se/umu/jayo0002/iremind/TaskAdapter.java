@@ -103,7 +103,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskHolder> im
         return mAllTasks.get(position);
     }
 
-    void setAll(List<Task> tasks) {
+    void setTasks(List<Task> tasks) {
         this.mTasks = tasks;
         mAllTasks = new ArrayList<>(mTasks);
         notifyDataSetChanged();

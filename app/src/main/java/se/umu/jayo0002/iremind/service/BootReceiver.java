@@ -19,6 +19,9 @@ public class BootReceiver extends BroadcastReceiver {
 
     /**
      * It receives the intent and reschedule the Tasks upon reboot.
+     * It deactivate any Task is currently active but its reminder did not trigger.
+     * The Reminder of a Task will not go off when the device is switched off, therefore they have to be
+     * handles when the device is switched on.
      *
      * @param context
      * @param intent
@@ -32,6 +35,10 @@ public class BootReceiver extends BroadcastReceiver {
                     for (Task task : tasks){
                         if(task.isActive() && task.isAlarmValid())
                             AlarmHandler.scheduleAlarm(context, task);
+                        else if(task.isActive() && !task.isAlarmValid()){
+                            task.setInactive();
+                            taskRepo.update(task);
+                        }
                     }
                 }
             });

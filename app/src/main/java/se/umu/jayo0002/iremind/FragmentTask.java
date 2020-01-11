@@ -22,7 +22,7 @@ import android.widget.SearchView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.util.Objects;
 
-import se.umu.jayo0002.iremind.controllers.OverdueTasksNotifier;
+import se.umu.jayo0002.iremind.controllers.RemindersController;
 import se.umu.jayo0002.iremind.models.Task;
 import se.umu.jayo0002.iremind.service.AlarmHandler;
 import se.umu.jayo0002.iremind.view.Toaster;
@@ -49,16 +49,14 @@ public class FragmentTask extends Fragment {
         mTaskViewModel = ViewModelProviders.of(Objects.requireNonNull(getActivity())).get(TaskViewModel.class);
         View view = inflater.inflate(R.layout.fragment_task, container, false);
         mRV = view.findViewById(R.id.recycler_view);
-        OverdueTasksNotifier mOverdueTasksNotifier = new OverdueTasksNotifier();
         mAdapter = new TaskAdapter(getContext());
         mRV.setLayoutManager(new LinearLayoutManager(getContext()));
         mRV.setHasFixedSize(true);
         setHasOptionsMenu(true);
         mFAB = view.findViewById(R.id.fab);
         mRV.setAdapter(mAdapter);
-        boolean mIsThereOverdue = mOverdueTasksNotifier.doControlOverdueTasks(Objects.requireNonNull(getActivity()));
-        mTaskViewModel.getActiveTasks().observe(Objects.requireNonNull(getActivity()), tasks -> mAdapter.setAll(tasks));
-        if (mIsThereOverdue) Toaster.displayToast(getContext(), Tags.OVERDUE_NOTIFICATION_DETAILS, Tags.LONG_TOAST);
+        RemindersController.doCheckTasks(Objects.requireNonNull(getContext()));
+        mTaskViewModel.getActiveTasks().observe(Objects.requireNonNull(getActivity()), tasks -> mAdapter.setTasks(tasks));
         onClickFAButton();
         onSwipe();
         mAdapter.setOnItemClickListener(task -> {
@@ -119,11 +117,13 @@ public class FragmentTask extends Fragment {
             mTask = Objects.requireNonNull(Objects.requireNonNull(data).getExtras()).getParcelable(Tags.TASK);
             mTaskViewModel.insert(mTask);
             AlarmHandler.scheduleAlarm(Objects.requireNonNull(getActivity()), mTask);
+            Toaster.displaySnack(getView(),Tags.ALARM_SET,Tags.LONG_SNACK);
         } else if (requestCode == Tags.REQUEST_CODE_EDIT_EVENT && resultCode == RESULT_OK) {
             mTask = Objects.requireNonNull(Objects.requireNonNull(data).getExtras()).getParcelable(Tags.TASK);
             mTaskViewModel.update(mTask);
             AlarmHandler.cancelAlarm(Objects.requireNonNull(getActivity()), mTask);
             AlarmHandler.scheduleAlarm(Objects.requireNonNull(getActivity()), mTask);
+            Toaster.displaySnack(getView(),Tags.ALARM_IS_UPDATED,Tags.LONG_SNACK);
         }
     }
 
@@ -168,7 +168,7 @@ public class FragmentTask extends Fragment {
             mSearchView.onActionViewExpanded();
             mSearchView.setQuery(mSearchQuery, true);
             mSearchView.clearFocus();
-            mTaskViewModel.getActiveTasks().observe(Objects.requireNonNull(getActivity()), tasks -> mAdapter.setAll(tasks));
+            mTaskViewModel.getActiveTasks().observe(Objects.requireNonNull(getActivity()), tasks -> mAdapter.setTasks(tasks));
             mAdapter.getFilter().filter(mSearchQuery);
             mIsTheSearchViewUp = false;
         }
