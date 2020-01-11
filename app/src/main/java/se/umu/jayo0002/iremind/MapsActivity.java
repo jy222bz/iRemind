@@ -94,16 +94,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     private void getCurrentLocation(){
-        FusedLocationProviderClient locationProvider = LocationServices.getFusedLocationProviderClient(this);
+        FusedLocationProviderClient provider = LocationServices.getFusedLocationProviderClient(this);
         try {
-            Task<Location> location = locationProvider.getLastLocation();
+            final Task<Location> location = provider.getLastLocation();
             location.addOnCompleteListener(task -> {
                 if (task.isSuccessful()){
                     Location currentPosition = task.getResult();
                     assert currentPosition != null;
-                    mLatLng = new LatLng(currentPosition.getLatitude(),
-                            currentPosition.getLongitude());
-                    onCallMoveToLocation(mLatLng);
+                    onCallMoveToLocation(new LatLng(currentPosition.getLatitude(),
+                            currentPosition.getLongitude()));
                 }
             });
 
