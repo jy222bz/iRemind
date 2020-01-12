@@ -1,6 +1,9 @@
-package se.umu.jayo0002.iremind.models;
+package se.umu.jayo0002.iremind.models.date;
 
 import java.util.Calendar;
+
+import se.umu.jayo0002.iremind.models.text.StringFormatter;
+
 import static se.umu.jayo0002.iremind.Tags.MONTHS;
 
 /**

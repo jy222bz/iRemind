@@ -1,5 +1,6 @@
 package se.umu.jayo0002.iremind.models;
 
+
 /**
  * Interface that implements one void method.
  * @author Jacob Yousif

@@ -1,4 +1,4 @@
-package se.umu.jayo0002.iremind.models;
+package se.umu.jayo0002.iremind.models.text;
 
 
 /**

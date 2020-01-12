@@ -2,15 +2,17 @@ package se.umu.jayo0002.iremind.controllers;
 
 import android.content.Context;
 import se.umu.jayo0002.iremind.Tags;
+import se.umu.jayo0002.iremind.models.date.DateValidator;
 import se.umu.jayo0002.iremind.models.LocationInfo;
 import se.umu.jayo0002.iremind.models.Task;
+import se.umu.jayo0002.iremind.models.text.TextValidator;
 import se.umu.jayo0002.iremind.models.model_controllers.ObjectController;
 import se.umu.jayo0002.iremind.view.Toaster;
 
 /**
  * A content controller class.
  */
-public class ContentController {
+public class CreateTaskHelper {
 
     /**
      * A private field for the Context.
@@ -21,7 +23,7 @@ public class ContentController {
      * A constructor, to construct the object and to initializes the context.
      * @param context
      */
-    public ContentController(Context context) {
+    public CreateTaskHelper(Context context) {
         mContext = context;
     }
 

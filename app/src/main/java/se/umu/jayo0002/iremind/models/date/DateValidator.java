@@ -1,4 +1,4 @@
-package se.umu.jayo0002.iremind.controllers;
+package se.umu.jayo0002.iremind.models.date;
 
 import java.util.Calendar;
 

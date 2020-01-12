@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+
 import se.umu.jayo0002.iremind.models.OnItemClickListener;
 import se.umu.jayo0002.iremind.models.Task;
 

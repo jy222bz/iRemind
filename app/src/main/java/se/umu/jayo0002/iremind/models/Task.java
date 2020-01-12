@@ -8,8 +8,11 @@ import androidx.room.PrimaryKey;
 import com.google.android.gms.maps.model.LatLng;
 import java.util.Calendar;
 import java.util.Date;
-import se.umu.jayo0002.iremind.controllers.DateValidator;
+
+import se.umu.jayo0002.iremind.models.date.DateValidator;
 import se.umu.jayo0002.iremind.models.exceptions.ExceptionBuilder;
+import se.umu.jayo0002.iremind.models.text.StringFormatter;
+
 import static se.umu.jayo0002.iremind.models.exceptions.Classification.ALARM_INVALID;
 import static se.umu.jayo0002.iremind.models.exceptions.Classification.LOCATION_INFO_NULL;
 

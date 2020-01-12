@@ -5,7 +5,7 @@ import com.google.android.material.tabs.TabLayout;
 import androidx.appcompat.widget.Toolbar;
 import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AppCompatActivity;
-import se.umu.jayo0002.iremind.models.Date;
+import se.umu.jayo0002.iremind.models.date.Date;
 import se.umu.jayo0002.iremind.system_controllers.MapServiceController;
 import se.umu.jayo0002.iremind.ui.main.SectionsPagerAdapter;
 import se.umu.jayo0002.iremind.view.Toaster;

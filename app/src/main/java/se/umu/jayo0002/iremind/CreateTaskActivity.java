@@ -21,10 +21,10 @@ import com.google.android.gms.maps.model.LatLng;
 import java.util.Calendar;
 import java.util.Objects;
 
-import se.umu.jayo0002.iremind.controllers.ContentController;
-import se.umu.jayo0002.iremind.models.Date;
+import se.umu.jayo0002.iremind.controllers.CreateTaskHelper;
+import se.umu.jayo0002.iremind.models.date.Date;
 import se.umu.jayo0002.iremind.models.LocationInfo;
-import se.umu.jayo0002.iremind.models.StringFormatter;
+import se.umu.jayo0002.iremind.models.text.StringFormatter;
 import se.umu.jayo0002.iremind.models.Task;
 import se.umu.jayo0002.iremind.models.model_controllers.ObjectController;
 import se.umu.jayo0002.iremind.system_controllers.MapServiceController;
@@ -44,7 +44,7 @@ public class CreateTaskActivity extends AppCompatActivity implements View.OnClic
     private LocationInfo mLocationInfo;
     private String mTitle, mEvent, mPickedDate, mPickedTime;
     private boolean mIsDatePickerShown, mIsTimePickerShown;
-    private ContentController mController;
+    private CreateTaskHelper mCreateTaskHelper;
     private ObjectController mObjectController;
     private Task mTask;
 
@@ -226,9 +226,9 @@ public class CreateTaskActivity extends AppCompatActivity implements View.OnClic
     }
 
     private void onSave() {
-        if (mController.areContentsValid(mTitle, mEvent, mStartHour, mStartMinute, mYear, mMonth, mDay)) {
+        if (mCreateTaskHelper.areContentsValid(mTitle, mEvent, mStartHour, mStartMinute, mYear, mMonth, mDay)) {
             Intent main = new Intent();
-            main.putExtra(TASK, mController.getTask(mTitle, mEvent, mStartHour, mStartMinute,
+            main.putExtra(TASK, mCreateTaskHelper.getTask(mTitle, mEvent, mStartHour, mStartMinute,
                     mYear, mMonth, mDay, mLocationInfo, mTask));
             setResult(RESULT_OK, main);
             this.finish();
@@ -237,7 +237,7 @@ public class CreateTaskActivity extends AppCompatActivity implements View.OnClic
 
     private void prepareUI() {
         mEvent = "";
-        mController = new ContentController(this);
+        mCreateTaskHelper = new CreateTaskHelper(this);
         mPickedDate = Date.getFullDate();
         mPickedTime = getString(R.string.starting_time);
         Button mButtonClose = findViewById(R.id.close_button);
