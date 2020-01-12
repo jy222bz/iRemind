@@ -1,6 +1,7 @@
 package se.umu.jayo0002.iremind.models;
 
 import java.util.Calendar;
+import static se.umu.jayo0002.iremind.Tags.MONTHS;
 
 /**
  * This class represents an object that provides two methods about date and time.
@@ -16,11 +17,7 @@ public class Date {
      * @return String
      */
     public String getDate() {
-      String[] mMonth = {"January", "February",
-                "March", "April", "May", "June", "July",
-                "August", "September", "October", "November",
-                "December"};
-        String month = mMonth[Calendar.getInstance().get(Calendar.MONTH)];
+        String month = MONTHS[Calendar.getInstance().get(Calendar.MONTH)];
         Calendar.getInstance();
         int day = (Calendar.getInstance().get(Calendar.DAY_OF_MONTH));
         return StringFormatter.getFormattedString(day)  + " " + month;

@@ -4,6 +4,7 @@ import android.content.Context;
 import se.umu.jayo0002.iremind.Tags;
 import se.umu.jayo0002.iremind.models.LocationInfo;
 import se.umu.jayo0002.iremind.models.Task;
+import se.umu.jayo0002.iremind.models.model_controllers.ObjectController;
 import se.umu.jayo0002.iremind.view.Toaster;
 
 /**
@@ -27,6 +28,7 @@ public class ContentController {
     /**
      * It takes the context and control if they are valid.
      * If they are not valid it displays a toast message with clarification.
+     *
      * @param title
      * @param text
      * @param hour
@@ -52,6 +54,7 @@ public class ContentController {
 
     /**
      * It sets the values upon saving the operation and it returns a Task.
+     *
      * @param title
      * @param text
      * @param hour
@@ -64,11 +67,13 @@ public class ContentController {
      */
     public Task getTask(String title, String text, int hour, int minute, int year, int month,
                         int day, LocationInfo locationInfo, Task task){
-        if (task == null)
+        ObjectController objectController = new ObjectController();
+        if (!objectController.isObjectValid(task))
             task = new Task();
         task.setTitle(title);
         task.setNote(text);
-        task.setLocation(locationInfo);
+        if (objectController.isObjectValid(locationInfo))
+            task.setLocation(locationInfo);
         task.setYear(year);
         task.setMonth(month);
         task.setDay(day);

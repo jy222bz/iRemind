@@ -28,7 +28,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.Task;
 import java.util.List;
 import java.util.Objects;
-import se.umu.jayo0002.iremind.models.GoogleMapHelper;
+import se.umu.jayo0002.iremind.models.map.GoogleMapHelper;
 import se.umu.jayo0002.iremind.models.LocationInfo;
 import se.umu.jayo0002.iremind.view.Toaster;
 
@@ -60,11 +60,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        mMarker=  mMap.addMarker(new MarkerOptions()
+        mMarker = mMap.addMarker(new MarkerOptions()
                 .position(mLatLng)
                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED))
                 .draggable(true));
-        init();
+        doCheckTheConditions();
         mMap.setOnCameraMoveListener(() -> mLatLng = mMap.getCameraPosition().target);
         mMap.setOnCameraIdleListener(() -> mMarker.setPosition(mLatLng));
         onSearch();
@@ -81,13 +81,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     if (grantResult != PackageManager.PERMISSION_GRANTED) return;
                 }
             }
-            Toaster.displayToast(this, Tags.ADDRESS_GUIDE,Tags.LONG_TOAST);
+            Toaster.displayToast(this, Tags.ADDRESS_GUIDE, Tags.LONG_TOAST);
             mPermitted = true;
-            init();
+            doCheckTheConditions();
         }
     }
 
-    private void getCurrentLocation(){
+    private void getCurrentLocation() {
         FusedLocationProviderClient provider = LocationServices.getFusedLocationProviderClient(this);
         try {
             final Task<Location> location = provider.getLastLocation();
@@ -95,30 +95,32 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 if (task.isSuccessful()) {
                     Location currentPosition = task.getResult();
                     if (currentPosition != null)
-                    onCallMoveToLocation(new LatLng(currentPosition.getLatitude(),
+                        onCallMoveToLocation(new LatLng(currentPosition.getLatitude(),
                                 currentPosition.getLongitude()));
+                    else
+                        Toaster.displayToast(this, Tags.LOCATION_IS_NULL, Tags.LONG_TOAST);
                 }
             });
         } catch (Exception e) {
-            Toaster.displayToast(this,Tags.NO_LOCATION,Tags.LONG_TOAST);
+            Toaster.displayToast(this, Tags.NO_LOCATION, Tags.LONG_TOAST);
         }
     }
 
-    private void onCallMoveToLocation(LatLng latLng){
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng,Tags.MAP_ZOOM));
+    private void onCallMoveToLocation(LatLng latLng) {
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, Tags.MAP_ZOOM));
         mLatLng = latLng;
         mMarker.setPosition(mLatLng);
     }
 
-    private void onSearch(){
+    private void onSearch() {
         mSearchBar.setOnEditorActionListener((textView, i, keyEvent) -> {
-            if(i == EditorInfo.IME_ACTION_SEARCH
+            if (i == EditorInfo.IME_ACTION_SEARCH
                     || i == EditorInfo.IME_ACTION_DONE
                     || keyEvent.getAction() == KeyEvent.ACTION_DOWN
-                    || keyEvent.getAction() == KeyEvent.KEYCODE_ENTER){
+                    || keyEvent.getAction() == KeyEvent.KEYCODE_ENTER) {
                 List<Address> list = GoogleMapHelper.geoCoder(null,
                         this, mSearchBar.getText().toString());
-                if(list.size() >0){
+                if (list.size() > 0) {
                     Address address = list.get(0);
                     mLatLng = new LatLng(address.getLatitude(), address.getLongitude());
                     onCallMoveToLocation(new LatLng(address.getLatitude(), address.getLongitude()));
@@ -129,18 +131,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         });
     }
 
-    private void onBackToMyLocation(){
+    private void onBackToMyLocation() {
         mMyLocation.setOnClickListener(view -> getCurrentLocation());
     }
 
-    private void onLongClick(){
+    private void onLongClick() {
         mMap.setOnMapLongClickListener(latLng -> {
             List<Address> list = GoogleMapHelper.geoCoder(latLng,
-                    this,mSearchBar.getText().toString());
+                    this, mSearchBar.getText().toString());
             LocationInfo locationInfo = new LocationInfo();
             locationInfo.setLatLng(latLng);
             locationInfo.setAddress(list.get(0).getAddressLine(0));
-            Toaster.displayToast(this,list.get(0).getAddressLine(0),Tags.LONG_TOAST);
             Intent back_to_create_events = new Intent();
             back_to_create_events.putExtra(Tags.LOCATION_OBJECT, locationInfo);
             setResult(RESULT_OK, back_to_create_events);
@@ -186,24 +187,25 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mPermitted = savedInstanceState.getBoolean(Tags.PERMISSION_STATE);
     }
 
-    private void requestPermission(){
+    private void requestPermission() {
         String[] permission = {Manifest.permission.ACCESS_FINE_LOCATION};
         if (PackageManager.PERMISSION_GRANTED == ContextCompat.checkSelfPermission(this.getApplicationContext(),
-                Tags.ACCESS_FINE_LOCATION)){
+                Tags.ACCESS_FINE_LOCATION)) {
             mPermitted = true;
         } else {
             ActivityCompat.requestPermissions(this, permission, Tags.LOCATION_PERMISSION_REQUEST_CODE);
         }
     }
 
-    private void init(){
-        if (mPermitted){
+    private void doCheckTheConditions() {
+        if (mPermitted) {
             mMyLocation.setVisibility(View.VISIBLE);
             mMyLocation.setEnabled(true);
-        } if (getIntent().hasExtra(Tags.LAT_LNG) && !mIsItOutState){
+        }
+        if (getIntent().hasExtra(Tags.LAT_LNG) && !mIsItOutState) {
             mLatLng = Objects.requireNonNull(getIntent().getExtras()).getParcelable(Tags.LAT_LNG);
             onCallMoveToLocation(mLatLng);
-        }  else if (mPermitted && !mIsItOutState){
+        } else if (mPermitted && !mIsItOutState) {
             getCurrentLocation();
         } else if (mIsItOutState) {
             onCallMoveToLocation(mLatLng);
@@ -211,7 +213,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
-    private void prepareUI(){
+    private void prepareUI() {
         mSearchBar = findViewById(R.id.search_map);
         mMyLocation = findViewById(R.id.to_my_location);
         mMyLocation.setVisibility(View.INVISIBLE);

@@ -27,6 +27,8 @@ public class Tags {
     public static final String INVALID_DATE = "The DATE and the TIME of the reminder should be in the future!";
     public static final String TITLE_IS_INVALID = "There should be a title that is not longer than " +
             Tags.THE_ALLOWED_AMOUNT_FOR_TITLE + " CHARACTERS!";
+    public static final String[] MONTHS = {"January", "February", "March", "April", "May", "June", "July",
+            "August", "September", "October", "November", "December"};
     public static final String EVENT_TITLE = "THE TITLE FOR THE EVENT";
     public static final String EVENT_INFO = "More info about the event.";
     public static final String EVENT_TIME_HOUR = "Starting hour.";
@@ -60,4 +62,5 @@ public class Tags {
     public static final String ALARM_SET= "The Reminder Is Set!";
     public static final String ALARM_IS_UPDATED= "The Reminder Is Updated and Set!.";
     public static final String ADDRESS_GUIDE= "To select an address, Tap The Position Of The Location LONG.";
+    public static final String LOCATION_IS_NULL="Failed to fetch the location. Try again later!";
 }

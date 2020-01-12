@@ -8,8 +8,10 @@ import androidx.room.PrimaryKey;
 import com.google.android.gms.maps.model.LatLng;
 import java.util.Calendar;
 import java.util.Date;
-
 import se.umu.jayo0002.iremind.controllers.DateValidator;
+import se.umu.jayo0002.iremind.models.exceptions.ExceptionBuilder;
+import static se.umu.jayo0002.iremind.models.exceptions.Classification.ALARM_INVALID;
+import static se.umu.jayo0002.iremind.models.exceptions.Classification.LOCATION_INFO_NULL;
 
 /**
  * This class represents the Task object and the information that holds for the event to be noted.
@@ -116,6 +118,7 @@ public class Task implements Parcelable{
 
     /**
      * It sets the time and the date for the alarm of the event.
+     * @throws Exception if date and the time in the past.
      *
      * @param hour
      * @param minute
@@ -124,22 +127,22 @@ public class Task implements Parcelable{
      * @param day
      */
     public void setTheAlarmDate(int hour, int minute, int year, int month, int day) {
-        this.year = year;
-        this.month = month;
-        this.day = day;
-        this.hour = hour;
-        this.minute = minute;
+        if (!DateValidator.isDateValid(hour,minute, year,month,day))
+            throw new ExceptionBuilder(ALARM_INVALID);
+        else {
+            this.year = year;
+            this.month = month;
+            this.day = day;
+            this.hour = hour;
+            this.minute = minute;
+        }
     }
 
     /**
      * It returns the date the time of the alarm for the event.
-     * It returns null when the date is invalid.
      * @return Calendar
      */
     public Calendar getAlarmDateAndTime(){
-        if (!DateValidator.isDateValid(hour,minute, year,month,day))
-            return null;
-        else {
             Calendar c = Calendar.getInstance();
             c.set(Calendar.HOUR_OF_DAY, hour);
             c.set(Calendar.MINUTE, minute);
@@ -148,7 +151,6 @@ public class Task implements Parcelable{
             c.set(Calendar.DAY_OF_MONTH, day);
             c.set(Calendar.YEAR, year);
             return c;
-        }
     }
 
     /**
@@ -159,18 +161,21 @@ public class Task implements Parcelable{
             return DateValidator.isDateValid(hour,minute, year,month,day);
     }
 
+
     /**
-     * It sets the information of the location.
      * @param locationInfo
+     * @throws Exception if the object null.
      */
     public void setLocation(LocationInfo locationInfo) {
-        if (locationInfo != null){
+        if (locationInfo == null)
+            throw new ExceptionBuilder(LOCATION_INFO_NULL);
+        else {
             LatLng latLng = locationInfo.getLatLng();
             this.address = locationInfo.getAddress();
-            double lat= latLng.latitude;
-            double lng= latLng.longitude;
-            latitude= Double.toString(lat);
-            longitude= Double.toString(lng);
+            double lat = latLng.latitude;
+            double lng = latLng.longitude;
+            latitude = Double.toString(lat);
+            longitude = Double.toString(lng);
         }
     }
 

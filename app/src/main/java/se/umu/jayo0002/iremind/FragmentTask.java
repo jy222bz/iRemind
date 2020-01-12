@@ -21,8 +21,6 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.SearchView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.util.Objects;
-
-import se.umu.jayo0002.iremind.controllers.RemindersController;
 import se.umu.jayo0002.iremind.models.Task;
 import se.umu.jayo0002.iremind.service.AlarmHandler;
 import se.umu.jayo0002.iremind.view.Toaster;
@@ -55,7 +53,6 @@ public class FragmentTask extends Fragment {
         setHasOptionsMenu(true);
         mFAB = view.findViewById(R.id.fab);
         mRV.setAdapter(mAdapter);
-        RemindersController.doCheckTasks(Objects.requireNonNull(getContext()));
         mTaskViewModel.getActiveTasks().observe(Objects.requireNonNull(getActivity()), tasks -> mAdapter.setTasks(tasks));
         onClickFAButton();
         onSwipe();
@@ -63,8 +60,7 @@ public class FragmentTask extends Fragment {
             mTask = task;
             edit();
         });
-
-        restateSearchView(savedInstanceState);
+        reinitializeValues(savedInstanceState);
         return view;
     }
 
@@ -184,7 +180,7 @@ public class FragmentTask extends Fragment {
         super.onSaveInstanceState(outState);
     }
 
-    private void restateSearchView(Bundle savedInstanceState){
+    private void reinitializeValues(Bundle savedInstanceState){
         if (savedInstanceState != null) {
             mSearchQuery = savedInstanceState.getString(Tags.SEARCH_QUERY);
             mIsTheSearchViewUp = savedInstanceState.getBoolean(Tags.STATE_OF_THE_SEARCH_VIEW);

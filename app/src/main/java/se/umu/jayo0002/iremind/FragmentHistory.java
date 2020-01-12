@@ -61,11 +61,7 @@ public class FragmentHistory extends Fragment {
             startActivity(intent);
             Objects.requireNonNull(getActivity()).finish();
         });
-
-        if (savedInstanceState != null) {
-            mSearchQuery = savedInstanceState.getString(Tags.SEARCH_QUERY);
-            mIsTheSearchViewUp = savedInstanceState.getBoolean(Tags.STATE_OF_THE_SEARCH_VIEW);
-        }
+        reinitializeValues(savedInstanceState);
         return view;
     }
 
@@ -166,5 +162,12 @@ public class FragmentHistory extends Fragment {
             mSearchView.setQuery("", false);
         }
         super.onSaveInstanceState(outState);
+    }
+
+    private void reinitializeValues(Bundle savedInstanceState){
+        if (savedInstanceState != null) {
+            mSearchQuery = savedInstanceState.getString(Tags.SEARCH_QUERY);
+            mIsTheSearchViewUp = savedInstanceState.getBoolean(Tags.STATE_OF_THE_SEARCH_VIEW);
+        }
     }
 }

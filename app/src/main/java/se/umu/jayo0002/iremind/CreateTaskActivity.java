@@ -26,6 +26,7 @@ import se.umu.jayo0002.iremind.models.Date;
 import se.umu.jayo0002.iremind.models.LocationInfo;
 import se.umu.jayo0002.iremind.models.StringFormatter;
 import se.umu.jayo0002.iremind.models.Task;
+import se.umu.jayo0002.iremind.models.model_controllers.ObjectController;
 import se.umu.jayo0002.iremind.system_controllers.MapServiceController;
 
 import static se.umu.jayo0002.iremind.Tags.TASK;
@@ -44,17 +45,18 @@ public class CreateTaskActivity extends AppCompatActivity implements View.OnClic
     private String mTitle, mEvent, mPickedDate, mPickedTime;
     private boolean mIsDatePickerShown, mIsTimePickerShown;
     private ContentController mController;
-    volatile
+    private ObjectController mObjectController;
     private Task mTask;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_task);
+        mObjectController = new ObjectController();
         prepareUI();
-        if (getIntent().hasExtra(TASK) && savedInstanceState == null)
+        if (getIntent().hasExtra(TASK) && !mObjectController.isObjectValid(savedInstanceState))
             update();
-        else if (savedInstanceState != null)
+        else if (mObjectController.isObjectValid(savedInstanceState))
             updateTheStateOfUI(savedInstanceState);
         checkService();
         mDateDialog.setOnCancelListener(dialogInterface -> mIsDatePickerShown = false);
@@ -101,7 +103,7 @@ public class CreateTaskActivity extends AppCompatActivity implements View.OnClic
                 break;
             case R.id.btLocation:
                 Intent maps = new Intent(this, MapsActivity.class);
-                if (mLocationInfo != null)
+                if (mObjectController.isObjectValid(mLocationInfo))
                     maps.putExtra(Tags.LAT_LNG, mLocationInfo.getLatLng());
                 startActivityForResult(maps, Tags.REQUEST_CODE_MAP);
                 break;
@@ -132,8 +134,8 @@ public class CreateTaskActivity extends AppCompatActivity implements View.OnClic
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == Tags.REQUEST_CODE_MAP && resultCode == RESULT_OK) {
             mLocationInfo = Objects.requireNonNull(data).getParcelableExtra(Tags.LOCATION_OBJECT);
-            assert mLocationInfo != null;
-            mButtonAddLocation.setText(mLocationInfo.getAddress());
+            if(mObjectController.isObjectValid(mLocationInfo))
+                mButtonAddLocation.setText(mLocationInfo.getAddress());
         }
     }
 
@@ -181,24 +183,25 @@ public class CreateTaskActivity extends AppCompatActivity implements View.OnClic
 
     private void update() {
         mTask = Objects.requireNonNull(getIntent().getExtras()).getParcelable(TASK);
-        assert mTask != null;
-        mTitle = mTask.getTitle();
-        mEvent = mTask.getNote();
-        mYear = mTask.getYear();
-        mMonth = mTask.getMonth();
-        mDay = mTask.getDay();
-        mStartHour = mTask.getHour();
-        mStartMinute = mTask.getMinute();
-        mPickedDate = mTask.getDate();
-        mPickedTime = mTask.getTime();
-        mButtonAddDate.setText(mPickedDate);
-        mButtonAddStartTime.setText(mPickedTime);
-        mEventTitle.setText(mTitle);
-        checkLatLng(mTask.getLatLng(), mTask.getAddress());
+        if (mObjectController.isObjectValid(mTask)){
+            mTitle = mTask.getTitle();
+            mEvent = mTask.getNote();
+            mYear = mTask.getYear();
+            mMonth = mTask.getMonth();
+            mDay = mTask.getDay();
+            mStartHour = mTask.getHour();
+            mStartMinute = mTask.getMinute();
+            mPickedDate = mTask.getDate();
+            mPickedTime = mTask.getTime();
+            mButtonAddDate.setText(mPickedDate);
+            mButtonAddStartTime.setText(mPickedTime);
+            mEventTitle.setText(mTitle);
+            checkLatLng(mTask.getLatLng(), mTask.getAddress());
+        }
     }
 
     private void updateTheStateOfUI(Bundle outState) {
-        if (outState.getParcelable(Tags.LOCATION_OBJECT) != null) {
+        if (mObjectController.isObjectValid(outState.getParcelable(Tags.LOCATION_OBJECT))) {
             mLocationInfo = outState.getParcelable(Tags.LOCATION_OBJECT);
             mButtonAddLocation.setText(Objects.requireNonNull(mLocationInfo).getAddress());
         }
@@ -267,7 +270,7 @@ public class CreateTaskActivity extends AppCompatActivity implements View.OnClic
     }
 
     private void checkLatLng(LatLng latLng, String address) {
-        if (address != null && latLng != null) {
+        if (mObjectController.isObjectValid(address) && mObjectController.isObjectValid(latLng)) {
             mLocationInfo = new LocationInfo();
             mLocationInfo.setLatLng(latLng);
             mLocationInfo.setAddress(address);
@@ -276,9 +279,9 @@ public class CreateTaskActivity extends AppCompatActivity implements View.OnClic
     }
 
     private void checkStrings() {
-        if (mEvent != null && !mEvent.isEmpty())
+        if (mObjectController.isObjectValid(mEvent) && !mEvent.isEmpty())
             mMoreInfo.setText(mEvent);
-        if (mTitle != null && !mTitle.isEmpty())
+        if (mObjectController.isObjectValid(mTitle)&& !mTitle.isEmpty())
             mEventTitle.setText(mTitle);
     }
 }

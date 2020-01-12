@@ -12,25 +12,29 @@ import android.widget.TextView;
 import com.google.android.gms.maps.model.LatLng;
 import java.util.Objects;
 import se.umu.jayo0002.iremind.models.Task;
+import se.umu.jayo0002.iremind.models.model_controllers.ObjectController;
 import se.umu.jayo0002.iremind.view.Toaster;
 
 public class OpenTaskActivity extends AppCompatActivity implements View.OnClickListener {
     private Task mTask;
     private boolean mIsGoingMainActivity;
     private LatLng mLatLng;
-    Button mDemandMapDirections;
+    private Button mDemandMapDirections;
+    private ObjectController mObjectController;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_open_task);
-        if (savedInstanceState == null && getIntent().hasExtra(Tags.BUNDLE)) {
+        mObjectController = new ObjectController();
+        if (!mObjectController.isObjectValid(savedInstanceState) && getIntent().hasExtra(Tags.BUNDLE)) {
             Bundle bundle = getIntent().getBundleExtra(Tags.BUNDLE);
             mTask = Objects.requireNonNull(bundle).getParcelable(Tags.TASK);
-        } else if (savedInstanceState == null && getIntent().hasExtra(Tags.NEW_LAUNCH)) {
+        } else if (!mObjectController.isObjectValid(savedInstanceState) && getIntent().hasExtra(Tags.NEW_LAUNCH)) {
             mIsGoingMainActivity = true;
             mTask = Objects.requireNonNull(getIntent().getExtras()).getParcelable(Tags.NEW_LAUNCH);
-        } else if (savedInstanceState != null) {
+        } else if (mObjectController.isObjectValid(savedInstanceState)) {
             updateUI(savedInstanceState);
         }
         prepareUI();
@@ -103,7 +107,7 @@ public class OpenTaskActivity extends AppCompatActivity implements View.OnClickL
     }
 
     private void checkLatLng() {
-        if (mLatLng == null) {
+        if (!mObjectController.isObjectValid(mLatLng)) {
             mDemandMapDirections.setText(Tags.NON_APPLICABLE);
             mDemandMapDirections.setEnabled(false);
         } else {

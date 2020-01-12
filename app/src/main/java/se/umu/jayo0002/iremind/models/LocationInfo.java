@@ -5,6 +5,9 @@ import android.os.Parcelable;
 
 import com.google.android.gms.maps.model.LatLng;
 
+import se.umu.jayo0002.iremind.models.exceptions.Classification;
+import se.umu.jayo0002.iremind.models.exceptions.ExceptionBuilder;
+
 
 /**
  * This class represents an object that stores information about a location.
@@ -46,12 +49,15 @@ public class LocationInfo implements Parcelable {
 
     /**
      * It sets the coordinates of the location.
+     * @throws Exception if the object null.
      * @param latLng
      */
     public void setLatLng(LatLng latLng){
-        this.latLng = latLng;
+        if (latLng == null)
+            throw new ExceptionBuilder(Classification.LAT_LNG_NULL);
+        else
+            this.latLng = latLng;
     }
-
 
     /**
      * It returns the address of the location.
