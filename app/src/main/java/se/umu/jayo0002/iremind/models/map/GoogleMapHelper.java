@@ -11,7 +11,7 @@ import java.util.List;
 import se.umu.jayo0002.iremind.Tags;
 
 /**
- * A class help to geo code locations.
+ * A class helps to geocode locations.
  */
 public class GoogleMapHelper {
 

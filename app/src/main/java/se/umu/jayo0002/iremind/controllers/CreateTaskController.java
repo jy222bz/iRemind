@@ -27,7 +27,7 @@ public class CreateTaskController {
      * @param button
      * @param latLng
      * @param address
-     * @return
+     * @return boolean
      */
     public boolean setLocationButton(Button button, LatLng latLng, String address) {
         if (objectController.isStringValid(address)&& objectController.isObjectValid(latLng)) {
@@ -56,7 +56,7 @@ public class CreateTaskController {
     /**
      * It returns a LocationInfo Object
      *
-     * @return
+     * @return boolean
      */
     public LocationInfo getLocationInfo(LatLng latLng, String address) {
         LocationInfo locationInfo = new LocationInfo();

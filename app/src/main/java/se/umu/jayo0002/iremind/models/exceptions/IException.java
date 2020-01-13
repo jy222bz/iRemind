@@ -12,13 +12,13 @@ public interface IException {
 
     /**
      * It returns the classification of the Exception.
-     * @return
+     * @return Classification
      */
     Classification getClassification();
 
     /**
      * It returns the description of the Exception.
-     * @return
+     * @return String
      */
     String getDescription();
 }

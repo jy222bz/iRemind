@@ -31,7 +31,7 @@ public class ExceptionBuilder extends RuntimeException implements IException{
 
     /**
      * It return the classification of the Exception.
-     * @return
+     * @return Classification
      */
     @Override
     public Classification getClassification() {
@@ -40,7 +40,7 @@ public class ExceptionBuilder extends RuntimeException implements IException{
 
     /**
      * It returns the description of the Exception.
-     * @return
+     * @return String
      */
     @Override
     public String getDescription() {

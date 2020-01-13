@@ -32,13 +32,13 @@ public class IRemind extends Application {
     public void onCreate() {
         super.onCreate();
         mApplication = this;
-        createChannel();
+        doCreate();
     }
 
     /**
      * It creates the channel for notification.
      */
-    private void createChannel() {
+    private void doCreate() {
         Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel channel = new NotificationChannel(Tags.CHANNEL_ID, Tags.CHANNEL_NAME,
