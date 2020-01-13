@@ -3,7 +3,6 @@ package se.umu.jayo0002.iremind;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
@@ -15,12 +14,8 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TimePicker;
-
-import com.google.android.gms.maps.model.LatLng;
-
-import java.util.Calendar;
 import java.util.Objects;
-
+import se.umu.jayo0002.iremind.controllers.CreateTaskController;
 import se.umu.jayo0002.iremind.controllers.CreateTaskHelper;
 import se.umu.jayo0002.iremind.models.date.Date;
 import se.umu.jayo0002.iremind.models.LocationInfo;
@@ -28,7 +23,7 @@ import se.umu.jayo0002.iremind.models.text.StringFormatter;
 import se.umu.jayo0002.iremind.models.Task;
 import se.umu.jayo0002.iremind.models.model_controllers.ObjectController;
 import se.umu.jayo0002.iremind.system_controllers.MapServiceController;
-
+import se.umu.jayo0002.iremind.view.DialogConstructor;
 import static se.umu.jayo0002.iremind.Tags.TASK;
 
 public class CreateTaskActivity extends AppCompatActivity implements View.OnClickListener,
@@ -47,11 +42,13 @@ public class CreateTaskActivity extends AppCompatActivity implements View.OnClic
     private CreateTaskHelper mCreateTaskHelper;
     private ObjectController mObjectController;
     private Task mTask;
+    private CreateTaskController mCreateTaskController;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_task);
+        mCreateTaskController = new CreateTaskController();
         mObjectController = new ObjectController();
         prepareUI();
         if (getIntent().hasExtra(TASK) && !mObjectController.isObjectValid(savedInstanceState))
@@ -59,8 +56,18 @@ public class CreateTaskActivity extends AppCompatActivity implements View.OnClic
         else if (mObjectController.isObjectValid(savedInstanceState))
             updateTheStateOfUI(savedInstanceState);
         checkService();
-        mDateDialog.setOnCancelListener(dialogInterface -> mIsDatePickerShown = false);
-        mTimeDialog.setOnCancelListener(dialogInterface -> mIsTimePickerShown = false);
+        onCancelDialog();
+    }
+
+    private void onCancelDialog(){
+        mDateDialog.setOnCancelListener(dialogInterface -> {
+            mIsDatePickerShown = false;
+            mDateDialog.dismiss();
+        });
+        mTimeDialog.setOnCancelListener(dialogInterface -> {
+            mIsTimePickerShown = false;
+            mTimeDialog.dismiss();
+        });
     }
 
     private final TextWatcher textWatcher = new TextWatcher() {
@@ -196,7 +203,9 @@ public class CreateTaskActivity extends AppCompatActivity implements View.OnClic
             mButtonAddDate.setText(mPickedDate);
             mButtonAddStartTime.setText(mPickedTime);
             mEventTitle.setText(mTitle);
-            checkLatLng(mTask.getLatLng(), mTask.getAddress());
+            if (mCreateTaskController.setLocationButton(mButtonAddLocation,mTask.getLatLng(),mTask.getAddress())){
+                mLocationInfo = mCreateTaskController.getLocationInfo(mTask.getLatLng(),mTask.getAddress());
+            }
         }
     }
 
@@ -218,7 +227,7 @@ public class CreateTaskActivity extends AppCompatActivity implements View.OnClic
         mStartMinute = outState.getInt(Tags.EVENT_TIME_MINUTES);
         mButtonAddDate.setText(mPickedDate);
         mButtonAddStartTime.setText(mPickedTime);
-        checkStrings();
+        mCreateTaskController.setTextForButtons(mEventTitle,mMoreInfo,mTitle,mEvent);
         if (mIsTimePickerShown)
             mTimeDialog.show();
         else if (mIsDatePickerShown)
@@ -258,30 +267,8 @@ public class CreateTaskActivity extends AppCompatActivity implements View.OnClic
     }
 
     private void prepareDialogs() {
-        mDateDialog = new DatePickerDialog(
-                CreateTaskActivity.this,
-                R.style.PickerTheme, this, mYear, mMonth, mDay);
-        mDateDialog.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
-        mDateDialog.getDatePicker().setMaxDate(Date.getPlus(6));
-        mTimeDialog = new TimePickerDialog(CreateTaskActivity.this,
-                R.style.PickerTheme, this,
-                Calendar.getInstance().get(Calendar.HOUR_OF_DAY),
-                Calendar.getInstance().get(Calendar.MINUTE), false);
-    }
-
-    private void checkLatLng(LatLng latLng, String address) {
-        if (mObjectController.isObjectValid(address) && mObjectController.isObjectValid(latLng)) {
-            mLocationInfo = new LocationInfo();
-            mLocationInfo.setLatLng(latLng);
-            mLocationInfo.setAddress(address);
-            mButtonAddLocation.setText(address);
-        }
-    }
-
-    private void checkStrings() {
-        if (mObjectController.isObjectValid(mEvent) && !mEvent.isEmpty())
-            mMoreInfo.setText(mEvent);
-        if (mObjectController.isObjectValid(mTitle)&& !mTitle.isEmpty())
-            mEventTitle.setText(mTitle);
+        DialogConstructor dialog = new DialogConstructor(this);
+        mDateDialog = dialog.getDateDialog(mYear,mMonth,mDay,6,this);
+        mTimeDialog = dialog.getTimeDialog(this);
     }
 }

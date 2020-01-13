@@ -20,4 +20,14 @@ public class ObjectController implements IControlObjects {
     public <T> boolean isObjectValid(T object) {
         return object != null;
     }
+
+    /**
+     * It checks whether the string is valid.
+     * @param s
+     * @return boolean
+     */
+    @Override
+    public boolean isStringValid(String s) {
+        return s != null && !s.isEmpty();
+    }
 }

@@ -42,7 +42,7 @@ public class Date {
      * @param amountOfMonths
      * @return long
      */
-    public static long getPlus (int amountOfMonths){
+    public static long getTimeInTheFuture(int amountOfMonths){
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.MONTH, +amountOfMonths);
         return calendar.getTimeInMillis();

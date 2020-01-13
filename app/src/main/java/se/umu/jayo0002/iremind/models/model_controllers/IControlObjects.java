@@ -17,4 +17,11 @@ public interface IControlObjects {
      * @return boolean
      */
     <T> boolean isObjectValid(T object);
+
+    /**
+     * It checks whether the string is valid.
+     * @param s
+     * @return boolean
+     */
+    boolean isStringValid(String s);
 }
