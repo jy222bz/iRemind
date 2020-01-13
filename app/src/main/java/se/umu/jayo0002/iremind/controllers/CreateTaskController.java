@@ -64,8 +64,4 @@ public class CreateTaskController {
         locationInfo.setAddress(address);
         return locationInfo;
     }
-
-    public void getButtons(){
-
-    }
 }
