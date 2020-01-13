@@ -24,6 +24,7 @@ public class ExceptionBuilder extends RuntimeException implements IException{
      * @param classification
      */
     public ExceptionBuilder(Classification classification){
+        super(classification.getDescription());
         this.classification = classification;
         this.description = classification.getDescription();
     }
