@@ -17,7 +17,7 @@ public class CreateTaskHelper {
     /**
      * A private field for the Context.
      */
-    private Context mContext;
+    private final Context mContext;
 
     /**
      * A constructor, to construct the object and to initializes the context.

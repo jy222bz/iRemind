@@ -114,10 +114,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private void onSearch() {
         mSearchBar.setOnEditorActionListener((textView, i, keyEvent) -> {
+            boolean val = false;
             if (i == EditorInfo.IME_ACTION_SEARCH
                     || i == EditorInfo.IME_ACTION_DONE
                     || keyEvent.getAction() == KeyEvent.ACTION_DOWN
                     || keyEvent.getAction() == KeyEvent.KEYCODE_ENTER) {
+                val = true;
                 List<Address> list = GoogleMapHelper.geoCoder(null,
                         this, mSearchBar.getText().toString());
                 if (list.size() > 0) {
@@ -127,7 +129,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 }
             }
             mSearchBar.getText().clear();
-            return false;
+            return val;
         });
     }
 

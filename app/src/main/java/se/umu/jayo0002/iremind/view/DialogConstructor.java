@@ -20,7 +20,7 @@ public class DialogConstructor {
     /**
      *
      */
-    private Activity activity;
+    private final Activity activity;
 
     /**
      * It constructs the object.
