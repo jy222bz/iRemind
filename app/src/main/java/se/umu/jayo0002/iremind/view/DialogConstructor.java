@@ -18,7 +18,7 @@ import se.umu.jayo0002.iremind.models.date.Date;
 public class DialogConstructor {
 
     /**
-     *
+     * A private field represents the activity.
      */
     private final Activity activity;
 
