@@ -62,6 +62,6 @@ public class Tags {
     public static final int LONG_SNACK = 0;
     public static final String ALARM_SET= "The Reminder Is Set!";
     public static final String ALARM_IS_UPDATED= "The Reminder Is Updated and Set!.";
-    public static final String ADDRESS_GUIDE= "To select an address, Tap The Position Of The Location LONG.";
+    public static final String ADDRESS_GUIDE= "To Select An Address, LONG-PRESS The Position Of The Location.";
     public static final String LOCATION_IS_NULL="Failed to fetch the location. Try again later!";
 }
