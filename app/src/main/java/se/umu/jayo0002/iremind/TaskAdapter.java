@@ -30,6 +30,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskHolder> im
     public TaskAdapter(Context context){
         mContext = context;
     }
+
     void setOnItemClickListener(OnItemClickListener onItemClickListener){
         this.mListener = onItemClickListener;
     }

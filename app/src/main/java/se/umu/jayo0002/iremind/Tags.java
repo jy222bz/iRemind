@@ -6,6 +6,7 @@ public class Tags {
 
     public static final String CHANNEL_ID = "Notification Channel.";
     public static final int MAX_AMOUNT_OF_ADDRESSES =1;
+    public static final String DB_NAME="note_database";
     public static final String CHANNEL_NAME = "A ToDo-Task Reminder!";
     static final String NOT_SUPPORTED = "Your Phone does NOT support this version of Google Map service.";
     public static final int LOCATION_PERMISSION_REQUEST_CODE  = 189;

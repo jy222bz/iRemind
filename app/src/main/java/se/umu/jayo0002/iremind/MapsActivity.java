@@ -81,10 +81,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     if (grantResult != PackageManager.PERMISSION_GRANTED) return;
                 }
             }
-            Toaster.displayToast(this, Tags.ADDRESS_GUIDE, Tags.LONG_TOAST);
             mPermitted = true;
             doCheckTheConditions();
         }
+        Toaster.displayToast(this, Tags.ADDRESS_GUIDE, Tags.LONG_TOAST);
     }
 
     private void getCurrentLocation() {

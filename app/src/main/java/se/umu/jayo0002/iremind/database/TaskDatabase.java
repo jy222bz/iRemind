@@ -7,16 +7,14 @@ import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.sqlite.db.SupportSQLiteDatabase;
+
+import se.umu.jayo0002.iremind.Tags;
 import se.umu.jayo0002.iremind.models.Task;
 
 /**
  * This class manages the local data.
  * It extends the RoomDatabase class.
  * It creates an instance of the database.
- *
- * @author Jacob Yousif
- * @version 1.0
- * @since 2019 -12-09
  */
 @Database(entities = Task.class, version =5, exportSchema = false)
 public abstract class TaskDatabase extends RoomDatabase {
@@ -33,7 +31,7 @@ public abstract class TaskDatabase extends RoomDatabase {
     static synchronized TaskDatabase getInstance(Context context) {
         if (mTaskDatabase == null) {
             mTaskDatabase = Room.databaseBuilder(context.getApplicationContext(),
-                    TaskDatabase.class, "note_database").fallbackToDestructiveMigration()
+                    TaskDatabase.class, Tags.DB_NAME).fallbackToDestructiveMigration()
                     .addCallback(roomCallback).build();
         }
         return mTaskDatabase;

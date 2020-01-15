@@ -16,10 +16,6 @@ import se.umu.jayo0002.iremind.models.Task;
  * TaskViewModel prepares and provides data for the UI.
  * It communicates with the TaskRepo.
  * It extends the AndroidViewModel.
- *
- * @author Jacob Yousif
- * @version 1.0
- * @since 2019 -12-09
  */
 public class TaskViewModel extends AndroidViewModel {
 
@@ -57,11 +53,11 @@ public class TaskViewModel extends AndroidViewModel {
     }
 
     /**
-     * It add the Task in the repository.
+     * It adds the Task in the repository.
      * @param task
      */
-    public void insert(Task task) {
-        mRepo.insert(task);
+    public void add(Task task) {
+        mRepo.add(task);
     }
 
     /**

@@ -111,7 +111,7 @@ public class FragmentTask extends Fragment {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == Tags.REQUEST_CODE_CREATE_EVENT && resultCode == RESULT_OK) {
             mTask = Objects.requireNonNull(Objects.requireNonNull(data).getExtras()).getParcelable(Tags.TASK);
-            mTaskViewModel.insert(mTask);
+            mTaskViewModel.add(mTask);
             AlarmHandler.scheduleAlarm(Objects.requireNonNull(getActivity()), mTask);
             Toaster.displaySnack(getView(),Tags.ALARM_SET,Tags.LONG_SNACK);
         } else if (requestCode == Tags.REQUEST_CODE_EDIT_EVENT && resultCode == RESULT_OK) {

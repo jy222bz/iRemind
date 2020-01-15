@@ -11,9 +11,6 @@ import se.umu.jayo0002.iremind.models.Task;
  * This object provide a single source of data from the database to the TaskViewModel.
  * It communicates between the TaskViewModel and the database.
  *
- * @author Jacob Yousif
- * @version 1.0
- * @since 2019 -12-09
  */
 public class TaskRepo {
     /**
@@ -52,8 +49,8 @@ public class TaskRepo {
      * It adds the Task in the database.
      * @param task
      */
-    public void insert(Task task) {
-        new InsertTaskAsyncTask(mTaskDao).execute(task);
+    public void add(Task task) {
+        new addTaskAsyncTask(mTaskDao).execute(task);
     }
 
     /**
@@ -116,10 +113,10 @@ public class TaskRepo {
     /**
      * It executes the insertion operation in the background thread.
      */
-    private static class InsertTaskAsyncTask extends AsyncTask<Task, Void, Void> {
+    private static class addTaskAsyncTask extends AsyncTask<Task, Void, Void> {
         private final TaskDao mTaskDao;
 
-        private InsertTaskAsyncTask(TaskDao taskDao) {
+        private addTaskAsyncTask(TaskDao taskDao) {
             this.mTaskDao = taskDao;
         }
 
