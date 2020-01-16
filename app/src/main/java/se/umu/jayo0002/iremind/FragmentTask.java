@@ -77,7 +77,7 @@ public class FragmentTask extends Fragment {
 
     private void onClickFAButton() {
         mFAB.setOnClickListener((View v) -> {
-            UIUtil.hideKeyboard(Objects.requireNonNull(getActivity()));
+            collapseMenu();
             Intent intent = new Intent(getContext(), CreateTaskActivity.class);
             startActivityForResult(intent, Tags.REQUEST_CODE_CREATE_EVENT);
         });
@@ -127,7 +127,6 @@ public class FragmentTask extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        collapseView();
         if (requestCode == Tags.REQUEST_CODE_CREATE_EVENT && resultCode == RESULT_OK) {
             mTask = Objects.requireNonNull(Objects.requireNonNull(data).getExtras()).getParcelable(Tags.TASK);
             mTaskViewModel.add(mTask);
@@ -143,7 +142,7 @@ public class FragmentTask extends Fragment {
     }
 
     private void edit() {
-        UIUtil.hideKeyboard(Objects.requireNonNull(getActivity()));
+        collapseMenu();
         Intent intent = new Intent(getContext(), CreateTaskActivity.class);
         intent.putExtra(Tags.TASK, mTask);
         startActivityForResult(intent, Tags.REQUEST_CODE_EDIT_EVENT);
@@ -160,6 +159,7 @@ public class FragmentTask extends Fragment {
 
             @Override
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+                collapseMenu();
                 Task task = mAdapter.getTaskAt(viewHolder.getAdapterPosition());
                 if (direction == ItemTouchHelper.LEFT) {
                     AlarmHandler.cancelAlarm(Objects.requireNonNull(getActivity()), task);
@@ -205,11 +205,12 @@ public class FragmentTask extends Fragment {
         }
     }
 
-    private void collapseView() {
+    private void collapseMenu() {
         if (mMenuItem != null) {
             if (mMenuItem.isActionViewExpanded()) {
                 mMenuItem.collapseActionView();
                 mSearchView.setQuery("", false);
+                UIUtil.hideKeyboard(Objects.requireNonNull(getActivity()));
             }
         }
     }

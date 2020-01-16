@@ -122,12 +122,7 @@ public class FragmentHistory extends Fragment {
     @Override
     public void onDestroyOptionsMenu() {
         super.onDestroyOptionsMenu();
-        if (mSearchView != null &&
-                !mSearchView.getQuery().toString().isEmpty()) {
-            UIUtil.hideKeyboard(Objects.requireNonNull(getActivity()));
-            mSearchView.setQuery("", true);
-            mMenuItem.collapseActionView();
-        }
+        collapseMenu();
     }
 
     private void onSwipe() {
@@ -142,6 +137,7 @@ public class FragmentHistory extends Fragment {
             @Override
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
                 Task task = mAdapter.getTaskAt(viewHolder.getAdapterPosition());
+                collapseMenu();
                 if (direction == ItemTouchHelper.LEFT) {
                     mTaskViewModel.delete(task);
                     Toaster.displaySnack(getView(), Tags.EVENT_DELETED, Tags.LONG_SNACK);
@@ -162,6 +158,7 @@ public class FragmentHistory extends Fragment {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.delete) {
+            collapseMenu();
             if (Objects.requireNonNull(mTaskViewModel.getInactiveTasks().getValue()).size() == 0)
                 Toaster.displayToast(getActivity(), Tags.NO_ARCHIVE, Tags.LONG_TOAST);
             else
@@ -197,6 +194,16 @@ public class FragmentHistory extends Fragment {
         if (savedInstanceState != null) {
             mSearchQuery = savedInstanceState.getString(Tags.SEARCH_QUERY);
             mIsTheSearchViewUp = savedInstanceState.getBoolean(Tags.STATE_OF_THE_SEARCH_VIEW);
+        }
+    }
+
+    private void collapseMenu() {
+        if (mMenuItem != null) {
+            if (mMenuItem.isActionViewExpanded()) {
+                UIUtil.hideKeyboard(Objects.requireNonNull(getActivity()));
+                mMenuItem.collapseActionView();
+                mSearchView.setQuery("", false);
+            }
         }
     }
 }
