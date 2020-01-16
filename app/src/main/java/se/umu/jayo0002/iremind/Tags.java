@@ -64,4 +64,5 @@ public class Tags {
     public static final String ALARM_IS_UPDATED= "The Reminder Is Updated and Set!.";
     public static final String ADDRESS_GUIDE= "To Select An Address, LONG-PRESS The Position Of The Location.";
     public static final String LOCATION_IS_NULL="Failed to fetch the location. Try again later!";
+    public static final String NO_LOCATION_FOUND="The Provided Address Could Not Be Found!";
 }

@@ -26,6 +26,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.Task;
+import net.yslibrary.android.keyboardvisibilityevent.util.UIUtil;
 import java.util.List;
 import java.util.Objects;
 import se.umu.jayo0002.iremind.models.map.GoogleMapHelper;
@@ -119,6 +120,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     || i == EditorInfo.IME_ACTION_DONE
                     || keyEvent.getAction() == KeyEvent.ACTION_DOWN
                     || keyEvent.getAction() == KeyEvent.KEYCODE_ENTER) {
+                UIUtil.hideKeyboard(this);
                 val = true;
                 List<Address> list = GoogleMapHelper.geoCoder(null,
                         this, mSearchBar.getText().toString());
@@ -126,6 +128,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     Address address = list.get(0);
                     mLatLng = new LatLng(address.getLatitude(), address.getLongitude());
                     onCallMoveToLocation(new LatLng(address.getLatitude(), address.getLongitude()));
+                } else {
+                    Toaster.displayToast(this,Tags.NO_LOCATION_FOUND,Tags.LONG_TOAST);
                 }
             }
             mSearchBar.getText().clear();
@@ -217,6 +221,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private void prepareUI() {
         mSearchBar = findViewById(R.id.search_map);
+        mSearchBar.setImeOptions(EditorInfo.IME_FLAG_NO_EXTRACT_UI);
         mMyLocation = findViewById(R.id.to_my_location);
         mMyLocation.setVisibility(View.INVISIBLE);
         mMyLocation.setEnabled(false);

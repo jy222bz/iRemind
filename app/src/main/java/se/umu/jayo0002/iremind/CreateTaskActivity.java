@@ -10,10 +10,14 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TimePicker;
+
+import net.yslibrary.android.keyboardvisibilityevent.util.UIUtil;
+
 import java.util.Objects;
 import se.umu.jayo0002.iremind.controllers.CreateTaskController;
 import se.umu.jayo0002.iremind.controllers.CreateTaskHelper;
@@ -240,6 +244,7 @@ public class CreateTaskActivity extends AppCompatActivity implements View.OnClic
             main.putExtra(TASK, mCreateTaskHelper.getTask(mTitle, mEvent, mStartHour, mStartMinute,
                     mYear, mMonth, mDay, mLocationInfo, mTask));
             setResult(RESULT_OK, main);
+            UIUtil.hideKeyboard(this);
             this.finish();
         }
     }
@@ -262,6 +267,8 @@ public class CreateTaskActivity extends AppCompatActivity implements View.OnClic
         mEventTitle = findViewById(R.id.tvTitle);
         mMoreInfo = findViewById(R.id.tvMoreInfo);
         prepareDialogs();
+        mEventTitle.setImeOptions(EditorInfo.IME_FLAG_NO_EXTRACT_UI);
+        mMoreInfo.setImeOptions(EditorInfo.IME_FLAG_NO_EXTRACT_UI);
         mMoreInfo.addTextChangedListener(textWatcher);
         mEventTitle.addTextChangedListener(textWatcher);
     }

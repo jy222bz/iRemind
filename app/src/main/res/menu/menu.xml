@@ -2,7 +2,10 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item android:id="@+id/search"
-        app:showAsAction="always"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        app:showAsAction="always|collapseActionView"
+        android:icon="@drawable/ic_search"
         app:actionViewClass="android.widget.SearchView"
         android:title="@string/search_hint" />
 </menu>

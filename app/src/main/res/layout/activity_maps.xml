@@ -47,6 +47,8 @@
             android:layout_gravity="center"
             android:layout_toEndOf="@+id/image"
             android:background="@null"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
             android:hint="@string/address"
             android:imeOptions="actionSearch"
             android:importantForAutofill="no"
