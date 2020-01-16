@@ -84,6 +84,15 @@ public class FragmentTask extends Fragment {
     }
 
     @Override
+    public void onDestroyOptionsMenu() {
+        super.onDestroyOptionsMenu();
+        if (mSearchView != null){
+            mSearchView.setIconified(true);
+            UIUtil.hideKeyboard(Objects.requireNonNull(getActivity()));
+        }
+    }
+
+    @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         menu.clear();
@@ -190,7 +199,7 @@ public class FragmentTask extends Fragment {
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
-        if (mSearchQuery != null && !mSearchView.getQuery().toString().isEmpty()) {
+        if (mMenuItem != null && mMenuItem.isActionViewExpanded()) {
             outState.putString(Tags.SEARCH_QUERY, mSearchQuery);
             outState.putBoolean(Tags.STATE_OF_THE_SEARCH_VIEW, true);
             mSearchView.setQuery("", false);

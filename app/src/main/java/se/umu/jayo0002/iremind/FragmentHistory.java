@@ -122,7 +122,10 @@ public class FragmentHistory extends Fragment {
     @Override
     public void onDestroyOptionsMenu() {
         super.onDestroyOptionsMenu();
-        collapseMenu();
+        if (mSearchView != null ){
+            mSearchView.setIconified(true);
+            UIUtil.hideKeyboard(Objects.requireNonNull(getActivity()));
+        }
     }
 
     private void onSwipe() {
@@ -182,7 +185,7 @@ public class FragmentHistory extends Fragment {
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
-        if (mSearchQuery != null && !mSearchView.getQuery().toString().isEmpty()) {
+        if (mMenuItem != null && mMenuItem.isActionViewExpanded()) {
             outState.putString(Tags.SEARCH_QUERY, mSearchQuery);
             outState.putBoolean(Tags.STATE_OF_THE_SEARCH_VIEW, true);
             mSearchView.setQuery("", false);
@@ -200,10 +203,11 @@ public class FragmentHistory extends Fragment {
     private void collapseMenu() {
         if (mMenuItem != null) {
             if (mMenuItem.isActionViewExpanded()) {
-                UIUtil.hideKeyboard(Objects.requireNonNull(getActivity()));
                 mMenuItem.collapseActionView();
                 mSearchView.setQuery("", false);
+                UIUtil.hideKeyboard(Objects.requireNonNull(getActivity()));
             }
         }
     }
+
 }
