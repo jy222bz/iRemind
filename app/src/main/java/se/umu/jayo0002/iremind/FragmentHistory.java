@@ -124,6 +124,7 @@ public class FragmentHistory extends Fragment {
         super.onDestroyOptionsMenu();
         if (mSearchView != null &&
                 !mSearchView.getQuery().toString().isEmpty()) {
+            UIUtil.hideKeyboard(Objects.requireNonNull(getActivity()));
             mSearchView.setQuery("", true);
             mMenuItem.collapseActionView();
         }
@@ -171,11 +172,13 @@ public class FragmentHistory extends Fragment {
 
     private void updateSearchView(boolean isTheStateOut) {
         if (isTheStateOut) {
-            mMenuItem.expandActionView();
-            mSearchView.setQuery(mSearchQuery, false);
             mTaskViewModel.getInactiveTasks().observe(Objects.requireNonNull(getActivity()),
                     tasks -> mAdapter.setTasks(tasks));
             mAdapter.getFilter().filter(mSearchQuery);
+            mMenuItem.expandActionView();
+            mSearchView.onActionViewExpanded();
+            mSearchView.setQuery(mSearchQuery, false);
+            mSearchView.setFocusable(true);
             mIsTheSearchViewUp = false;
         }
     }

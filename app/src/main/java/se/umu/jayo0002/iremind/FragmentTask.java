@@ -93,7 +93,7 @@ public class FragmentTask extends Fragment {
         mSearchView = (SearchView) mMenuItem.getActionView();
         mSearchView.setImeOptions(EditorInfo.IME_FLAG_NO_EXTRACT_UI | EditorInfo.IME_ACTION_DONE );
         mSearchView.setIconifiedByDefault(false);
-        updateSearchView(mIsTheSearchViewUp, mMenuItem);
+        updateSearchView(mIsTheSearchViewUp);
         mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String s) {
@@ -124,17 +124,6 @@ public class FragmentTask extends Fragment {
             }
         });
     }
-
-    @Override
-    public void onDestroyOptionsMenu() {
-        super.onDestroyOptionsMenu();
-        if (mSearchView != null &&
-                !mSearchView.getQuery().toString().isEmpty()) {
-            mSearchView.setQuery("", false);
-            mMenuItem.collapseActionView();
-        }
-    }
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -186,13 +175,15 @@ public class FragmentTask extends Fragment {
         }).attachToRecyclerView(mRV);
     }
 
-    private void updateSearchView(boolean isTheStateOut, MenuItem item) {
+    private void updateSearchView(boolean isTheStateOut) {
         if (isTheStateOut) {
-            item.expandActionView();
-            mSearchView.setQuery(mSearchQuery, false);
             mTaskViewModel.getActiveTasks().observe(Objects.requireNonNull(getActivity()),
                     tasks -> mAdapter.setTasks(tasks));
             mAdapter.getFilter().filter(mSearchQuery);
+            mMenuItem.expandActionView();
+            mSearchView.onActionViewExpanded();
+            mSearchView.setQuery(mSearchQuery, false);
+            mSearchView.setFocusable(true);
             mIsTheSearchViewUp = false;
         }
     }
