@@ -106,6 +106,7 @@ public class FragmentTask extends Fragment {
         mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String s) {
+                mMenuItem.collapseActionView();
                 mSearchView.setQuery("", false);
                 return false;
             }
