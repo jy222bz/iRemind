@@ -202,13 +202,13 @@ public class FragmentHistory extends Fragment {
     }
 
     private void collapseMenu() {
-        if (mMenuItem != null) {
+        if (mSearchView != null && mMenuItem != null){
             if (mMenuItem.isActionViewExpanded()) {
-                mMenuItem.collapseActionView();
                 mSearchView.setQuery("", false);
+                mMenuItem.collapseActionView();
+                mSearchView.setIconified(true);
                 UIUtil.hideKeyboard(Objects.requireNonNull(getActivity()));
             }
         }
     }
-
 }
