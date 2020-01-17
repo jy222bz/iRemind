@@ -100,7 +100,7 @@ public class FragmentTask extends Fragment {
         in.inflate(R.menu.menu, menu);
         mMenuItem = menu.findItem(R.id.search);
         mSearchView = (SearchView) mMenuItem.getActionView();
-        mSearchView.setImeOptions(EditorInfo.IME_FLAG_NO_EXTRACT_UI | EditorInfo.IME_ACTION_DONE );
+        mSearchView.setImeOptions(EditorInfo.IME_FLAG_NO_EXTRACT_UI);
         mSearchView.setIconifiedByDefault(false);
         updateSearchView(mIsTheSearchViewUp);
         mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -218,7 +218,6 @@ public class FragmentTask extends Fragment {
     private void collapseMenu() {
         if (mSearchView != null && mMenuItem != null){
             if (mMenuItem.isActionViewExpanded()) {
-                mSearchView.setQuery("", false);
                 mMenuItem.collapseActionView();
                 mSearchView.setIconified(true);
                 UIUtil.hideKeyboard(Objects.requireNonNull(getActivity()));

@@ -50,7 +50,7 @@ public class TaskRepo {
      * @param task
      */
     public void add(Task task) {
-        new addTaskAsyncTask(mTaskDao).execute(task);
+        new addTask(mTaskDao).execute(task);
     }
 
     /**
@@ -58,7 +58,7 @@ public class TaskRepo {
      * @param task
      */
     public void update(Task task) {
-        new UpdateTaskAsyncTask(mTaskDao).execute(task);
+        new UpdateTask(mTaskDao).execute(task);
     }
 
     /**
@@ -66,21 +66,21 @@ public class TaskRepo {
      * @param task
      */
     public void delete(Task task) {
-        new DeleteTaskAsyncTask(mTaskDao).execute(task);
+        new DeleteTask(mTaskDao).execute(task);
     }
 
     /**
      * It deletes all the Tasks in the database.
      */
     public void deleteAll() {
-        new DeleteAllAsyncTask(mTaskDao).execute();
+        new DeleteAll(mTaskDao).execute();
     }
 
     /**
      * It deletes all the inactive Tasks in the database.
      */
     public void deleteAllInactiveTasks() {
-        new deleteAllInactiveTasksAsyncTask(mTaskDao).execute();
+        new deleteAllInactiveTasks(mTaskDao).execute();
     }
 
 
@@ -113,10 +113,10 @@ public class TaskRepo {
     /**
      * It executes the insertion operation in the background thread.
      */
-    private static class addTaskAsyncTask extends AsyncTask<Task, Void, Void> {
+    private static class addTask extends AsyncTask<Task, Void, Void> {
         private final TaskDao mTaskDao;
 
-        private addTaskAsyncTask(TaskDao taskDao) {
+        private addTask(TaskDao taskDao) {
             this.mTaskDao = taskDao;
         }
 
@@ -130,10 +130,10 @@ public class TaskRepo {
     /**
      * It executes the update operation in the background thread.
      */
-    private static class UpdateTaskAsyncTask extends AsyncTask<Task, Void, Void> {
+    private static class UpdateTask extends AsyncTask<Task, Void, Void> {
         private final TaskDao mTaskDao;
 
-        private UpdateTaskAsyncTask(TaskDao taskDao) {
+        private UpdateTask(TaskDao taskDao) {
             this.mTaskDao = taskDao;
         }
 
@@ -147,10 +147,10 @@ public class TaskRepo {
     /**
      * It executes the insertion operation in the background thread.
      */
-    private static class DeleteTaskAsyncTask extends AsyncTask<Task, Void, Void> {
+    private static class DeleteTask extends AsyncTask<Task, Void, Void> {
         private final TaskDao mTaskDao;
 
-        private DeleteTaskAsyncTask(TaskDao taskDao) {
+        private DeleteTask(TaskDao taskDao) {
             this.mTaskDao = taskDao;
         }
 
@@ -164,10 +164,10 @@ public class TaskRepo {
     /**
      * It executes the delete all operation in the background thread.
      */
-    private static class DeleteAllAsyncTask extends AsyncTask<Void, Void, Void> {
+    private static class DeleteAll extends AsyncTask<Void, Void, Void> {
         private final TaskDao mTaskDao;
 
-        private DeleteAllAsyncTask(TaskDao taskDao) {
+        private DeleteAll(TaskDao taskDao) {
             this.mTaskDao = taskDao;
         }
 
@@ -181,10 +181,10 @@ public class TaskRepo {
     /**
      * It executes the delete all inactive Tasks operation in the background thread.
      */
-    private static class deleteAllInactiveTasksAsyncTask extends AsyncTask<Void, Void, Void> {
+    private static class deleteAllInactiveTasks extends AsyncTask<Void, Void, Void> {
         private final TaskDao mTaskDao;
 
-        private deleteAllInactiveTasksAsyncTask(TaskDao taskDao) {
+        private deleteAllInactiveTasks(TaskDao taskDao) {
             this.mTaskDao = taskDao;
         }
 
