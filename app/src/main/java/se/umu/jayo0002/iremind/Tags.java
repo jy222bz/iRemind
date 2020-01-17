@@ -43,9 +43,9 @@ public class Tags {
     public static final String EVENT_DEACTIVATED = "The REMINDER is deactivated!";
     public static final String EVENT_ACTIVATED = "The REMINDER is activated now!";
     public static final String EVENT_INVALID = "It is permanently inactive. Only EVENTS with DATE and Time in the future can be reactivated again!";
-    public static final String BUNDLE = "A Bundle Object carrying data.";
+    public static final String BUNDLE_FROM_iREMIND = "A Bundle Object carrying data.";
     public static final String REMINDER = "A Task-ToDo Reminder!";
-    public static final String NEW_LAUNCH = "SHOW TASK";
+    public static final String TASK_LAUNCHED_FROM_AN_ACTIVITY = "SHOW TASK";
     public static final String BOOLEAN = "Whether to go to the Main Activity or not.";
     public static final String NOTE_INVALID_SIZE = "NOTE CANNOT BE LONGER THAN " + Tags.THE_ALLOWED_AMOUNT_FOR_NOTE +" CHARACTERS.";
     public static final long[] VIBRATION_PATTERN = {0, 100, 500, 100, 500, 100, 500, 100, 500, 100};
@@ -59,7 +59,7 @@ public class Tags {
     public static final int THE_ALLOWED_AMOUNT_FOR_TITLE = 34;
     public static final int THE_ALLOWED_AMOUNT_FOR_NOTE = 600;
     public static final int LONG_TOAST = 1;
-    public static final int LONG_SNACK = 0;
+    public static final int SHORT_SNACK = -1;
     public static final String ALARM_SET= "The Reminder Is Set!";
     public static final String ALARM_IS_UPDATED= "The Reminder Is Updated and Set!.";
     public static final String ADDRESS_GUIDE= "To Select An Address, LONG-PRESS The Position Of The Location.";

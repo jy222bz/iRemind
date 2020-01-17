@@ -3,16 +3,12 @@ package se.umu.jayo0002.iremind;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.view.MenuItemCompat;
-import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -38,7 +34,7 @@ import se.umu.jayo0002.iremind.view_models.TaskViewModel;
 /**
  * This Fragment is for showing the old and inactive Tasks.
  */
-public class FragmentHistory extends Fragment {
+public class FragmentHistory extends BaseFragment {
     private SearchView mSearchView;
     private FloatingActionButton mFAB;
     private TaskRepo mTaskRepo;
@@ -47,7 +43,7 @@ public class FragmentHistory extends Fragment {
     private RecyclerView mRV;
     private TaskViewModel mTaskViewModel;
     private String mSearchQuery;
-    private boolean mIsTheSearchViewUp;
+    private boolean mDoesMenuNeedUpdate;
     private InputMethodManager mInputMethodManager;
     private MenuItem mMenuItem;
 
@@ -70,7 +66,7 @@ public class FragmentHistory extends Fragment {
             mTask = task;
             UIUtil.hideKeyboard(Objects.requireNonNull(getActivity()));
             Intent intent = new Intent(getActivity(), OpenTaskActivity.class);
-            intent.putExtra(Tags.NEW_LAUNCH, task);
+            intent.putExtra(Tags.TASK_LAUNCHED_FROM_AN_ACTIVITY, task);
             startActivity(intent);
             Objects.requireNonNull(getActivity()).finish();
         });
@@ -88,45 +84,15 @@ public class FragmentHistory extends Fragment {
         mSearchView = (SearchView) mMenuItem.getActionView();
         mSearchView.setImeOptions(EditorInfo.IME_FLAG_NO_EXTRACT_UI);
         mSearchView.setIconifiedByDefault(false);
-        updateSearchView(mIsTheSearchViewUp);
-        mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String s) {
-                mMenuItem.collapseActionView();
-                mSearchView.setQuery("", false);
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String s) {
-                mSearchQuery = s;
-                mAdapter.getFilter().filter(s);
-                return false;
-            }
-        });
-        MenuItemCompat.setOnActionExpandListener(mMenuItem, new MenuItemCompat.OnActionExpandListener() {
-            @Override
-            public boolean onMenuItemActionExpand(MenuItem item) {
-                mInputMethodManager.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, 0);
-                return true;
-            }
-
-            @Override
-            public boolean onMenuItemActionCollapse(MenuItem item) {
-                UIUtil.hideKeyboard(Objects.requireNonNull(getActivity()));
-                mSearchView.setQuery("", false);
-                return true;
-            }
-        });
+        updateSearchView(mDoesMenuNeedUpdate);
+        setSearchViewOnQueryTextListener(mSearchView, mMenuItem);
+        setMenuItemOnActionExpandListener(mSearchView, mMenuItem, mInputMethodManager);
     }
 
     @Override
     public void onDestroyOptionsMenu() {
         super.onDestroyOptionsMenu();
-        if (mSearchView != null ){
-            mSearchView.setIconified(true);
-            UIUtil.hideKeyboard(Objects.requireNonNull(getActivity()));
-        }
+        destroyMenu(mSearchView);
     }
 
     private void onSwipe() {
@@ -141,18 +107,18 @@ public class FragmentHistory extends Fragment {
             @Override
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
                 Task task = mAdapter.getTaskAt(viewHolder.getAdapterPosition());
-                collapseMenu();
+                collapseMenu(mSearchView, mMenuItem);
                 if (direction == ItemTouchHelper.LEFT) {
                     mTaskViewModel.delete(task);
-                    Toaster.displaySnack(getView(), Tags.EVENT_DELETED, Tags.LONG_SNACK);
+                    Toaster.displaySnack(getView(), Tags.EVENT_DELETED, Tags.SHORT_SNACK);
                 } else if (direction == ItemTouchHelper.RIGHT) {
                     if (task.setActive()) {
                         mTaskViewModel.update(task);
                         AlarmHandler.scheduleAlarm(Objects.requireNonNull(getContext()), task);
-                        Toaster.displaySnack(getView(), Tags.EVENT_ACTIVATED, Tags.LONG_SNACK);
+                        Toaster.displaySnack(getView(), Tags.EVENT_ACTIVATED, Tags.SHORT_SNACK);
                     } else {
                         mAdapter.notifyDataSetChanged();
-                        Toaster.displaySnack(getView(), Tags.EVENT_INVALID, Tags.LONG_SNACK);
+                        Toaster.displaySnack(getView(), Tags.EVENT_INVALID, Tags.SHORT_SNACK);
                     }
                 }
             }
@@ -162,7 +128,7 @@ public class FragmentHistory extends Fragment {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.delete) {
-            collapseMenu();
+            collapseMenu(mSearchView, mMenuItem);
             if (Objects.requireNonNull(mTaskViewModel.getInactiveTasks().getValue()).size() == 0)
                 Toaster.displayToast(getActivity(), Tags.NO_ARCHIVE, Tags.LONG_TOAST);
             else
@@ -176,11 +142,7 @@ public class FragmentHistory extends Fragment {
             mTaskViewModel.getInactiveTasks().observe(Objects.requireNonNull(getActivity()),
                     tasks -> mAdapter.setTasks(tasks));
             mAdapter.getFilter().filter(mSearchQuery);
-            mMenuItem.expandActionView();
-            mSearchView.onActionViewExpanded();
-            mSearchView.setQuery(mSearchQuery, false);
-            mSearchView.setFocusable(true);
-            mIsTheSearchViewUp = false;
+            mDoesMenuNeedUpdate = onUpdateMenu(mMenuItem,mSearchView,mSearchQuery, mDoesMenuNeedUpdate);
         }
     }
 
@@ -197,17 +159,13 @@ public class FragmentHistory extends Fragment {
     private void reinitializeValues(Bundle savedInstanceState) {
         if (savedInstanceState != null) {
             mSearchQuery = savedInstanceState.getString(Tags.SEARCH_QUERY);
-            mIsTheSearchViewUp = savedInstanceState.getBoolean(Tags.STATE_OF_THE_SEARCH_VIEW);
+            mDoesMenuNeedUpdate = savedInstanceState.getBoolean(Tags.STATE_OF_THE_SEARCH_VIEW);
         }
     }
 
-    private void collapseMenu() {
-        if (mSearchView != null && mMenuItem != null){
-            if (mMenuItem.isActionViewExpanded()) {
-                mMenuItem.collapseActionView();
-                mSearchView.setIconified(true);
-                UIUtil.hideKeyboard(Objects.requireNonNull(getActivity()));
-            }
-        }
+    @Override
+    void callAdapter(String filter) {
+        mSearchQuery = filter;
+        mAdapter.getFilter().filter(filter);
     }
 }

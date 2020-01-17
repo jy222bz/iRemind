@@ -28,12 +28,13 @@ public class OpenTaskActivity extends AppCompatActivity implements View.OnClickL
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_open_task);
         mObjectController = new ObjectController();
-        if (!mObjectController.isObjectValid(savedInstanceState) && getIntent().hasExtra(Tags.BUNDLE)) {
-            Bundle bundle = getIntent().getBundleExtra(Tags.BUNDLE);
+        if (!mObjectController.isObjectValid(savedInstanceState) && getIntent()
+                .hasExtra(Tags.BUNDLE_FROM_iREMIND)) {
+            Bundle bundle = getIntent().getBundleExtra(Tags.BUNDLE_FROM_iREMIND);
             mTask = Objects.requireNonNull(bundle).getParcelable(Tags.TASK);
-        } else if (!mObjectController.isObjectValid(savedInstanceState) && getIntent().hasExtra(Tags.NEW_LAUNCH)) {
+        } else if (!mObjectController.isObjectValid(savedInstanceState) && getIntent().hasExtra(Tags.TASK_LAUNCHED_FROM_AN_ACTIVITY)) {
             mIsGoingMainActivity = true;
-            mTask = Objects.requireNonNull(getIntent().getExtras()).getParcelable(Tags.NEW_LAUNCH);
+            mTask = Objects.requireNonNull(getIntent().getExtras()).getParcelable(Tags.TASK_LAUNCHED_FROM_AN_ACTIVITY);
         } else if (mObjectController.isObjectValid(savedInstanceState)) {
             updateUI(savedInstanceState);
         }
@@ -102,7 +103,7 @@ public class OpenTaskActivity extends AppCompatActivity implements View.OnClickL
             startActivity(googleMapDirections);
             this.finish();
         } catch (ActivityNotFoundException e) {
-            Toaster.displayToast(this, Tags.NO_GOOGLE_MAP_APP, Tags.LONG_SNACK);
+            Toaster.displayToast(this, Tags.NO_GOOGLE_MAP_APP, Tags.SHORT_SNACK);
         }
     }
 

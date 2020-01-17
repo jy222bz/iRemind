@@ -27,7 +27,7 @@ public class AlarmHandler {
         Bundle bundle = new Bundle();
         bundle.putParcelable(Tags.TASK, task);
         Intent intent = new Intent(context, AlarmReceiver.class);
-        intent.putExtra(Tags.BUNDLE, bundle);
+        intent.putExtra(Tags.BUNDLE_FROM_iREMIND, bundle);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context, task.getId(), intent, PendingIntent.FLAG_ONE_SHOT);
         assert alarmManager != null;
         AlarmManager.AlarmClockInfo alarmClockInfo=

@@ -1,12 +1,9 @@
 package se.umu.jayo0002.iremind;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.view.MenuItemCompat;
-import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -20,13 +17,9 @@ import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.SearchView;
-
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-
 import net.yslibrary.android.keyboardvisibilityevent.util.UIUtil;
-
 import java.util.Objects;
-
 import se.umu.jayo0002.iremind.models.Task;
 import se.umu.jayo0002.iremind.service.AlarmHandler;
 import se.umu.jayo0002.iremind.view.Toaster;
@@ -38,7 +31,7 @@ import static android.app.Activity.RESULT_OK;
 /**
  * This Fragment is for showing the current active Tasks.
  */
-public class FragmentTask extends Fragment {
+public class FragmentTask extends BaseFragment {
     private SearchView mSearchView;
     private FloatingActionButton mFAB;
     private Task mTask;
@@ -46,7 +39,7 @@ public class FragmentTask extends Fragment {
     private TaskViewModel mTaskViewModel;
     private RecyclerView mRV;
     private String mSearchQuery;
-    private boolean mIsTheSearchViewUp;
+    private boolean mDoesMenuNeedUpdate;
     private InputMethodManager mInputMethodManager;
     private MenuItem mMenuItem;
 
@@ -77,7 +70,7 @@ public class FragmentTask extends Fragment {
 
     private void onClickFAButton() {
         mFAB.setOnClickListener((View v) -> {
-            collapseMenu();
+            collapseMenu(mSearchView, mMenuItem);
             Intent intent = new Intent(getContext(), CreateTaskActivity.class);
             startActivityForResult(intent, Tags.REQUEST_CODE_CREATE_EVENT);
         });
@@ -102,38 +95,11 @@ public class FragmentTask extends Fragment {
         mSearchView = (SearchView) mMenuItem.getActionView();
         mSearchView.setImeOptions(EditorInfo.IME_FLAG_NO_EXTRACT_UI);
         mSearchView.setIconifiedByDefault(false);
-        updateSearchView(mIsTheSearchViewUp);
-        mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String s) {
-                mMenuItem.collapseActionView();
-                mSearchView.setQuery("", false);
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String s) {
-                mSearchQuery = s;
-                mAdapter.getFilter().filter(s);
-                return false;
-            }
-        });
-
-        MenuItemCompat.setOnActionExpandListener(mMenuItem, new MenuItemCompat.OnActionExpandListener() {
-            @Override
-            public boolean onMenuItemActionExpand(MenuItem item) {
-               mInputMethodManager.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, 0);
-                return true;
-            }
-
-            @Override
-            public boolean onMenuItemActionCollapse(MenuItem item) {
-                UIUtil.hideKeyboard(Objects.requireNonNull(getActivity()));
-                mSearchView.setQuery("", false);
-                return true;
-            }
-        });
+        updateSearchView(mDoesMenuNeedUpdate);
+        setSearchViewOnQueryTextListener(mSearchView, mMenuItem);
+        setMenuItemOnActionExpandListener(mSearchView, mMenuItem, mInputMethodManager);
     }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -141,18 +107,18 @@ public class FragmentTask extends Fragment {
             mTask = Objects.requireNonNull(Objects.requireNonNull(data).getExtras()).getParcelable(Tags.TASK);
             mTaskViewModel.add(mTask);
             AlarmHandler.scheduleAlarm(Objects.requireNonNull(getActivity()), mTask);
-            Toaster.displaySnack(getView(), Tags.ALARM_SET, Tags.LONG_SNACK);
+            Toaster.displaySnack(getView(), Tags.ALARM_SET, Tags.SHORT_SNACK);
         } else if (requestCode == Tags.REQUEST_CODE_EDIT_EVENT && resultCode == RESULT_OK) {
             mTask = Objects.requireNonNull(Objects.requireNonNull(data).getExtras()).getParcelable(Tags.TASK);
             mTaskViewModel.update(mTask);
             AlarmHandler.cancelAlarm(Objects.requireNonNull(getActivity()), mTask);
             AlarmHandler.scheduleAlarm(Objects.requireNonNull(getActivity()), mTask);
-            Toaster.displaySnack(getView(), Tags.ALARM_IS_UPDATED, Tags.LONG_SNACK);
+            Toaster.displaySnack(getView(), Tags.ALARM_IS_UPDATED, Tags.SHORT_SNACK);
         }
     }
 
     private void edit() {
-        collapseMenu();
+        collapseMenu(mSearchView, mMenuItem);
         Intent intent = new Intent(getContext(), CreateTaskActivity.class);
         intent.putExtra(Tags.TASK, mTask);
         startActivityForResult(intent, Tags.REQUEST_CODE_EDIT_EVENT);
@@ -169,17 +135,17 @@ public class FragmentTask extends Fragment {
 
             @Override
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-                collapseMenu();
+                collapseMenu(mSearchView, mMenuItem);
                 Task task = mAdapter.getTaskAt(viewHolder.getAdapterPosition());
                 if (direction == ItemTouchHelper.LEFT) {
                     AlarmHandler.cancelAlarm(Objects.requireNonNull(getActivity()), task);
                     mTaskViewModel.delete(task);
-                    Toaster.displaySnack(getView(), Tags.EVENT_DELETED, Tags.LONG_SNACK);
+                    Toaster.displaySnack(getView(), Tags.EVENT_DELETED, Tags.SHORT_SNACK);
                 } else if (direction == ItemTouchHelper.RIGHT) {
                     AlarmHandler.cancelAlarm(Objects.requireNonNull(getActivity()), task);
                     task.setInactive();
                     mTaskViewModel.update(task);
-                    Toaster.displaySnack(getView(), Tags.EVENT_DEACTIVATED, Tags.LONG_SNACK);
+                    Toaster.displaySnack(getView(), Tags.EVENT_DEACTIVATED, Tags.SHORT_SNACK);
                 }
             }
         }).attachToRecyclerView(mRV);
@@ -190,11 +156,7 @@ public class FragmentTask extends Fragment {
             mTaskViewModel.getActiveTasks().observe(Objects.requireNonNull(getActivity()),
                     tasks -> mAdapter.setTasks(tasks));
             mAdapter.getFilter().filter(mSearchQuery);
-            mMenuItem.expandActionView();
-            mSearchView.onActionViewExpanded();
-            mSearchView.setQuery(mSearchQuery, false);
-            mSearchView.setFocusable(true);
-            mIsTheSearchViewUp = false;
+            mDoesMenuNeedUpdate = onUpdateMenu(mMenuItem,mSearchView,mSearchQuery, mDoesMenuNeedUpdate);
         }
     }
 
@@ -211,17 +173,13 @@ public class FragmentTask extends Fragment {
     private void reinitializeValues(Bundle savedInstanceState) {
         if (savedInstanceState != null) {
             mSearchQuery = savedInstanceState.getString(Tags.SEARCH_QUERY);
-            mIsTheSearchViewUp = savedInstanceState.getBoolean(Tags.STATE_OF_THE_SEARCH_VIEW);
+            mDoesMenuNeedUpdate = savedInstanceState.getBoolean(Tags.STATE_OF_THE_SEARCH_VIEW);
         }
     }
 
-    private void collapseMenu() {
-        if (mSearchView != null && mMenuItem != null){
-            if (mMenuItem.isActionViewExpanded()) {
-                mMenuItem.collapseActionView();
-                mSearchView.setIconified(true);
-                UIUtil.hideKeyboard(Objects.requireNonNull(getActivity()));
-            }
-        }
+    @Override
+    void callAdapter(String filter) {
+        mSearchQuery = filter;
+        mAdapter.getFilter().filter(filter);
     }
 }
