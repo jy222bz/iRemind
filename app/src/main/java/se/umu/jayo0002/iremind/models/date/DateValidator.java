@@ -12,6 +12,11 @@ import java.util.Calendar;
 public class DateValidator {
 
     /**
+     * A private constructor.
+     */
+    private DateValidator(){}
+
+    /**
      * It validates whether the time and the date for the alarm of the event is in the future.
      *
      * @param hour

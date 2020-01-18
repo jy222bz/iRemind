@@ -3,6 +3,7 @@ package se.umu.jayo0002.iremind.service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+
 import se.umu.jayo0002.iremind.database.TaskRepo;
 import se.umu.jayo0002.iremind.models.Task;
 
@@ -28,20 +29,23 @@ public class BootReceiver extends BroadcastReceiver {
      */
     @Override
     public void onReceive(Context context, Intent intent) {
-        if (Intent.ACTION_BOOT_COMPLETED.equals(intent.getAction())) {
-            TaskRepo taskRepo = new TaskRepo(context.getApplicationContext());
-            taskRepo.getAll().observeForever(tasks -> {
-                if (tasks.size() > 0){
-                    for (Task task : tasks){
-                        if(task.isActive() && task.isAlarmValid())
-                            AlarmHandler.scheduleAlarm(context, task);
-                        else if(task.isActive() && !task.isAlarmValid()){
-                            task.setInactive();
-                            taskRepo.update(task);
-                        }
+        if (Intent.ACTION_BOOT_COMPLETED.equals(intent.getAction()))
+            scheduleTasks(context);
+    }
+
+    private void scheduleTasks(Context context) {
+        TaskRepo taskRepo = new TaskRepo(context.getApplicationContext());
+        taskRepo.getAll().observeForever(tasks -> {
+            if (!tasks.isEmpty()) {
+                for (Task task : tasks) {
+                    if (task.isActive() && task.isAlarmValid())
+                        AlarmHandler.scheduleAlarm(context, task);
+                    else if (task.isActive() && !task.isAlarmValid()) {
+                        task.setInactive();
+                        taskRepo.update(task);
                     }
                 }
-            });
-        }
+            }
+        });
     }
 }

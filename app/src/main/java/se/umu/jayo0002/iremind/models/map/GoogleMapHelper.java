@@ -16,6 +16,11 @@ import se.umu.jayo0002.iremind.Tags;
 public class GoogleMapHelper {
 
     /**
+     * A private constructor.
+     */
+    private GoogleMapHelper(){}
+
+    /**
      * It geo codes in reverse order, i.e. it takes the LatLng and transferring it to list of addresses.
      * When the LatLng is null, it uses the name of the location to transfer it to list of addresses.
      *
@@ -31,12 +36,15 @@ public class GoogleMapHelper {
             try{
                 list = geocoder.getFromLocationName(address, Tags.MAX_AMOUNT_OF_ADDRESSES);
             }catch (IOException ignored){
+                /*Do nothing*/
             }
+
         } else {
             try {
                 list = geocoder.getFromLocation(latLng.latitude,
                         latLng.longitude, Tags.MAX_AMOUNT_OF_ADDRESSES);
             } catch (IOException ignored) {
+                /*Do nothing*/
             }
         }
         return list;

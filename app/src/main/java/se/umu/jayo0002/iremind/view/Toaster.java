@@ -15,6 +15,8 @@ import com.google.android.material.snackbar.Snackbar;
  */
 public class Toaster {
 
+    private Toaster(){}
+
 
     /**
      * It displays a toast.

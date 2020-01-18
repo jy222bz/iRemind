@@ -24,7 +24,7 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle(new Date().getDate());
         setSupportActionBar(toolbar);
-        if (MapServiceController.isServiceSupported(this))
+        if (MapServiceController.isServiceNOTSupported(this))
             Toaster.displayToast(this,Tags.NOT_SUPPORTED, Tags.LONG_TOAST);
     }
 }

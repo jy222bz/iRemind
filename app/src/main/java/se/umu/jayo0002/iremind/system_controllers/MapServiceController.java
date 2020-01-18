@@ -18,7 +18,7 @@ public class MapServiceController {
     /**
      * Constructor, creates a new object.
      */
-    public MapServiceController(){}
+    private MapServiceController(){}
 
 
     /**
@@ -26,7 +26,7 @@ public class MapServiceController {
      * @param activity
      * @return boolean
      */
-    public static boolean isServiceSupported(Activity activity) {
+    public static boolean isServiceNOTSupported(Activity activity) {
         return GoogleApiAvailability.getInstance()
                 .isGooglePlayServicesAvailable(activity) != ConnectionResult.SUCCESS;
     }

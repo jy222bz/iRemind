@@ -17,6 +17,8 @@ import se.umu.jayo0002.iremind.models.Task;
  */
 public class AlarmHandler {
 
+    private AlarmHandler(){}
+
     /**
      * It schedules the alarm.
      * @param context
@@ -27,7 +29,7 @@ public class AlarmHandler {
         Bundle bundle = new Bundle();
         bundle.putParcelable(Tags.TASK, task);
         Intent intent = new Intent(context, AlarmReceiver.class);
-        intent.putExtra(Tags.BUNDLE_FROM_iREMIND, bundle);
+        intent.putExtra(Tags.BUNDLE_FROM_I_REMIND, bundle);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context, task.getId(), intent, PendingIntent.FLAG_ONE_SHOT);
         assert alarmManager != null;
         AlarmManager.AlarmClockInfo alarmClockInfo=

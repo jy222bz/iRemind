@@ -3,7 +3,6 @@ package se.umu.jayo0002.iremind.view;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
-import java.util.Calendar;
 import se.umu.jayo0002.iremind.R;
 import se.umu.jayo0002.iremind.models.date.Date;
 
@@ -53,10 +52,7 @@ public class DialogConstructor {
      * @param listener
      * @return TimePickerDialog
      */
-    public TimePickerDialog getTimeDialog(TimePickerDialog.OnTimeSetListener listener){
-        return new TimePickerDialog(activity,
-                R.style.PickerTheme, listener,
-                Calendar.getInstance().get(Calendar.HOUR_OF_DAY),
-                Calendar.getInstance().get(Calendar.MINUTE), false);
+    public TimePickerDialog getTimeDialog(TimePickerDialog.OnTimeSetListener listener, int hour, int minute){
+        return new TimePickerDialog(activity, R.style.PickerTheme, listener, hour, minute, false);
     }
 }

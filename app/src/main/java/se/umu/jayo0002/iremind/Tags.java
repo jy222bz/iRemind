@@ -4,6 +4,8 @@ import android.Manifest;
 
 public class Tags {
 
+    private Tags(){ }
+
     public static final String CHANNEL_ID = "Notification Channel.";
     public static final int MAX_AMOUNT_OF_ADDRESSES =1;
     public static final String DB_NAME="note_database";
@@ -43,7 +45,7 @@ public class Tags {
     public static final String EVENT_DEACTIVATED = "The REMINDER is deactivated!";
     public static final String EVENT_ACTIVATED = "The REMINDER is activated now!";
     public static final String EVENT_INVALID = "It is permanently inactive. Only EVENTS with DATE and Time in the future can be reactivated again!";
-    public static final String BUNDLE_FROM_iREMIND = "A Bundle Object carrying data.";
+    public static final String BUNDLE_FROM_I_REMIND = "A Bundle Object carrying data.";
     public static final String REMINDER = "A Task-ToDo Reminder!";
     public static final String TASK_LAUNCHED_FROM_AN_ACTIVITY = "SHOW TASK";
     public static final String BOOLEAN = "Whether to go to the Main Activity or not.";
@@ -65,4 +67,7 @@ public class Tags {
     public static final String ADDRESS_GUIDE= "To Select An Address, LONG-PRESS The Position Of The Location.";
     public static final String LOCATION_IS_NULL="Failed to fetch the location. Try again later!";
     public static final String NO_LOCATION_FOUND="The Provided Address Could Not Be Found!";
+    public static final String DATE_PICKER_OUT_STATE = "State of DATE_PICKER";
+    public static final String TIME_PICKER_OUT_STATE = "State of TIME_PICKER";
+    public static final String NO_INFO ="No additional information was provided!";
 }

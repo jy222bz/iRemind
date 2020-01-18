@@ -6,7 +6,6 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProviders;
-import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -18,14 +17,8 @@ import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.SearchView;
-
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-
 import net.yslibrary.android.keyboardvisibilityevent.util.UIUtil;
-
 import java.util.Objects;
-
-import se.umu.jayo0002.iremind.database.TaskRepo;
 import se.umu.jayo0002.iremind.models.Task;
 import se.umu.jayo0002.iremind.service.AlarmHandler;
 import se.umu.jayo0002.iremind.view.Toaster;
@@ -36,11 +29,7 @@ import se.umu.jayo0002.iremind.view_models.TaskViewModel;
  */
 public class FragmentHistory extends BaseFragment {
     private SearchView mSearchView;
-    private FloatingActionButton mFAB;
-    private TaskRepo mTaskRepo;
-    private Task mTask;
     private TaskAdapter mAdapter;
-    private RecyclerView mRV;
     private TaskViewModel mTaskViewModel;
     private String mSearchQuery;
     private boolean mDoesMenuNeedUpdate;
@@ -54,16 +43,15 @@ public class FragmentHistory extends BaseFragment {
         View view = inflater.inflate(R.layout.fragment_history, container, false);
         mInputMethodManager = (InputMethodManager) Objects.requireNonNull(getActivity()).
                 getSystemService(Activity.INPUT_METHOD_SERVICE);
-        mRV = view.findViewById(R.id.recycler_view1);
+        RecyclerView mRV = view.findViewById(R.id.recycler_view1);
         mAdapter = new TaskAdapter(getContext());
         mRV.setLayoutManager(new LinearLayoutManager(getContext()));
         mRV.setHasFixedSize(true);
         setHasOptionsMenu(true);
         mRV.setAdapter(mAdapter);
         mTaskViewModel.getInactiveTasks().observe(Objects.requireNonNull(getActivity()), tasks -> mAdapter.setTasks(tasks));
-        onSwipe();
+        registerRecyclerViewOnItemTouchHelper(mRV);
         mAdapter.setOnItemClickListener(task -> {
-            mTask = task;
             UIUtil.hideKeyboard(Objects.requireNonNull(getActivity()));
             Intent intent = new Intent(getActivity(), OpenTaskActivity.class);
             intent.putExtra(Tags.TASK_LAUNCHED_FROM_AN_ACTIVITY, task);
@@ -95,41 +83,11 @@ public class FragmentHistory extends BaseFragment {
         destroyMenu(mSearchView);
     }
 
-    private void onSwipe() {
-        new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0,
-                ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
-            @Override
-            public boolean onMove(@NonNull RecyclerView recyclerView,
-                                  @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
-                return false;
-            }
-
-            @Override
-            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-                Task task = mAdapter.getTaskAt(viewHolder.getAdapterPosition());
-                collapseMenu(mSearchView, mMenuItem);
-                if (direction == ItemTouchHelper.LEFT) {
-                    mTaskViewModel.delete(task);
-                    Toaster.displaySnack(getView(), Tags.EVENT_DELETED, Tags.SHORT_SNACK);
-                } else if (direction == ItemTouchHelper.RIGHT) {
-                    if (task.setActive()) {
-                        mTaskViewModel.update(task);
-                        AlarmHandler.scheduleAlarm(Objects.requireNonNull(getContext()), task);
-                        Toaster.displaySnack(getView(), Tags.EVENT_ACTIVATED, Tags.SHORT_SNACK);
-                    } else {
-                        mAdapter.notifyDataSetChanged();
-                        Toaster.displaySnack(getView(), Tags.EVENT_INVALID, Tags.SHORT_SNACK);
-                    }
-                }
-            }
-        }).attachToRecyclerView(mRV);
-    }
-
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.delete) {
             collapseMenu(mSearchView, mMenuItem);
-            if (Objects.requireNonNull(mTaskViewModel.getInactiveTasks().getValue()).size() == 0)
+            if (Objects.requireNonNull(mTaskViewModel.getInactiveTasks().getValue()).isEmpty())
                 Toaster.displayToast(getActivity(), Tags.NO_ARCHIVE, Tags.LONG_TOAST);
             else
                 mTaskViewModel.deleteAllInactiveTasks();
@@ -167,5 +125,27 @@ public class FragmentHistory extends BaseFragment {
     void callAdapter(String filter) {
         mSearchQuery = filter;
         mAdapter.getFilter().filter(filter);
+    }
+
+    @Override
+    void onLeftSwipe(@NonNull RecyclerView.ViewHolder viewHolder) {
+        collapseMenu(mSearchView,mMenuItem);
+        Task task = mAdapter.getTaskAt(viewHolder.getAdapterPosition());
+        mTaskViewModel.delete(task);
+        Toaster.displaySnack(getView(), Tags.EVENT_DELETED, Tags.SHORT_SNACK);
+    }
+
+    @Override
+    void onRightSwipe(@NonNull RecyclerView.ViewHolder viewHolder) {
+        collapseMenu(mSearchView,mMenuItem);
+        Task task = mAdapter.getTaskAt(viewHolder.getAdapterPosition());
+        if (task.setActive()) {
+            mTaskViewModel.update(task);
+            AlarmHandler.scheduleAlarm(Objects.requireNonNull(getContext()), task);
+            Toaster.displaySnack(getView(), Tags.EVENT_ACTIVATED, Tags.SHORT_SNACK);
+        } else {
+            mAdapter.notifyDataSetChanged();
+            Toaster.displaySnack(getView(), Tags.EVENT_INVALID, Tags.SHORT_SNACK);
+        }
     }
 }

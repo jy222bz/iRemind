@@ -2,13 +2,17 @@ package se.umu.jayo0002.iremind.models;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
+
 import com.google.android.gms.maps.model.LatLng;
+
 import java.util.Calendar;
 import java.util.Date;
 
+import se.umu.jayo0002.iremind.Tags;
 import se.umu.jayo0002.iremind.models.date.DateValidator;
 import se.umu.jayo0002.iremind.models.exceptions.ExceptionBuilder;
 import se.umu.jayo0002.iremind.models.text.StringFormatter;
@@ -25,10 +29,10 @@ import static se.umu.jayo0002.iremind.models.exceptions.Classification.LOCATION_
  * @author Jacob Yousif
  * @version 1.0
  * @since 2019 -12-09
- * */
+ */
 
 @Entity(tableName = "task_table")
-public class Task implements Parcelable{
+public class Task implements Parcelable {
 
     /**
      * The id for the event.
@@ -52,7 +56,27 @@ public class Task implements Parcelable{
     /**
      * These fields for the time and the date of the event.
      */
-    private int year, month, day, hour, minute;
+    private int year;
+
+    /**
+     * These fields for the time and the date of the event.
+     */
+    private int month;
+
+    /**
+     * These fields for the time and the date of the event.
+     */
+    private int day;
+
+    /**
+     * These fields for the time and the date of the event.
+     */
+    private int hour;
+
+    /**
+     * These fields for the time and the date of the event.
+     */
+    private int minute;
 
 
     /**
@@ -74,13 +98,13 @@ public class Task implements Parcelable{
     /**
      * The status of the event.
      */
-    @ColumnInfo(name= "status_column")
+    @ColumnInfo(name = "status_column")
     private int status;
 
     /**
      * A constructor, creating a new object and its status will be active.
      */
-    public Task(){
+    public Task() {
         this.status = 1;
         this.address = null;
         this.latitude = null;
@@ -90,6 +114,7 @@ public class Task implements Parcelable{
 
     /**
      * It sets the title of the event.
+     *
      * @param title
      */
     public void setTitle(String title) {
@@ -98,39 +123,41 @@ public class Task implements Parcelable{
 
     /**
      * It sets the information about the event.
+     *
      * @param note
      */
     public void setNote(String note) {
-        this.note  = note;
+        this.note = note;
     }
 
     /**
      * It sets the status of the event to inactive.
      */
     public void setInactive() {
-            this.status = 0;
+        this.status = 0;
     }
 
     /**
      * It returns the status of the event.
+     *
      * @return boolean
      */
     public boolean isActive() {
-        return this.status ==1;
+        return this.status == 1;
     }
 
     /**
      * It sets the time and the date for the alarm of the event.
-     * @throws Exception if date and the time in the past.
      *
      * @param hour
      * @param minute
      * @param year
      * @param month
      * @param day
+     * @throws Exception if date and the time in the past.
      */
     public void setTheAlarmDate(int hour, int minute, int year, int month, int day) {
-        if (!DateValidator.isDateValid(hour,minute, year,month,day))
+        if (!DateValidator.isDateValid(hour, minute, year, month, day))
             throw new ExceptionBuilder(ALARM_INVALID);
         else {
             this.year = year;
@@ -143,25 +170,27 @@ public class Task implements Parcelable{
 
     /**
      * It returns the date the time of the alarm for the event.
+     *
      * @return Calendar
      */
-    public Calendar getAlarmDateAndTime(){
-            Calendar c = Calendar.getInstance();
-            c.set(Calendar.HOUR_OF_DAY, hour);
-            c.set(Calendar.MINUTE, minute);
-            c.set(Calendar.SECOND, 0);
-            c.set(Calendar.MONTH, month);
-            c.set(Calendar.DAY_OF_MONTH, day);
-            c.set(Calendar.YEAR, year);
-            return c;
+    public Calendar getAlarmDateAndTime() {
+        Calendar c = Calendar.getInstance();
+        c.set(Calendar.HOUR_OF_DAY, hour);
+        c.set(Calendar.MINUTE, minute);
+        c.set(Calendar.SECOND, 0);
+        c.set(Calendar.MONTH, month);
+        c.set(Calendar.DAY_OF_MONTH, day);
+        c.set(Calendar.YEAR, year);
+        return c;
     }
 
     /**
      * It checks whether the alarm date and time is in the future.
+     *
      * @return boolean
      */
-    public boolean isAlarmValid(){
-            return DateValidator.isDateValid(hour,minute, year,month,day);
+    public boolean isAlarmValid() {
+        return DateValidator.isDateValid(hour, minute, year, month, day);
     }
 
 
@@ -185,96 +214,107 @@ public class Task implements Parcelable{
 
     /**
      * It sets the month.
+     *
      * @param month
      */
-    public void setMonth(int month){
+    public void setMonth(int month) {
         this.month = month;
     }
 
     /**
      * It sets the address.
+     *
      * @param address
      */
-    public void setAddress(String address){
+    public void setAddress(String address) {
         this.address = address;
     }
 
     /**
      * It sets the coordinates.
+     *
      * @param latitude
      */
-    public void setLatitude(String latitude){
+    public void setLatitude(String latitude) {
         this.latitude = latitude;
     }
 
     /**
      * It sets the coordinates.
+     *
      * @param longitude
      */
-    public void setLongitude(String longitude){
+    public void setLongitude(String longitude) {
         this.longitude = longitude;
     }
 
     /**
      * It sets the day.
+     *
      * @param day
      */
-    public void setDay(int day){
+    public void setDay(int day) {
         this.day = day;
     }
 
     /**
      * It sets the hour.
+     *
      * @param hour
      */
-    public void setHour(int hour){
-        this.hour= hour;
+    public void setHour(int hour) {
+        this.hour = hour;
     }
 
     /**
      * It sets the minute.
+     *
      * @param minute
      */
-    public void setMinute(int minute){
+    public void setMinute(int minute) {
         this.minute = minute;
     }
 
     /**
      * It sets the status.
+     *
      * @param status
      */
-    public void setStatus(int status){
+    public void setStatus(int status) {
         this.status = status;
     }
 
     /**
      * The sets the year.
+     *
      * @param year
      */
-    public void setYear(int year){
+    public void setYear(int year) {
         this.year = year;
     }
 
     /**
      * It returns the coordinates.
+     *
      * @return String
      */
-    public String getLongitude(){
+    public String getLongitude() {
         return this.longitude;
     }
 
     /**
      * It returns coordinates.
+     *
      * @return String
      */
-    public String getLatitude(){
+    public String getLatitude() {
         return this.latitude;
     }
 
 
-
     /**
      * It returns the title.
+     *
      * @return String
      */
     public String getTitle() {
@@ -283,16 +323,18 @@ public class Task implements Parcelable{
 
     /**
      * It returns the information about the event.
+     *
      * @return String
      */
     public String getNote() {
         if (this.note.isEmpty())
-            return "No additional information was provided!";
+            return Tags.NO_INFO;
         return this.note;
     }
 
     /**
      * It returns the address.
+     *
      * @return String
      */
     public String getAddress() {
@@ -301,11 +343,12 @@ public class Task implements Parcelable{
         else if (address.length() == 0)
             return "No address was assigned!";
         else
-        return this.address;
+            return this.address;
     }
 
     /**
      * It returns the year.
+     *
      * @return int
      */
     public int getYear() {
@@ -314,6 +357,7 @@ public class Task implements Parcelable{
 
     /**
      * it returns the month.
+     *
      * @return int
      */
     public int getMonth() {
@@ -322,6 +366,7 @@ public class Task implements Parcelable{
 
     /**
      * It returns the day.
+     *
      * @return int
      */
     public int getDay() {
@@ -330,6 +375,7 @@ public class Task implements Parcelable{
 
     /**
      * It returns the hour.
+     *
      * @return int
      */
     public int getHour() {
@@ -338,6 +384,7 @@ public class Task implements Parcelable{
 
     /**
      * It returns the minute.
+     *
      * @return int
      */
     public int getMinute() {
@@ -346,6 +393,7 @@ public class Task implements Parcelable{
 
     /**
      * It returns the status.
+     *
      * @return int
      */
     public int getStatus() {
@@ -354,6 +402,7 @@ public class Task implements Parcelable{
 
     /**
      * It returns the status.
+     *
      * @return int
      */
     public int getId() {
@@ -362,6 +411,7 @@ public class Task implements Parcelable{
 
     /**
      * It sets the id.
+     *
      * @param id
      */
     public void setId(int id) {
@@ -370,38 +420,42 @@ public class Task implements Parcelable{
 
     /**
      * It returns the full date.
+     *
      * @return int
      */
-    public String getDate(){
-        return StringFormatter.getFormattedDate(year, (month+1), day);
+    public String getDate() {
+        return StringFormatter.getFormattedDate(year, (month + 1), day);
     }
 
     /**
      * It returns the full time.
+     *
      * @return String
      */
-    public String getTime(){
+    public String getTime() {
         return StringFormatter.getFormattedTime(hour, minute);
     }
 
     /**
      * It return the coordinates.
+     *
      * @return LatLng
      */
     public LatLng getLatLng() {
         if (getLatitude() == null || getLongitude() == null)
             return null;
         else
-        return new LatLng(Double.parseDouble(latitude), Double.parseDouble(longitude));
+            return new LatLng(Double.parseDouble(latitude), Double.parseDouble(longitude));
     }
 
     /**
      * It sets the status active if the date is valid, i.e. is in the future.
+     *
      * @return boolean
      */
     public boolean setActive() {
         if (status == 0) {
-            if (DateValidator.isDateValid(hour, minute, year, month, day)){
+            if (DateValidator.isDateValid(hour, minute, year, month, day)) {
                 status = 1;
                 return true;
             } else {
@@ -426,6 +480,7 @@ public class Task implements Parcelable{
         longitude = in.readString();
         status = in.readInt();
     }
+
     public static final Creator<Task> CREATOR = new Creator<Task>() {
         @Override
         public Task createFromParcel(Parcel in) {

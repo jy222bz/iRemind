@@ -20,29 +20,10 @@
             android:background="@drawable/shape_for_upper_part_add_event">
 
             <Button
-                android:id="@+id/close_button"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_gravity="start"
-                android:layout_margin="5dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:background="@drawable/close_button"
-                android:text="@string/close_x"
-                android:textColor="@color/white"
-                android:textSize="12sp"
-                android:textStyle="bold"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                android:layout_marginLeft="8dp"
-                tools:ignore="RtlHardcoded" />
-
-            <Button
                 android:id="@+id/save_button"
                 android:layout_width="65dp"
                 android:layout_height="35dp"
                 android:layout_gravity="end"
-                android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="4dp"
                 android:background="@drawable/shape_for_save_button_top"
@@ -51,11 +32,7 @@
                 android:textSize="12sp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.974"
-                app:layout_constraintStart_toEndOf="@+id/close_button"
                 app:layout_constraintTop_toTopOf="parent"
-                android:layout_marginLeft="8dp"
-                android:layout_marginRight="4dp"
                 tools:ignore="RtlHardcoded" />
 
             <Button

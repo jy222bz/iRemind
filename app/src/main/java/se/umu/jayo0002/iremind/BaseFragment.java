@@ -3,8 +3,11 @@ package se.umu.jayo0002.iremind;
 import android.view.MenuItem;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.SearchView;
+import androidx.annotation.NonNull;
 import androidx.core.view.MenuItemCompat;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.ItemTouchHelper;
+import androidx.recyclerview.widget.RecyclerView;
 import net.yslibrary.android.keyboardvisibilityevent.util.UIUtil;
 import java.util.Objects;
 
@@ -21,17 +24,27 @@ public abstract class BaseFragment extends Fragment {
     abstract void callAdapter(String filter);
 
     /**
+     * It passes the left swiped ViewHolder, to carry out the desired function.
+     * @param viewHolder
+     */
+    abstract void onLeftSwipe(@NonNull RecyclerView.ViewHolder viewHolder);
+
+    /**
+     * It passes the right swiped ViewHolder, to carry out the desired function.
+     * @param viewHolder
+     */
+    abstract void onRightSwipe(@NonNull RecyclerView.ViewHolder viewHolder);
+
+    /**
      * It collapses the menu and it iconify the search view.
      * @param searchView
      * @param menuItem
      */
     public void collapseMenu(SearchView searchView, MenuItem menuItem) {
-        if (searchView != null && menuItem != null){
-            if (menuItem.isActionViewExpanded()) {
+        if (searchView != null && menuItem != null && menuItem.isActionViewExpanded()){
                 menuItem.collapseActionView();
                 searchView.setIconified(true);
                 UIUtil.hideKeyboard(Objects.requireNonNull(getActivity()));
-            }
         }
     }
 
@@ -103,5 +116,29 @@ public abstract class BaseFragment extends Fragment {
         searchView.setQuery(searchQuery, false);
         searchView.setFocusable(true);
         return !doesNeedUpdate;
+    }
+
+    /**
+     * It attaches Item Touch Helper to the target Recycle View.
+     * @param recyclerView
+     */
+    public void registerRecyclerViewOnItemTouchHelper(RecyclerView recyclerView) {
+        new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0,
+                ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+            @Override
+            public boolean onMove(@NonNull RecyclerView recyclerView,
+                                  @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+                return false;
+            }
+
+            @Override
+            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+                if (direction == ItemTouchHelper.LEFT) {
+                    onLeftSwipe(viewHolder);
+                } else if (direction == ItemTouchHelper.RIGHT) {
+                    onRightSwipe(viewHolder);
+                }
+            }
+        }).attachToRecyclerView(recyclerView);
     }
 }

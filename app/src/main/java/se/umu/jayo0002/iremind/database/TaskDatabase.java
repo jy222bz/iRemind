@@ -45,16 +45,16 @@ public abstract class TaskDatabase extends RoomDatabase {
         @Override
         public void onCreate(@NonNull SupportSQLiteDatabase sQLiteDatabase) {
             super.onCreate(sQLiteDatabase);
-            new onCreatePopulateDatabase (mTaskDatabase).execute();
+            new OnCreatePopulateDatabase(mTaskDatabase).execute();
         }
     };
 
     /**
      * It asynchronous operation to populate the operation in the background after it is initialized.
      */
-    private static class onCreatePopulateDatabase extends AsyncTask<Void, Void, Void> {
+    private static class OnCreatePopulateDatabase extends AsyncTask<Void, Void, Void> {
 
-        private onCreatePopulateDatabase(TaskDatabase db) {
+        private OnCreatePopulateDatabase(TaskDatabase db) {
             TaskDao mTaskDao = db.taskDao();
         }
         @Override

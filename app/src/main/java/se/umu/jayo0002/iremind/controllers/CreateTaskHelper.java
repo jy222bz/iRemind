@@ -56,7 +56,6 @@ public class CreateTaskHelper {
 
     /**
      * It sets the values upon saving the operation and it returns a Task.
-     *
      * @param title
      * @param text
      * @param hour

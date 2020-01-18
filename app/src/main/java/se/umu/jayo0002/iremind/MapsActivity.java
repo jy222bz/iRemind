@@ -124,7 +124,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 val = true;
                 List<Address> list = GoogleMapHelper.geoCoder(null,
                         this, mSearchBar.getText().toString());
-                if (list.size() > 0) {
+                if (!list.isEmpty()) {
                     Address address = list.get(0);
                     mLatLng = new LatLng(address.getLatitude(), address.getLongitude());
                     onCallMoveToLocation(new LatLng(address.getLatitude(), address.getLongitude()));
@@ -148,9 +148,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             LocationInfo locationInfo = new LocationInfo();
             locationInfo.setLatLng(latLng);
             locationInfo.setAddress(list.get(0).getAddressLine(0));
-            Intent back_to_create_events = new Intent();
-            back_to_create_events.putExtra(Tags.LOCATION_OBJECT, locationInfo);
-            setResult(RESULT_OK, back_to_create_events);
+            Intent backToCreateEvents = new Intent();
+            backToCreateEvents.putExtra(Tags.LOCATION_OBJECT, locationInfo);
+            setResult(RESULT_OK, backToCreateEvents);
             this.finish();
         });
     }
@@ -163,16 +163,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         outState.putBoolean(Tags.PERMISSION_STATE, mPermitted);
     }
 
-    public void onBackPressed() {
-        Intent back_to_create_events = new Intent();
-        setResult(RESULT_CANCELED, back_to_create_events);
-        finish();
-    }
-
     private void onDrag() {
         mMap.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
             @Override
             public void onMarkerDragStart(Marker arg0) {
+                /*It is not useful in this context.*/
             }
 
             @Override
@@ -183,6 +178,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
             @Override
             public void onMarkerDrag(Marker arg0) {
+                /*It is not useful in this context.*/
             }
         });
     }

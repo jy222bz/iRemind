@@ -13,7 +13,7 @@ import android.os.Bundle;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import java.util.Objects;
-import se.umu.jayo0002.iremind.OpenTaskActivity;
+import se.umu.jayo0002.iremind.OneLaunchActivity;
 import se.umu.jayo0002.iremind.R;
 import se.umu.jayo0002.iremind.Tags;
 import se.umu.jayo0002.iremind.database.TaskRepo;
@@ -40,13 +40,13 @@ public class AlarmReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         TaskRepo taskRepo = new TaskRepo(context);
-        Bundle bundle = intent.getBundleExtra(Tags.BUNDLE_FROM_iREMIND);
+        Bundle bundle = intent.getBundleExtra(Tags.BUNDLE_FROM_I_REMIND);
         Task task = Objects.requireNonNull(bundle).getParcelable(Tags.TASK);
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(Objects.requireNonNull(context));
-        Intent activityIntent = new Intent(context, OpenTaskActivity.class);
+        Intent activityIntent = new Intent(context, OneLaunchActivity.class);
         Bundle bundle1 = new Bundle();
         bundle1.putParcelable(Tags.TASK, task);
-        activityIntent.putExtra(Tags.BUNDLE_FROM_iREMIND, bundle1);
+        activityIntent.putExtra(Tags.BUNDLE_FROM_I_REMIND, bundle1);
         Objects.requireNonNull(task).setInactive();
         taskRepo.update(task);
         PendingIntent pendingIntent = PendingIntent.getActivity(context,

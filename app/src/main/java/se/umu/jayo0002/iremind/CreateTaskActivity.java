@@ -2,47 +2,37 @@ package se.umu.jayo0002.iremind;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.View;
-import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TimePicker;
-
 import net.yslibrary.android.keyboardvisibilityevent.util.UIUtil;
-
+import java.util.Calendar;
 import java.util.Objects;
 import se.umu.jayo0002.iremind.controllers.CreateTaskController;
 import se.umu.jayo0002.iremind.controllers.CreateTaskHelper;
-import se.umu.jayo0002.iremind.models.date.Date;
 import se.umu.jayo0002.iremind.models.LocationInfo;
 import se.umu.jayo0002.iremind.models.text.StringFormatter;
 import se.umu.jayo0002.iremind.models.Task;
 import se.umu.jayo0002.iremind.models.model_controllers.ObjectController;
-import se.umu.jayo0002.iremind.system_controllers.MapServiceController;
-import se.umu.jayo0002.iremind.view.DialogConstructor;
+
+
 import static se.umu.jayo0002.iremind.Tags.TASK;
 
-public class CreateTaskActivity extends AppCompatActivity implements View.OnClickListener,
+public class CreateTaskActivity extends HelperBase implements View.OnClickListener,
         DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
-    private Button mButtonAddDate;
-    private Button mButtonAddLocation;
-    private Button mButtonAddStartTime;
+    private Button mButtonAddDate, mButtonAddLocation, mButtonAddStartTime;
     private EditText mEventTitle, mMoreInfo;
     private DatePickerDialog mDateDialog;
     private TimePickerDialog mTimeDialog;
-    private int mYear, mMonth, mDay;
-    private int mStartHour, mStartMinute, mReminder;
+    private int mYear, mMonth, mDay, mStartHour, mStartMinute;
     private LocationInfo mLocationInfo;
     private String mTitle, mEvent, mPickedDate, mPickedTime;
-    private boolean mIsDatePickerShown, mIsTimePickerShown;
     private CreateTaskHelper mCreateTaskHelper;
     private ObjectController mObjectController;
     private Task mTask;
@@ -59,85 +49,32 @@ public class CreateTaskActivity extends AppCompatActivity implements View.OnClic
             update();
         else if (mObjectController.isObjectValid(savedInstanceState))
             updateTheStateOfUI(savedInstanceState);
-        checkService();
-        onCancelDialog();
-    }
-
-    private void onCancelDialog(){
+        checkMapService(mButtonAddLocation);
         mDateDialog.setOnCancelListener(dialogInterface -> {
-            mIsDatePickerShown = false;
             mDateDialog.dismiss();
+            mDateDialog = getDateDialog(mYear, mMonth, mDay, 6, this);
         });
         mTimeDialog.setOnCancelListener(dialogInterface -> {
-            mIsTimePickerShown = false;
             mTimeDialog.dismiss();
+            mTimeDialog = getTimeDialog(mStartHour, mStartMinute, this);
         });
     }
-
-    private final TextWatcher textWatcher = new TextWatcher() {
-        @Override
-        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-        }
-
-        @Override
-        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-        }
-
-        @Override
-        public void afterTextChanged(Editable editable) {
-            String str = editable.toString();
-            if (editable == mEventTitle.getEditableText())
-                mTitle = str;
-            else if (editable == mMoreInfo.getEditableText())
-                mEvent = str;
-        }
-    };
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.close_button:
-                destroyActivity();
-                break;
-            case R.id.save_button:
-                onSave();
-                break;
-            case R.id.btDate:
-                mIsDatePickerShown = true;
-                mDateDialog.show();
-                break;
-            case R.id.btStartingTime:
-                mIsTimePickerShown = true;
-                mTimeDialog.show();
-                break;
-            case R.id.btLocation:
-                Intent maps = new Intent(this, MapsActivity.class);
-                if (mObjectController.isObjectValid(mLocationInfo))
-                    maps.putExtra(Tags.LAT_LNG, mLocationInfo.getLatLng());
-                startActivityForResult(maps, Tags.REQUEST_CODE_MAP);
-                break;
-            default:
-                break;
+        UIUtil.hideKeyboard(this);
+        if (view.getId() == R.id.save_button)
+            onSave();
+        else if (view.getId() == R.id.btDate)
+            mDateDialog.show();
+        else if (view.getId() == R.id.btStartingTime)
+            mTimeDialog.show();
+        else if (view.getId() == R.id.btLocation) {
+            Intent maps = new Intent(this, MapsActivity.class);
+            if (mObjectController.isObjectValid(mLocationInfo))
+                maps.putExtra(Tags.LAT_LNG, mLocationInfo.getLatLng());
+            startActivityForResult(maps, Tags.REQUEST_CODE_MAP);
         }
-    }
-
-    private void checkService() {
-        if (MapServiceController.isServiceSupported(this)) {
-            mButtonAddLocation.setEnabled(false);
-            mButtonAddLocation.setText(R.string.not_supported);
-        }
-    }
-
-    public void onBackPressed() {
-        destroyActivity();
-    }
-
-    private void destroyActivity() {
-        Intent main = new Intent();
-        setResult(RESULT_CANCELED, main);
-        this.finish();
     }
 
     @Override
@@ -145,7 +82,7 @@ public class CreateTaskActivity extends AppCompatActivity implements View.OnClic
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == Tags.REQUEST_CODE_MAP && resultCode == RESULT_OK) {
             mLocationInfo = Objects.requireNonNull(data).getParcelableExtra(Tags.LOCATION_OBJECT);
-            if(mObjectController.isObjectValid(mLocationInfo))
+            if (mObjectController.isObjectValid(mLocationInfo))
                 mButtonAddLocation.setText(mLocationInfo.getAddress());
         }
     }
@@ -157,7 +94,6 @@ public class CreateTaskActivity extends AppCompatActivity implements View.OnClic
         mDay = day;
         mPickedDate = StringFormatter.getFormattedDate(year, (month + 1), day);
         mButtonAddDate.setText(mPickedDate);
-        mIsDatePickerShown = false;
         mDateDialog.dismiss();
     }
 
@@ -167,34 +103,20 @@ public class CreateTaskActivity extends AppCompatActivity implements View.OnClic
         mStartMinute = minute;
         mPickedTime = StringFormatter.getFormattedTime(hour, minute);
         mButtonAddStartTime.setText(mPickedTime);
-        mIsTimePickerShown = false;
         mTimeDialog.dismiss();
     }
 
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
-        outState.putBoolean(Tags.DATE_PICKER_STATUS, mIsDatePickerShown);
-        outState.putBoolean(Tags.TIME_PICKER_STATUS, mIsTimePickerShown);
-        outState.putString(Tags.DATE, mPickedDate);
-        outState.putString(Tags.PICKED_TIME, mPickedTime);
-        outState.putString(Tags.EVENT_TITLE, mTitle);
-        outState.putString(Tags.EVENT_INFO, mEvent);
-        outState.putInt(Tags.EVENT_YEAR, mYear);
-        outState.putInt(Tags.EVENT_MONTH, mMonth);
-        outState.putInt(Tags.EVENT_DAY, mDay);
-        outState.putInt(Tags.EVENT_TIME_HOUR, mStartHour);
-        outState.putInt(Tags.EVENT_TIME_MINUTES, mStartMinute);
-        outState.putParcelable(Tags.LOCATION_OBJECT, mLocationInfo);
-        if (mIsDatePickerShown)
-            mDateDialog.dismiss();
-        else if (mIsTimePickerShown)
-            mTimeDialog.dismiss();
+        mCreateTaskController.setOutStateBundle(outState, mDateDialog,
+                mTimeDialog, mPickedDate, mPickedTime,
+                mYear, mMonth, mDay, mStartHour, mStartMinute, mTitle, mEvent, mLocationInfo);
         super.onSaveInstanceState(outState);
     }
 
     private void update() {
         mTask = Objects.requireNonNull(getIntent().getExtras()).getParcelable(TASK);
-        if (mObjectController.isObjectValid(mTask)){
+        if (mObjectController.isObjectValid(mTask)) {
             mTitle = mTask.getTitle();
             mEvent = mTask.getNote();
             mYear = mTask.getYear();
@@ -204,12 +126,12 @@ public class CreateTaskActivity extends AppCompatActivity implements View.OnClic
             mStartMinute = mTask.getMinute();
             mPickedDate = mTask.getDate();
             mPickedTime = mTask.getTime();
-            mButtonAddDate.setText(mPickedDate);
-            mButtonAddStartTime.setText(mPickedTime);
-            mEventTitle.setText(mTitle);
-            if (mCreateTaskController.setLocationButton(mButtonAddLocation,mTask.getLatLng(),mTask.getAddress())){
-                mLocationInfo = mCreateTaskController.getLocationInfo(mTask.getLatLng(),mTask.getAddress());
-            }
+            mCreateTaskController.setDateButtons(mButtonAddDate, mButtonAddStartTime, mPickedDate, mPickedTime);
+            mCreateTaskController.setTextForEditTexts(mEventTitle, mMoreInfo, mTitle, mEvent);
+            mDateDialog = getDateDialog(mYear, mMonth, mDay, 6, this);
+            mTimeDialog = getTimeDialog(mStartHour, mStartMinute, this);
+            if (mCreateTaskController.setLocationButton(mButtonAddLocation, mTask.getLatLng(), mTask.getAddress()))
+                mLocationInfo = mCreateTaskController.getLocationInfo(mTask.getLatLng(), mTask.getAddress());
         }
     }
 
@@ -218,8 +140,6 @@ public class CreateTaskActivity extends AppCompatActivity implements View.OnClic
             mLocationInfo = outState.getParcelable(Tags.LOCATION_OBJECT);
             mButtonAddLocation.setText(Objects.requireNonNull(mLocationInfo).getAddress());
         }
-        mIsTimePickerShown = outState.getBoolean(Tags.TIME_PICKER_STATUS);
-        mIsDatePickerShown = outState.getBoolean(Tags.DATE_PICKER_STATUS);
         mPickedDate = outState.getString(Tags.DATE);
         mPickedTime = outState.getString(Tags.PICKED_TIME);
         mTitle = outState.getString(Tags.EVENT_TITLE);
@@ -229,13 +149,15 @@ public class CreateTaskActivity extends AppCompatActivity implements View.OnClic
         mDay = outState.getInt(Tags.EVENT_DAY);
         mStartHour = outState.getInt(Tags.EVENT_TIME_HOUR);
         mStartMinute = outState.getInt(Tags.EVENT_TIME_MINUTES);
-        mButtonAddDate.setText(mPickedDate);
-        mButtonAddStartTime.setText(mPickedTime);
-        mCreateTaskController.setTextForButtons(mEventTitle,mMoreInfo,mTitle,mEvent);
-        if (mIsTimePickerShown)
+        mCreateTaskController.setDateButtons(mButtonAddDate, mButtonAddStartTime, mPickedDate, mPickedTime);
+        mCreateTaskController.setTextForEditTexts(mEventTitle, mMoreInfo, mTitle, mEvent);
+        if (outState.getBoolean(Tags.TIME_PICKER_STATUS)) {
+            mTimeDialog.onRestoreInstanceState(outState.getBundle(Tags.TIME_PICKER_OUT_STATE));
             mTimeDialog.show();
-        else if (mIsDatePickerShown)
+        } else if (outState.getBoolean(Tags.DATE_PICKER_STATUS)) {
+            mDateDialog.onRestoreInstanceState(outState.getBundle(Tags.DATE_PICKER_OUT_STATE));
             mDateDialog.show();
+        }
     }
 
     private void onSave() {
@@ -244,7 +166,6 @@ public class CreateTaskActivity extends AppCompatActivity implements View.OnClic
             main.putExtra(TASK, mCreateTaskHelper.getTask(mTitle, mEvent, mStartHour, mStartMinute,
                     mYear, mMonth, mDay, mLocationInfo, mTask));
             setResult(RESULT_OK, main);
-            UIUtil.hideKeyboard(this);
             this.finish();
         }
     }
@@ -252,30 +173,28 @@ public class CreateTaskActivity extends AppCompatActivity implements View.OnClic
     private void prepareUI() {
         mEvent = "";
         mCreateTaskHelper = new CreateTaskHelper(this);
-        mPickedDate = Date.getFullDate();
+        mPickedDate = getString(R.string.date);
         mPickedTime = getString(R.string.starting_time);
-        Button mButtonClose = findViewById(R.id.close_button);
-        mButtonClose.setOnClickListener(this);
-        Button mButtonSave = findViewById(R.id.save_button);
-        mButtonSave.setOnClickListener(this);
-        mButtonAddDate = findViewById(R.id.btDate);
-        mButtonAddDate.setOnClickListener(this);
-        mButtonAddLocation = findViewById(R.id.btLocation);
-        mButtonAddLocation.setOnClickListener(this);
-        mButtonAddStartTime = findViewById(R.id.btStartingTime);
-        mButtonAddStartTime.setOnClickListener(this);
-        mEventTitle = findViewById(R.id.tvTitle);
-        mMoreInfo = findViewById(R.id.tvMoreInfo);
-        prepareDialogs();
-        mEventTitle.setImeOptions(EditorInfo.IME_FLAG_NO_EXTRACT_UI);
-        mMoreInfo.setImeOptions(EditorInfo.IME_FLAG_NO_EXTRACT_UI);
-        mMoreInfo.addTextChangedListener(textWatcher);
-        mEventTitle.addTextChangedListener(textWatcher);
+        setSaveButton(this);
+        mButtonAddDate = getDateButton(this);
+        mButtonAddLocation = getLocationButton(this);
+        mButtonAddStartTime = getTimeButton(this);
+        mEventTitle = getTitleEditText();
+        mMoreInfo = getInfoEditText();
+        mStartHour =Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
+        mStartMinute = Calendar.getInstance().get(Calendar.MINUTE);
+        mTimeDialog = getTimeDialog(mStartHour,
+                mStartMinute, this);
+        mDateDialog = getDateDialog(mYear, mMonth, mDay, 6, this);
     }
 
-    private void prepareDialogs() {
-        DialogConstructor dialog = new DialogConstructor(this);
-        mDateDialog = dialog.getDateDialog(mYear,mMonth,mDay,6,this);
-        mTimeDialog = dialog.getTimeDialog(this);
+    @Override
+    void setTitle(String title) {
+        mTitle = title;
+    }
+
+    @Override
+    void setInfo(String info) {
+        mEvent = info;
     }
 }

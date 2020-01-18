@@ -1,11 +1,11 @@
 package se.umu.jayo0002.iremind;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProviders;
-import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -37,7 +37,6 @@ public class FragmentTask extends BaseFragment {
     private Task mTask;
     private TaskAdapter mAdapter;
     private TaskViewModel mTaskViewModel;
-    private RecyclerView mRV;
     private String mSearchQuery;
     private boolean mDoesMenuNeedUpdate;
     private InputMethodManager mInputMethodManager;
@@ -50,7 +49,7 @@ public class FragmentTask extends BaseFragment {
         View view = inflater.inflate(R.layout.fragment_task, container, false);
         mInputMethodManager = (InputMethodManager) Objects.requireNonNull(getActivity()).
                 getSystemService(Activity.INPUT_METHOD_SERVICE);
-        mRV = view.findViewById(R.id.recycler_view);
+        RecyclerView mRV = view.findViewById(R.id.recycler_view);
         mAdapter = new TaskAdapter(getContext());
         mRV.setLayoutManager(new LinearLayoutManager(getContext()));
         mRV.setHasFixedSize(true);
@@ -59,7 +58,7 @@ public class FragmentTask extends BaseFragment {
         mRV.setAdapter(mAdapter);
         mTaskViewModel.getActiveTasks().observe(Objects.requireNonNull(getActivity()), tasks -> mAdapter.setTasks(tasks));
         onClickFAButton();
-        onSwipe();
+        registerRecyclerViewOnItemTouchHelper(mRV);
         mAdapter.setOnItemClickListener(task -> {
             mTask = task;
             edit();
@@ -124,33 +123,6 @@ public class FragmentTask extends BaseFragment {
         startActivityForResult(intent, Tags.REQUEST_CODE_EDIT_EVENT);
     }
 
-    private void onSwipe() {
-        new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0,
-                ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
-            @Override
-            public boolean onMove(@NonNull RecyclerView recyclerView,
-                                  @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
-                return false;
-            }
-
-            @Override
-            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-                collapseMenu(mSearchView, mMenuItem);
-                Task task = mAdapter.getTaskAt(viewHolder.getAdapterPosition());
-                if (direction == ItemTouchHelper.LEFT) {
-                    AlarmHandler.cancelAlarm(Objects.requireNonNull(getActivity()), task);
-                    mTaskViewModel.delete(task);
-                    Toaster.displaySnack(getView(), Tags.EVENT_DELETED, Tags.SHORT_SNACK);
-                } else if (direction == ItemTouchHelper.RIGHT) {
-                    AlarmHandler.cancelAlarm(Objects.requireNonNull(getActivity()), task);
-                    task.setInactive();
-                    mTaskViewModel.update(task);
-                    Toaster.displaySnack(getView(), Tags.EVENT_DEACTIVATED, Tags.SHORT_SNACK);
-                }
-            }
-        }).attachToRecyclerView(mRV);
-    }
-
     private void updateSearchView(boolean isTheStateOut) {
         if (isTheStateOut) {
             mTaskViewModel.getActiveTasks().observe(Objects.requireNonNull(getActivity()),
@@ -181,5 +153,24 @@ public class FragmentTask extends BaseFragment {
     void callAdapter(String filter) {
         mSearchQuery = filter;
         mAdapter.getFilter().filter(filter);
+    }
+
+    @Override
+    void onLeftSwipe(@NonNull RecyclerView.ViewHolder viewHolder) {
+        collapseMenu(mSearchView,mMenuItem);
+        Task task = mAdapter.getTaskAt(viewHolder.getAdapterPosition());
+        AlarmHandler.cancelAlarm(Objects.requireNonNull(getActivity()), task);
+        mTaskViewModel.delete(task);
+        Toaster.displaySnack(getView(), Tags.EVENT_DELETED, Tags.SHORT_SNACK);
+    }
+
+    @Override
+    void onRightSwipe(@NonNull RecyclerView.ViewHolder viewHolder) {
+        collapseMenu(mSearchView,mMenuItem);
+        Task task = mAdapter.getTaskAt(viewHolder.getAdapterPosition());
+        AlarmHandler.cancelAlarm(Objects.requireNonNull(getActivity()), task);
+        task.setInactive();
+        mTaskViewModel.update(task);
+        Toaster.displaySnack(getView(), Tags.EVENT_DEACTIVATED, Tags.SHORT_SNACK);
     }
 }

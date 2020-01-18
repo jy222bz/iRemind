@@ -64,7 +64,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskHolder> im
 
     /**
      * Called by RecyclerView to display the data at the specified position. This method should
-     * update the contents of the {@link TaskHolder to reflect the item at the given
+     * getTheSavedTask the contents of the {@link TaskHolder to reflect the item at the given
      * position.
      * <p>
      * Note that unlike {@link ListView}, RecyclerView will not call this method

@@ -3,7 +3,6 @@ package se.umu.jayo0002.iremind.service;
 import android.app.Application;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
-import android.content.Context;
 import android.media.AudioAttributes;
 import android.media.RingtoneManager;
 import android.net.Uri;
@@ -15,15 +14,6 @@ import se.umu.jayo0002.iremind.Tags;
  */
 public class IRemind extends Application {
 
-    private static Application mApplication;
-
-    public static Application getApplication() {
-        return mApplication;
-    }
-
-    public static Context getContext() {
-        return getApplication().getApplicationContext();
-    }
 
     /**
      * It calls the private method to create the channel for notifications.
@@ -31,7 +21,6 @@ public class IRemind extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        mApplication = this;
         doCreate();
     }
 
