@@ -9,6 +9,11 @@ package se.umu.jayo0002.iremind.models.text;
  */
 public class TextValidator {
 
+    /**
+     * A private constructor.
+     */
+    private TextValidator(){}
+
 
     /**
      * It checks whether the title is valid, according to the rules.
@@ -16,10 +21,10 @@ public class TextValidator {
      * @param theMaximumAmountOfChars
      * @return boolean
      */
-    public static boolean isTitleValid(String title, int theMaximumAmountOfChars){
+    public static boolean isTitleNotValid(String title, int theMaximumAmountOfChars){
         if (title == null)
-            return false;
-        else return title.length() <= theMaximumAmountOfChars;
+            return true;
+        else return title.length() > theMaximumAmountOfChars;
     }
 
     /**

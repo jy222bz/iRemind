@@ -1,22 +1,14 @@
 package se.umu.jayo0002.iremind;
 
 import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.fragment.app.FragmentActivity;
-import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Address;
-import android.location.Location;
 import android.os.Bundle;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ImageView;
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -25,15 +17,13 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.tasks.Task;
-import net.yslibrary.android.keyboardvisibilityevent.util.UIUtil;
 import java.util.List;
 import java.util.Objects;
 import se.umu.jayo0002.iremind.models.map.GoogleMapHelper;
 import se.umu.jayo0002.iremind.models.LocationInfo;
 import se.umu.jayo0002.iremind.view.Toaster;
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
+public class MapsActivity extends GoogleMapHelperClass implements OnMapReadyCallback {
 
     private GoogleMap mMap;
     private boolean mPermitted = false;
@@ -51,7 +41,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         if (savedInstanceState != null)
             updateState(savedInstanceState);
         else if (!mPermitted)
-            requestPermission();
+            getPermission();
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         if (mapFragment == null) throw new AssertionError();
@@ -68,9 +58,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         doCheckTheConditions();
         mMap.setOnCameraMoveListener(() -> mLatLng = mMap.getCameraPosition().target);
         mMap.setOnCameraIdleListener(() -> mMarker.setPosition(mLatLng));
-        onSearch();
+        setTheSearch(mSearchBar);
         onBackToMyLocation();
-        onDrag();
+        setOnDragListener(mMap);
         onLongClick();
     }
 
@@ -88,57 +78,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         Toaster.displayToast(this, Tags.ADDRESS_GUIDE, Tags.LONG_TOAST);
     }
 
-    private void getCurrentLocation() {
-        FusedLocationProviderClient provider = LocationServices.getFusedLocationProviderClient(this);
-        try {
-            final Task<Location> location = provider.getLastLocation();
-            location.addOnCompleteListener(task -> {
-                if (task.isSuccessful()) {
-                    Location currentPosition = task.getResult();
-                    if (currentPosition != null)
-                        onCallMoveToLocation(new LatLng(currentPosition.getLatitude(),
-                                currentPosition.getLongitude()));
-                    else
-                        Toaster.displayToast(this, Tags.LOCATION_IS_NULL, Tags.LONG_TOAST);
-                }
-            });
-        } catch (Exception e) {
-            Toaster.displayToast(this, Tags.NO_LOCATION, Tags.LONG_TOAST);
-        }
-    }
-
     private void onCallMoveToLocation(LatLng latLng) {
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, Tags.MAP_ZOOM));
         mLatLng = latLng;
         mMarker.setPosition(mLatLng);
     }
 
-    private void onSearch() {
-        mSearchBar.setOnEditorActionListener((textView, i, keyEvent) -> {
-            boolean val = false;
-            if (i == EditorInfo.IME_ACTION_SEARCH
-                    || i == EditorInfo.IME_ACTION_DONE
-                    || keyEvent.getAction() == KeyEvent.ACTION_DOWN
-                    || keyEvent.getAction() == KeyEvent.KEYCODE_ENTER) {
-                UIUtil.hideKeyboard(this);
-                val = true;
-                List<Address> list = GoogleMapHelper.geoCoder(null,
-                        this, mSearchBar.getText().toString());
-                if (!list.isEmpty()) {
-                    Address address = list.get(0);
-                    mLatLng = new LatLng(address.getLatitude(), address.getLongitude());
-                    onCallMoveToLocation(new LatLng(address.getLatitude(), address.getLongitude()));
-                } else {
-                    Toaster.displayToast(this,Tags.NO_LOCATION_FOUND,Tags.LONG_TOAST);
-                }
-            }
-            mSearchBar.getText().clear();
-            return val;
-        });
-    }
-
     private void onBackToMyLocation() {
-        mMyLocation.setOnClickListener(view -> getCurrentLocation());
+        mMyLocation.setOnClickListener(view -> getDeviceCurrentLocation());
     }
 
     private void onLongClick() {
@@ -163,40 +110,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         outState.putBoolean(Tags.PERMISSION_STATE, mPermitted);
     }
 
-    private void onDrag() {
-        mMap.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
-            @Override
-            public void onMarkerDragStart(Marker arg0) {
-                /*It is not useful in this context.*/
-            }
-
-            @Override
-            public void onMarkerDragEnd(Marker arg0) {
-                mMap.animateCamera(CameraUpdateFactory.newLatLng(arg0.getPosition()));
-                mLatLng = new LatLng(arg0.getPosition().latitude, arg0.getPosition().longitude);
-            }
-
-            @Override
-            public void onMarkerDrag(Marker arg0) {
-                /*It is not useful in this context.*/
-            }
-        });
-    }
-
     private void updateState(Bundle savedInstanceState) {
         mLatLng = savedInstanceState.getParcelable(Tags.LAT_LNG_OUT_STATE);
         mIsItOutState = savedInstanceState.getBoolean(Tags.STATE_CONDITION);
         mPermitted = savedInstanceState.getBoolean(Tags.PERMISSION_STATE);
-    }
-
-    private void requestPermission() {
-        String[] permission = {Manifest.permission.ACCESS_FINE_LOCATION};
-        if (PackageManager.PERMISSION_GRANTED == ContextCompat.checkSelfPermission(this.getApplicationContext(),
-                Tags.ACCESS_FINE_LOCATION)) {
-            mPermitted = true;
-        } else {
-            ActivityCompat.requestPermissions(this, permission, Tags.LOCATION_PERMISSION_REQUEST_CODE);
-        }
     }
 
     private void doCheckTheConditions() {
@@ -208,7 +125,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             mLatLng = Objects.requireNonNull(getIntent().getExtras()).getParcelable(Tags.LAT_LNG);
             onCallMoveToLocation(mLatLng);
         } else if (mPermitted && !mIsItOutState) {
-            getCurrentLocation();
+            getDeviceCurrentLocation();
         } else if (mIsItOutState) {
             onCallMoveToLocation(mLatLng);
             mIsItOutState = false;
@@ -223,5 +140,37 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMyLocation.setEnabled(false);
         mIsItOutState = false;
         mLatLng = new LatLng(0, 0);
+    }
+
+    @Override
+    void updateCoordinates(LatLng latLng) {
+        mLatLng = latLng;
+        mMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));
+    }
+
+    @Override
+    void notifyPositiveSearchResult(LatLng latLng) {
+        mLatLng = latLng;
+        onCallMoveToLocation(latLng);
+    }
+
+    @Override
+    void notifyNegativeSearchResult() {
+        Toaster.displayToast(this, Tags.NO_LOCATION_FOUND, Tags.LONG_TOAST);
+    }
+
+    @Override
+    void itIsPermitted() {
+        mPermitted = true;
+    }
+
+    @Override
+    void deviceCoordinates(LatLng latLng) {
+        onCallMoveToLocation(latLng);
+    }
+
+    @Override
+    void reportFailureOfGettingTheDeviceLocation() {
+        Toaster.displayToast(this, Tags.NO_LOCATION_FOUND, Tags.LONG_TOAST);
     }
 }

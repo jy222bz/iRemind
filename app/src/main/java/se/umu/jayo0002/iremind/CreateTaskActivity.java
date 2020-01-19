@@ -15,12 +15,12 @@ import net.yslibrary.android.keyboardvisibilityevent.util.UIUtil;
 import java.util.Calendar;
 import java.util.Objects;
 import se.umu.jayo0002.iremind.controllers.CreateTaskController;
-import se.umu.jayo0002.iremind.controllers.CreateTaskHelper;
+import se.umu.jayo0002.iremind.controllers.Warden;
+import se.umu.jayo0002.iremind.controllers.TaskSetter;
 import se.umu.jayo0002.iremind.models.LocationInfo;
 import se.umu.jayo0002.iremind.models.text.StringFormatter;
 import se.umu.jayo0002.iremind.models.Task;
 import se.umu.jayo0002.iremind.models.model_controllers.ObjectController;
-
 
 
 import static se.umu.jayo0002.iremind.Tags.TASK;
@@ -34,7 +34,7 @@ public class CreateTaskActivity extends HelperBase implements View.OnClickListen
     private int mYear, mMonth, mDay, mStartHour, mStartMinute;
     private LocationInfo mLocationInfo;
     private String mTitle, mEvent, mPickedDate, mPickedTime;
-    private CreateTaskHelper mCreateTaskHelper;
+    private Warden mWarden;
     private ObjectController mObjectController;
     private Task mTask;
     private CreateTaskController mCreateTaskController;
@@ -52,7 +52,7 @@ public class CreateTaskActivity extends HelperBase implements View.OnClickListen
             updateTheStateOfUI(savedInstanceState);
         checkMapService(mButtonAddLocation);
         mDateDialog.setOnCancelListener(dialogInterface -> mDateDialog.dismiss());
-        mTimeDialog.setOnCancelListener(dialogInterface ->  mTimeDialog.dismiss());
+        mTimeDialog.setOnCancelListener(dialogInterface -> mTimeDialog.dismiss());
     }
 
     @Override
@@ -60,11 +60,12 @@ public class CreateTaskActivity extends HelperBase implements View.OnClickListen
         UIUtil.hideKeyboard(this);
         if (view.getId() == R.id.save_button)
             onSave();
-        else if (view.getId() == R.id.btDate){
+        else if (view.getId() == R.id.btDate) {
             mDateDialog = getDateDialog(mYear, mMonth, mDay, 6, this);
             mDateDialog.show();
-        } else if (view.getId() == R.id.btStartingTime){
-            mTimeDialog = getTimeDialog(mStartHour, mStartMinute, this);
+        } else if (view.getId() == R.id.btStartingTime) {
+            int [] time = mCreateTaskController.getValidTime(mStartHour,mStartMinute,getIntent());
+            mTimeDialog = getTimeDialog(time[0], time[1], this);
             mTimeDialog.show();
         } else if (view.getId() == R.id.btLocation) {
             Intent maps = new Intent(this, MapsActivity.class);
@@ -105,7 +106,7 @@ public class CreateTaskActivity extends HelperBase implements View.OnClickListen
 
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
-        mCreateTaskController.setOutStateBundle(outState, mDateDialog,
+        TaskSetter.setOutStateBundle(outState, mDateDialog,
                 mTimeDialog, mPickedDate, mPickedTime,
                 mYear, mMonth, mDay, mStartHour, mStartMinute, mTitle, mEvent, mLocationInfo);
         super.onSaveInstanceState(outState);
@@ -127,15 +128,11 @@ public class CreateTaskActivity extends HelperBase implements View.OnClickListen
         mCreateTaskController.setTextForEditTexts(mEventTitle, mMoreInfo, mTitle, mEvent);
         mDateDialog = getDateDialog(mYear, mMonth, mDay, 6, this);
         mTimeDialog = getTimeDialog(mStartHour, mStartMinute, this);
-        if (mCreateTaskController.setLocationButton(mButtonAddLocation, mTask.getLatLng(), mTask.getAddress()))
-            mLocationInfo = mCreateTaskController.getLocationInfo(mTask.getLatLng(), mTask.getAddress());
+        mLocationInfo = mCreateTaskController.setLocationInfo(mButtonAddLocation, mTask.getLatLng(), mTask.getAddress(), mLocationInfo);
     }
 
     private void updateTheStateOfUI(Bundle outState) {
-        if (mObjectController.isObjectValid(outState.getParcelable(Tags.LOCATION_OBJECT))) {
-            mLocationInfo = outState.getParcelable(Tags.LOCATION_OBJECT);
-            mButtonAddLocation.setText(Objects.requireNonNull(mLocationInfo).getAddress());
-        }
+        mLocationInfo = mCreateTaskController.validateLocationInfo(mButtonAddLocation, outState.getParcelable(Tags.LOCATION_OBJECT));
         mPickedDate = outState.getString(Tags.DATE);
         mPickedTime = outState.getString(Tags.PICKED_TIME);
         mTitle = outState.getString(Tags.EVENT_TITLE);
@@ -147,19 +144,13 @@ public class CreateTaskActivity extends HelperBase implements View.OnClickListen
         mStartMinute = outState.getInt(Tags.EVENT_TIME_MINUTES);
         mCreateTaskController.setDateButtons(mButtonAddDate, mButtonAddStartTime, mPickedDate, mPickedTime);
         mCreateTaskController.setTextForEditTexts(mEventTitle, mMoreInfo, mTitle, mEvent);
-        if (outState.getBoolean(Tags.TIME_PICKER_STATUS)) {
-            mTimeDialog.onRestoreInstanceState(outState.getBundle(Tags.TIME_PICKER_OUT_STATE));
-            mTimeDialog.show();
-        } else if (outState.getBoolean(Tags.DATE_PICKER_STATUS)) {
-            mDateDialog.onRestoreInstanceState(outState.getBundle(Tags.DATE_PICKER_OUT_STATE));
-            mDateDialog.show();
-        }
+        mCreateTaskController.runDialogs(outState, mTimeDialog, mDateDialog);
     }
 
     private void onSave() {
-        if (mCreateTaskHelper.areContentsValid(mTitle, mEvent, mStartHour, mStartMinute, mYear, mMonth, mDay)) {
+        if (mWarden.isInputValid(mTitle, mEvent, mStartHour, mStartMinute, mYear, mMonth, mDay)) {
             Intent main = new Intent();
-            main.putExtra(TASK, mCreateTaskHelper.getTask(mTitle, mEvent, mStartHour, mStartMinute,
+            main.putExtra(TASK, TaskSetter.getTask(mTitle, mEvent, mStartHour, mStartMinute,
                     mYear, mMonth, mDay, mLocationInfo, mTask));
             setResult(RESULT_OK, main);
             this.finish();
@@ -168,7 +159,7 @@ public class CreateTaskActivity extends HelperBase implements View.OnClickListen
 
     private void prepareUI() {
         mEvent = "";
-        mCreateTaskHelper = new CreateTaskHelper(this);
+        mWarden = new Warden(this);
         mPickedDate = getString(R.string.date);
         mPickedTime = getString(R.string.starting_time);
         setSaveButton(this);

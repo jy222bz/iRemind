@@ -27,7 +27,7 @@ public class Tags {
     public static final String TIME_PICKER_STATUS = "Whether the TimePicker is showing";
     static final String LAT_LNG = "The last known coordinates for the last location.";
     public static final String TASK= "A Task Object.";
-    public static final String INVALID_DATE = "The DATE and the TIME of the reminder should be in the future!";
+    public static final String INVALID_DATE = "DATE and TIME in the future should be provided!";
     public static final String TITLE_IS_INVALID = "There should be a title that is not longer than " +
             Tags.THE_ALLOWED_AMOUNT_FOR_TITLE + " CHARACTERS!";
     public static final String[] MONTHS = {"January", "February", "March", "April", "May", "June", "July",
@@ -70,4 +70,5 @@ public class Tags {
     public static final String DATE_PICKER_OUT_STATE = "State of DATE_PICKER";
     public static final String TIME_PICKER_OUT_STATE = "State of TIME_PICKER";
     public static final String NO_INFO ="No additional information was provided!";
+    public static final String REQUIRED_INFO ="In order to create an event, provide a Title and valid Date and Time.";
 }

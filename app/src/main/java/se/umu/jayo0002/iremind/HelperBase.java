@@ -42,7 +42,7 @@ public abstract class HelperBase extends AppCompatActivity {
     abstract void setInfo(String info);
 
     /**
-     * It check whether there is device supports Google Map Service.
+     * It checks whether the device supports Google Map Service.
      * @param button
      */
     public void checkMapService(Button button) {
@@ -64,6 +64,7 @@ public abstract class HelperBase extends AppCompatActivity {
     }
 
     /**
+     * It returns a button.
      * @param listener
      * @return Button
      */
@@ -121,12 +122,12 @@ public abstract class HelperBase extends AppCompatActivity {
     private final TextWatcher textWatcher = new TextWatcher() {
         @Override
         public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-            /*It is not useful in this context*/
+            /*It is not useful in this context.*/
         }
 
         @Override
         public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-            /*It is not useful in this context*/
+            /*It is not useful in this context.*/
         }
 
         @Override
