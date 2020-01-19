@@ -25,6 +25,7 @@ import se.umu.jayo0002.iremind.service.AlarmHandler;
 import se.umu.jayo0002.iremind.view.Toaster;
 import se.umu.jayo0002.iremind.view_models.TaskViewModel;
 
+import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
 
 
@@ -110,14 +111,21 @@ public class FragmentTask extends BaseFragment {
         } else if (requestCode == Tags.REQUEST_CODE_EDIT_EVENT && resultCode == RESULT_OK) {
             mTask = Objects.requireNonNull(Objects.requireNonNull(data).getExtras()).getParcelable(Tags.TASK);
             mTaskViewModel.update(mTask);
-            AlarmHandler.cancelAlarm(Objects.requireNonNull(getActivity()), mTask);
             AlarmHandler.scheduleAlarm(Objects.requireNonNull(getActivity()), mTask);
             Toaster.displaySnack(getView(), Tags.ALARM_IS_UPDATED, Tags.SHORT_SNACK);
+        } else if (requestCode == Tags.REQUEST_CODE_EDIT_EVENT && resultCode == RESULT_CANCELED) {
+            if (mTask.isAlarmValid())
+                AlarmHandler.scheduleAlarm(Objects.requireNonNull(getActivity()), mTask);
+            else {
+                mTask.setInactive();
+                mTaskViewModel.update(mTask);
+            }
         }
     }
 
     private void edit() {
         collapseMenu(mSearchView, mMenuItem);
+        AlarmHandler.cancelAlarm(Objects.requireNonNull(getActivity()),mTask);
         Intent intent = new Intent(getContext(), CreateTaskActivity.class);
         intent.putExtra(Tags.TASK, mTask);
         startActivityForResult(intent, Tags.REQUEST_CODE_EDIT_EVENT);

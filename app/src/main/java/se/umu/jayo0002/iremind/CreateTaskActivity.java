@@ -22,6 +22,7 @@ import se.umu.jayo0002.iremind.models.Task;
 import se.umu.jayo0002.iremind.models.model_controllers.ObjectController;
 
 
+
 import static se.umu.jayo0002.iremind.Tags.TASK;
 
 public class CreateTaskActivity extends HelperBase implements View.OnClickListener,
@@ -50,14 +51,8 @@ public class CreateTaskActivity extends HelperBase implements View.OnClickListen
         else if (mObjectController.isObjectValid(savedInstanceState))
             updateTheStateOfUI(savedInstanceState);
         checkMapService(mButtonAddLocation);
-        mDateDialog.setOnCancelListener(dialogInterface -> {
-            mDateDialog.dismiss();
-            mDateDialog = getDateDialog(mYear, mMonth, mDay, 6, this);
-        });
-        mTimeDialog.setOnCancelListener(dialogInterface -> {
-            mTimeDialog.dismiss();
-            mTimeDialog = getTimeDialog(mStartHour, mStartMinute, this);
-        });
+        mDateDialog.setOnCancelListener(dialogInterface -> mDateDialog.dismiss());
+        mTimeDialog.setOnCancelListener(dialogInterface ->  mTimeDialog.dismiss());
     }
 
     @Override
@@ -65,11 +60,13 @@ public class CreateTaskActivity extends HelperBase implements View.OnClickListen
         UIUtil.hideKeyboard(this);
         if (view.getId() == R.id.save_button)
             onSave();
-        else if (view.getId() == R.id.btDate)
+        else if (view.getId() == R.id.btDate){
+            mDateDialog = getDateDialog(mYear, mMonth, mDay, 6, this);
             mDateDialog.show();
-        else if (view.getId() == R.id.btStartingTime)
+        } else if (view.getId() == R.id.btStartingTime){
+            mTimeDialog = getTimeDialog(mStartHour, mStartMinute, this);
             mTimeDialog.show();
-        else if (view.getId() == R.id.btLocation) {
+        } else if (view.getId() == R.id.btLocation) {
             Intent maps = new Intent(this, MapsActivity.class);
             if (mObjectController.isObjectValid(mLocationInfo))
                 maps.putExtra(Tags.LAT_LNG, mLocationInfo.getLatLng());
@@ -116,23 +113,22 @@ public class CreateTaskActivity extends HelperBase implements View.OnClickListen
 
     private void update() {
         mTask = Objects.requireNonNull(getIntent().getExtras()).getParcelable(TASK);
-        if (mObjectController.isObjectValid(mTask)) {
-            mTitle = mTask.getTitle();
-            mEvent = mTask.getNote();
-            mYear = mTask.getYear();
-            mMonth = mTask.getMonth();
-            mDay = mTask.getDay();
-            mStartHour = mTask.getHour();
-            mStartMinute = mTask.getMinute();
-            mPickedDate = mTask.getDate();
-            mPickedTime = mTask.getTime();
-            mCreateTaskController.setDateButtons(mButtonAddDate, mButtonAddStartTime, mPickedDate, mPickedTime);
-            mCreateTaskController.setTextForEditTexts(mEventTitle, mMoreInfo, mTitle, mEvent);
-            mDateDialog = getDateDialog(mYear, mMonth, mDay, 6, this);
-            mTimeDialog = getTimeDialog(mStartHour, mStartMinute, this);
-            if (mCreateTaskController.setLocationButton(mButtonAddLocation, mTask.getLatLng(), mTask.getAddress()))
-                mLocationInfo = mCreateTaskController.getLocationInfo(mTask.getLatLng(), mTask.getAddress());
-        }
+        assert mTask != null;
+        mTitle = mTask.getTitle();
+        mEvent = mTask.getNote();
+        mYear = mTask.getYear();
+        mMonth = mTask.getMonth();
+        mDay = mTask.getDay();
+        mStartHour = mTask.getHour();
+        mStartMinute = mTask.getMinute();
+        mPickedDate = mTask.getDate();
+        mPickedTime = mTask.getTime();
+        mCreateTaskController.setDateButtons(mButtonAddDate, mButtonAddStartTime, mPickedDate, mPickedTime);
+        mCreateTaskController.setTextForEditTexts(mEventTitle, mMoreInfo, mTitle, mEvent);
+        mDateDialog = getDateDialog(mYear, mMonth, mDay, 6, this);
+        mTimeDialog = getTimeDialog(mStartHour, mStartMinute, this);
+        if (mCreateTaskController.setLocationButton(mButtonAddLocation, mTask.getLatLng(), mTask.getAddress()))
+            mLocationInfo = mCreateTaskController.getLocationInfo(mTask.getLatLng(), mTask.getAddress());
     }
 
     private void updateTheStateOfUI(Bundle outState) {
@@ -181,7 +177,7 @@ public class CreateTaskActivity extends HelperBase implements View.OnClickListen
         mButtonAddStartTime = getTimeButton(this);
         mEventTitle = getTitleEditText();
         mMoreInfo = getInfoEditText();
-        mStartHour =Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
+        mStartHour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
         mStartMinute = Calendar.getInstance().get(Calendar.MINUTE);
         mTimeDialog = getTimeDialog(mStartHour,
                 mStartMinute, this);

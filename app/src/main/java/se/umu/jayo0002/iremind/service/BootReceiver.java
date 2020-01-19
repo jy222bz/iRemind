@@ -3,9 +3,7 @@ package se.umu.jayo0002.iremind.service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-
-import se.umu.jayo0002.iremind.database.TaskRepo;
-import se.umu.jayo0002.iremind.models.Task;
+import se.umu.jayo0002.iremind.models.Scheduler;
 
 
 /**
@@ -20,7 +18,7 @@ public class BootReceiver extends BroadcastReceiver {
 
     /**
      * It receives the intent and reschedule the Tasks upon reboot.
-     * It deactivate any Task is currently active but its reminder did not trigger.
+     * It deactivate any Task that is currently active but its reminder did not trigger.
      * The Reminder of a Task will not go off when the device is switched off, therefore they have to be
      * handled when the device is switched on.
      *
@@ -30,22 +28,6 @@ public class BootReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         if (Intent.ACTION_BOOT_COMPLETED.equals(intent.getAction()))
-            scheduleTasks(context);
-    }
-
-    private void scheduleTasks(Context context) {
-        TaskRepo taskRepo = new TaskRepo(context.getApplicationContext());
-        taskRepo.getAll().observeForever(tasks -> {
-            if (!tasks.isEmpty()) {
-                for (Task task : tasks) {
-                    if (task.isActive() && task.isAlarmValid())
-                        AlarmHandler.scheduleAlarm(context, task);
-                    else if (task.isActive() && !task.isAlarmValid()) {
-                        task.setInactive();
-                        taskRepo.update(task);
-                    }
-                }
-            }
-        });
+            Scheduler.scheduleTasks(context);
     }
 }
