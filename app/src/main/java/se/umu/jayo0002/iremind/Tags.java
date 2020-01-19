@@ -13,7 +13,7 @@ public class Tags {
     static final String NOT_SUPPORTED = "Your Phone does NOT support this version of Google Map service.";
     public static final int LOCATION_PERMISSION_REQUEST_CODE  = 189;
     public static final String ACCESS_FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
-    public static final String NO_LOCATION= "Error. Failed to get the location.";
+    public static final String NO_LOCATION= "Error. Failed to get the device location.";
     static final float MAP_ZOOM= 15f;
     public static final String LOCATION_OBJECT = "LOCATION_INFO";
     static final String LAT_LNG_OUT_STATE = "LatLng Out-State";

@@ -171,6 +171,6 @@ public class MapsActivity extends GoogleMapHelperClass implements OnMapReadyCall
 
     @Override
     void reportFailureOfGettingTheDeviceLocation() {
-        Toaster.displayToast(this, Tags.NO_LOCATION_FOUND, Tags.LONG_TOAST);
+        Toaster.displayToast(this, Tags.NO_LOCATION, Tags.LONG_TOAST);
     }
 }
