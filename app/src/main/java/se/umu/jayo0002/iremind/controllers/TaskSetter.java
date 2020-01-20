@@ -68,7 +68,7 @@ public class TaskSetter {
      */
     public static void setOutStateBundle(Bundle outState, DatePickerDialog datePickerDialog, TimePickerDialog timePickerDialog,
                                   String pickedDate, String pickedTime, int year, int month, int day,
-                                  int hour, int minute, String title, String info, LocationInfo locationInfo) {
+                                  int hour, int minute, String title, String info, LocationInfo locationInfo, Task task) {
         boolean isDatePickerShown = false;
         boolean isTimePickerShown = false;
         if (datePickerDialog.isShowing()) {
@@ -93,6 +93,7 @@ public class TaskSetter {
         outState.putInt(Tags.EVENT_DAY, day);
         outState.putInt(Tags.EVENT_TIME_HOUR, hour);
         outState.putInt(Tags.EVENT_TIME_MINUTES, minute);
+        outState.putParcelable(Tags.STATE_OUT_TASK,task);
         outState.putParcelable(Tags.LOCATION_OBJECT, locationInfo);
     }
 }

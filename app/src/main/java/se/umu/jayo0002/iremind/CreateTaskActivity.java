@@ -64,7 +64,7 @@ public class CreateTaskActivity extends HelperBase implements View.OnClickListen
             mDateDialog = getDateDialog(mYear, mMonth, mDay, 6, this);
             mDateDialog.show();
         } else if (view.getId() == R.id.btStartingTime) {
-            int [] time = mCreateTaskController.getValidTime(mStartHour,mStartMinute,getIntent());
+            int [] time = mCreateTaskController.getValidTime(mStartHour,mStartMinute, mPickedTime);
             mTimeDialog = getTimeDialog(time[0], time[1], this);
             mTimeDialog.show();
         } else if (view.getId() == R.id.btLocation) {
@@ -108,7 +108,7 @@ public class CreateTaskActivity extends HelperBase implements View.OnClickListen
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         TaskSetter.setOutStateBundle(outState, mDateDialog,
                 mTimeDialog, mPickedDate, mPickedTime,
-                mYear, mMonth, mDay, mStartHour, mStartMinute, mTitle, mEvent, mLocationInfo);
+                mYear, mMonth, mDay, mStartHour, mStartMinute, mTitle, mEvent, mLocationInfo, mTask);
         super.onSaveInstanceState(outState);
     }
 
@@ -140,6 +140,7 @@ public class CreateTaskActivity extends HelperBase implements View.OnClickListen
         mYear = outState.getInt(Tags.EVENT_YEAR);
         mMonth = outState.getInt(Tags.EVENT_MONTH);
         mDay = outState.getInt(Tags.EVENT_DAY);
+        mTask = outState.getParcelable(Tags.STATE_OUT_TASK);
         mStartHour = outState.getInt(Tags.EVENT_TIME_HOUR);
         mStartMinute = outState.getInt(Tags.EVENT_TIME_MINUTES);
         mCreateTaskController.setDateButtons(mButtonAddDate, mButtonAddStartTime, mPickedDate, mPickedTime);
@@ -161,7 +162,7 @@ public class CreateTaskActivity extends HelperBase implements View.OnClickListen
         mEvent = "";
         mWarden = new Warden(this);
         mPickedDate = getString(R.string.date);
-        mPickedTime = getString(R.string.starting_time);
+        mPickedTime = Tags.STANDRAD_TIME_LABEL;
         setSaveButton(this);
         mButtonAddDate = getDateButton(this);
         mButtonAddLocation = getLocationButton(this);

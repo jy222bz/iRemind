@@ -2,21 +2,15 @@ package se.umu.jayo0002.iremind.controllers;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
-import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
-
 import com.google.android.gms.maps.model.LatLng;
-
 import java.util.Calendar;
 import java.util.Objects;
-
 import se.umu.jayo0002.iremind.Tags;
 import se.umu.jayo0002.iremind.models.LocationInfo;
 import se.umu.jayo0002.iremind.models.model_controllers.ObjectController;
-
-import static se.umu.jayo0002.iremind.Tags.TASK;
 
 /**
  * It is a Controller Class to manages the UI.
@@ -111,20 +105,20 @@ public class CreateTaskController {
 
     /**
      * It checks which time suites the situation.
-     * If it is an update operation, then the users time applies.
+     * If the time has changed, then the user's time applies.
      * Otherwise, the current time applies.
      *
      * @param hour
      * @param minute
-     * @param intent
+     * @param control
      * @return
      */
-    public int[] getValidTime(int hour, int minute, Intent intent) {
+    public int[] getValidTime(int hour, int minute, String control) {
         int[] numbers = new int[2];
-        if (intent.hasExtra(TASK)) {
+
+        if (!control.equals(Tags.STANDRAD_TIME_LABEL)) {
             numbers[0] = hour;
             numbers[1] = minute;
-
         } else {
             numbers[0] = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
             numbers[1] = Calendar.getInstance().get(Calendar.MINUTE);
