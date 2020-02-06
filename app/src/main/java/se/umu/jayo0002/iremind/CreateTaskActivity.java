@@ -162,7 +162,7 @@ public class CreateTaskActivity extends HelperBase implements View.OnClickListen
         mEvent = "";
         mWarden = new Warden(this);
         mPickedDate = getString(R.string.date);
-        mPickedTime = Tags.STANDRAD_TIME_LABEL;
+        mPickedTime = Tags.STANDARD_TIME_LABEL;
         setSaveButton(this);
         mButtonAddDate = getDateButton(this);
         mButtonAddLocation = getLocationButton(this);
@@ -184,5 +184,13 @@ public class CreateTaskActivity extends HelperBase implements View.OnClickListen
     @Override
     void setInfo(String info) {
         mEvent = info;
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent();
+        intent.putExtra(TASK, mTask);
+        setResult(RESULT_CANCELED, intent);
+        this.finish();
     }
 }

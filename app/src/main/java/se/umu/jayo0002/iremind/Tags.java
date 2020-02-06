@@ -72,5 +72,7 @@ public class Tags {
     public static final String TIME_PICKER_OUT_STATE = "State of TIME_PICKER";
     public static final String NO_INFO ="No additional information was provided!";
     public static final String REQUIRED_INFO ="In order to create an event, provide a Title and valid Date and Time.";
-    public static final String STANDRAD_TIME_LABEL ="Time: 00:00  ";
+    public static final String STANDARD_TIME_LABEL ="Time: 00:00  ";
+    public static final String TIME_IS_NOT_VALID_ANYMORE ="The Date and the Time of the reminder is not valid anymore.";
+
 }

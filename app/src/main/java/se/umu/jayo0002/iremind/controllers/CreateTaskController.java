@@ -116,7 +116,7 @@ public class CreateTaskController {
     public int[] getValidTime(int hour, int minute, String control) {
         int[] numbers = new int[2];
 
-        if (!control.equals(Tags.STANDRAD_TIME_LABEL)) {
+        if (!control.equals(Tags.STANDARD_TIME_LABEL)) {
             numbers[0] = hour;
             numbers[1] = minute;
         } else {

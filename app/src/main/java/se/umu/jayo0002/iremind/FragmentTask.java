@@ -114,12 +114,7 @@ public class FragmentTask extends BaseFragment {
             AlarmHandler.scheduleAlarm(Objects.requireNonNull(getActivity()), mTask);
             Toaster.displaySnack(getView(), Tags.ALARM_IS_UPDATED, Tags.SHORT_SNACK);
         } else if (requestCode == Tags.REQUEST_CODE_EDIT_EVENT && resultCode == RESULT_CANCELED) {
-            if (mTask.isAlarmValid())
-                AlarmHandler.scheduleAlarm(Objects.requireNonNull(getActivity()), mTask);
-            else {
-                mTask.setInactive();
-                mTaskViewModel.update(mTask);
-            }
+            validateTheTask(data);
         }
     }
 
@@ -180,5 +175,19 @@ public class FragmentTask extends BaseFragment {
         task.setInactive();
         mTaskViewModel.update(task);
         Toaster.displaySnack(getView(), Tags.EVENT_DEACTIVATED, Tags.SHORT_SNACK);
+    }
+
+    private void validateTheTask(Intent data) {
+        mTask = Objects.requireNonNull(Objects.requireNonNull(data).getExtras()).getParcelable(Tags.TASK);
+        if (mTask != null) {
+            if (mTask.isAlarmValid())
+                AlarmHandler.scheduleAlarm(Objects.requireNonNull(getActivity()), mTask);
+            else {
+                mTask.setInactive();
+                mTaskViewModel.update(mTask);
+                Toaster.displaySnack(getView(), Tags.TIME_IS_NOT_VALID_ANYMORE, Tags.SHORT_SNACK);
+            }
+        }
+
     }
 }
